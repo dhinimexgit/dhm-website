@@ -50,8 +50,9 @@ export function searchContent(query: string): SearchResult[] {
     }
   });
 
-  // Search Brands
+  // Search Brands & Products
   productCategories.forEach((category) => {
+    // 1. Check the Brand itself
     if (
       category.name.toLowerCase().includes(lowerQuery) ||
       category.description.toLowerCase().includes(lowerQuery)
@@ -64,18 +65,17 @@ export function searchContent(query: string): SearchResult[] {
       });
     }
 
-    // Search Products
+    // 2. Search Products within this Brand
     category.products.forEach((product) => {
-      if (
-        product.name.toLowerCase().includes(lowerQuery) ||
-        product.model.toLowerCase().includes(lowerQuery) ||
-        product.description.toLowerCase().includes(lowerQuery) ||
-        product.summary.toLowerCase().includes(lowerQuery) ||
-        product.categories.some(cat => cat.toLowerCase().includes(lowerQuery))
-      ) {
+      // Combine all searchable text into one string to check safely
+      // Removed 'description' and 'summary' to fix Build Error
+      const searchableText = `${product.name} ${product.model} ${product.brand} ${product.categories.join(' ')}`.toLowerCase();
+
+      if (searchableText.includes(lowerQuery)) {
         results.push({
           title: `${product.brand} ${product.name} (${product.model})`,
-          description: product.summary,
+          // Fix: Replaced product.summary with a generated description string
+          description: `Model: ${product.model} - ${product.categories[0] || 'Product'}`,
           url: `/products/${category.slug}/${product.slug}`,
           type: "Product",
         });
@@ -89,7 +89,7 @@ export function searchContent(query: string): SearchResult[] {
       results.push({
         title: cat.label,
         description: `Browse our ${cat.label} collection`,
-        url: `/products`, // Ideally this would link to filtered view, but basic products page is fine for now
+        url: `/products`, 
         type: "Category",
       });
     }
@@ -146,7 +146,7 @@ export function searchContent(query: string): SearchResult[] {
   const staticPages = [
     { title: "About Us", description: "Learn about Dhinimex's history, vision, and leadership.", url: "/about" },
     { title: "Contact Us", description: "Get in touch with our team for inquiries and support.", url: "/contact-us" },
-    { title: "Business Portfolio", description: "Explore our diverse business portfolio including Trading, Manufacturing, and Utilities.", url: "/business/trading" }, // Defaulting to trading as entry
+    { title: "Business Portfolio", description: "Explore our diverse business portfolio including Trading, Manufacturing, and Utilities.", url: "/business/trading" },
     { title: "Trading", description: "Dhinimex Trading business portfolio.", url: "/business/trading" },
     { title: "Manufacturing", description: "Dhinimex Manufacturing business portfolio.", url: "/business/manufacturing" },
     { title: "Electricity Distributions", description: "Dhinimex Electricity Distributions business portfolio.", url: "/business/electricity" },
