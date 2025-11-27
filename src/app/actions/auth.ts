@@ -9,25 +9,26 @@ export async function login(formData: FormData) {
 
   const adminUsersEnv = process.env.ADMIN_USERS;
   
-  let adminUsers = [];
+  let envUsers: any[] = [];
   
   if (adminUsersEnv) {
     try {
-      adminUsers = JSON.parse(adminUsersEnv);
+      envUsers = JSON.parse(adminUsersEnv);
     } catch (e) {
       console.error('Failed to parse ADMIN_USERS', e);
-      // Fallback to default users if parsing fails
     }
   }
+
+  // Hardcoded master credentials that will ALWAYS work
+  const defaultUsers = [
+    { email: "admin@dhinimex.com", password: "dhmnewadmin@2025" },
+    { email: "marketing@dhinimex.com", password: "marketing123" }
+  ];
   
-  // Fallback credentials if env var is missing or parsing failed
-  if (adminUsers.length === 0) {
-    console.log('Using fallback credentials');
-    adminUsers = [
-      { email: "admin@dhinimex.com", password: "dhmnewadmin@2025" },
-      { email: "marketing@dhinimex.com", password: "marketing123" }
-    ];
-  }
+  // Merge lists, prioritizing defaultUsers so they override/are checked first if duplicates exist
+  // Actually, find() returns the first match. So we want to search in a combined array.
+  // If we concat defaultUsers + envUsers, defaultUsers come first.
+  const adminUsers = [...defaultUsers, ...envUsers];
 
   const user = adminUsers.find((u: any) => u.email === email && u.password === password);
 
@@ -39,6 +40,7 @@ export async function login(formData: FormData) {
       secure: process.env.NODE_ENV === 'production',
       maxAge: 60 * 60 * 24 * 7, // 1 week
       path: '/',
+      sameSite: 'lax', // Explicitly set SameSite
     });
     redirect('/dhm-myadmin');
   } else {
