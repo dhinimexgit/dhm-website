@@ -9,17 +9,24 @@ export async function login(formData: FormData) {
 
   const adminUsersEnv = process.env.ADMIN_USERS;
   
-  if (!adminUsersEnv) {
-    console.error('ADMIN_USERS environment variable is not set');
-    return { error: 'Server configuration error' };
-  }
-
   let adminUsers = [];
-  try {
-    adminUsers = JSON.parse(adminUsersEnv);
-  } catch (e) {
-    console.error('Failed to parse ADMIN_USERS', e);
-    return { error: 'Server configuration error' };
+  
+  if (adminUsersEnv) {
+    try {
+      adminUsers = JSON.parse(adminUsersEnv);
+    } catch (e) {
+      console.error('Failed to parse ADMIN_USERS', e);
+      // Fallback to default users if parsing fails
+    }
+  }
+  
+  // Fallback credentials if env var is missing or parsing failed
+  if (adminUsers.length === 0) {
+    console.log('Using fallback credentials');
+    adminUsers = [
+      { email: "admin@dhinimex.com", password: "dhmnewadmin@2025" },
+      { email: "marketing@dhinimex.com", password: "marketing123" }
+    ];
   }
 
   const user = adminUsers.find((u: any) => u.email === email && u.password === password);
