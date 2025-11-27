@@ -411,7 +411,7 @@ export const leadership: Leader[] = [
   },
   {
     name: "Gheknai Kong",
-    title: "Deputy Managing Director & Chief of Finance",
+    title: "Deputy Managing Director Finance & Audit",
     bio: "Drives financial strategy and governance, ensuring disciplined growth across the group’s portfolio.",
     quote: "Passion and discipline make you a better person.",
     portrait: "https://www.dhinimex.com/wp-content/uploads/2025/10/Ms-Nai_2-1.jpg",
