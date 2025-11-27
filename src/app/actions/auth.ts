@@ -41,7 +41,10 @@ export async function login(formData: FormData) {
 
 export async function logout() {
   const cookieStore = await cookies();
+  // Explicitly delete with path to ensure it clears correctly
   cookieStore.delete('dhm_admin_session');
+  // Also try deleting with path options if the above simple delete doesn't catch it in some environments
+  cookieStore.set('dhm_admin_session', '', { maxAge: 0, path: '/' });
+  
   redirect('/dhm-myadmin/login');
 }
-
