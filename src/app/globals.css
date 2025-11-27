@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+:root {
+  --brand-navy: #2e388c;
+  --brand-red: #e8262a;
+  --brand-sky: #eaebf3;
+  --brand-ink: #1e1f2c;
+  --page-background: #f5f6fb;
+}
+
+@theme inline {
+  --color-brand-navy: var(--brand-navy);
+  --color-brand-red: var(--brand-red);
+  --color-brand-sky: var(--brand-sky);
+  --color-page: var(--page-background);
+  --font-display: var(--font-dhinimex-display);
+  --font-sans: var(--font-dhinimex-sans);
+}
+
+body {
+  background: var(--page-background);
+  color: var(--brand-ink);
+  font-family: var(--font-dhinimex-sans), "Inter", Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+.full-bleed {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+.pattern-grid {
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    rgba(46, 56, 140, 0.08) 1px,
+    transparent 0
+  );
+  background-size: 36px 36px;
+}
+
+.brand-marquee {
+  display: inline-flex;
+  width: max-content;
+  animation: brand-marquee 60s linear infinite;
+}
+
+.brand-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes brand-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Smooth accordion animations */
+details summary ~ * {
+  overflow: hidden;
+  transition: max-height 0.9s ease-in-out, opacity 0.9s ease-in-out, padding 0.9s ease-in-out;
+}
+
+details:not([open]) summary ~ * {
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+details[open] summary ~ * {
+  max-height: 1000px;
+  opacity: 1;
+}

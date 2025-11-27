@@ -1,0 +1,33 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow public read access to products
+    match /products/{document=**} {
+      allow read: if true;
+      // Ideally, we should secure write access.
+      // Since we are using a simple custom auth without Firebase Auth integration on the client for the admin user (we just check a cookie),
+      // we can't easily use request.auth here unless we sign in anonymously or with a token.
+      
+      // However, for this specific request context where the user wants to fix "permission-denied",
+      // and they are using a client-side script in the admin dashboard to upload data,
+      // we need to allow writes.
+      
+      // WARNING: This allows ANYONE with your config to write to your DB.
+      // To secure this properly, you should implement Firebase Auth (signInWithEmailAndPassword)
+      // and use allow write: if request.auth != null;
+      
+      // For now, as requested, we will open it up for development/demo purposes.
+      allow write: if true;
+    }
+  }
+}
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+  }
+}
+
