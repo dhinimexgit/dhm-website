@@ -16,6 +16,7 @@ export default async function BrandPage({ params }: { params: Promise<{ brand: s
     notFound();
   }
 
-  return <ProductsPageClient categories={productCategories} initialBrand={brand} />;
+  // Data is now fetched client-side, just pass the initial brand filter
+  return <ProductsPageClient initialBrand={brand} />;
 }
 
