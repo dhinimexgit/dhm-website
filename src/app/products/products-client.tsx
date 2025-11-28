@@ -648,6 +648,7 @@ export function ProductsPageClient({ initialBrand }: Props) {
 
 function ProductImageDisplay({ images, productName }: { images: any, productName: string }) {
   const [imageError, setImageError] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
   
   // Get the first valid image with robust validation
   const validImages = useMemo(() => {
@@ -680,9 +681,10 @@ function ProductImageDisplay({ images, productName }: { images: any, productName
   
   const firstImage = validImages.length > 0 ? validImages[0] : null;
   
-  // Reset error state when image changes
+  // Reset error and loading state when image changes
   useEffect(() => {
     setImageError(false);
+    setImageLoading(true);
   }, [firstImage]);
   
   if (!firstImage || imageError) {
@@ -697,14 +699,22 @@ function ProductImageDisplay({ images, productName }: { images: any, productName
   
   return (
     <div className="relative mb-4 h-40 w-full overflow-hidden rounded-lg bg-slate-100">
+      {/* Loading spinner */}
+      {imageLoading && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-slate-100">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-brand-navy border-t-transparent"></div>
+        </div>
+      )}
       <Image
         src={firstImage}
         alt={productName || 'Product image'}
         fill
-        className="object-contain transition-transform duration-500 group-hover:scale-110"
+        className={`object-contain transition-all duration-500 group-hover:scale-110 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        onLoad={() => setImageLoading(false)}
         onError={() => {
           console.warn('Image failed to load:', firstImage);
+          setImageLoading(false);
           setImageError(true);
         }}
       />
