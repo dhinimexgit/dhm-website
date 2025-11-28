@@ -1,13 +1,8 @@
-import { getAllProducts } from "@/lib/products";
 import { ProductsPageClient } from "./products-client";
 
-// Revalidate every hour
-export const revalidate = 3600;
-
-export default async function ProductsPage() {
-  const categories = await getAllProducts();
-
+// This page now fetches data client-side (like the admin page) for real-time updates
+export default function ProductsPage() {
   return (
-    <ProductsPageClient categories={categories} />
+    <ProductsPageClient />
   );
 }

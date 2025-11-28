@@ -3,7 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState, useEffect, useRef } from "react";
-import type { ProductCategory } from "@/data/site-content";
+import { db } from "@/lib/firebase";
+import { collection, onSnapshot } from "firebase/firestore";
+import type { ProductCategory, Product } from "@/data/site-content";
+import { productCategories } from "@/data/site-content";
 import { HeroHeader } from "@/components/layout/hero-header";
 import { ContactModal } from "@/components/contact-modal";
 
@@ -12,7 +15,6 @@ const sortOptions = [
   { label: "Oldest → Newest", value: "oldest" },
   { label: "Price: Low → High", value: "price-asc" },
   { label: "Price: High → Low", value: "price-desc" },
-  // { label: "Rating: High → Low", value: "rating" },
 ];
 
 const categoryTree = [
@@ -48,12 +50,71 @@ const categoryTree = [
   },
 ];
 
+// Helper to convert Firestore data to Product type (same as admin page)
+const docToProduct = (doc: any): Product => {
+  const data = doc.data ? doc.data() : doc;
+  
+  // Clean images array
+  let rawImages = data.images;
+  if (rawImages === null || rawImages === undefined) {
+    rawImages = [];
+  }
+  
+  const cleanedImages = Array.isArray(rawImages) 
+    ? rawImages
+        .filter((img: any) => img && typeof img === 'string' && img.trim().length > 0)
+        .map((img: string) => img.trim())
+    : [];
+  
+  return {
+    slug: data.slug,
+    brand: data.brand,
+    model: data.model,
+    name: data.name,
+    price: data.price,
+    categories: data.categories || [],
+    subCategories: data.subCategories || [],
+    featuredHighlights: data.featuredHighlights || [],
+    specs: data.specs || {},
+    images: cleanedImages,
+    createdAt: data.createdAt?.toDate?.().toISOString() || data.createdAt || null,
+    createdBy: data.createdBy,
+    updatedAt: data.updatedAt?.toDate?.().toISOString() || data.updatedAt || null,
+    updatedBy: data.updatedBy,
+  };
+};
+
 type Props = {
-  categories: ProductCategory[];
   initialBrand?: string;
 };
 
-export function ProductsPageClient({ categories, initialBrand }: Props) {
+export function ProductsPageClient({ initialBrand }: Props) {
+  // Real-time products from Firebase (like admin page)
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch products client-side using onSnapshot (real-time, no caching)
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "products"), (snapshot) => {
+      const items: Product[] = [];
+      snapshot.forEach((doc) => {
+        items.push(docToProduct(doc));
+      });
+      setProducts(items);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Build categories structure from products
+  const categories = useMemo(() => {
+    return productCategories.map(cat => ({
+      ...cat,
+      products: products.filter(p => p.brand === cat.slug)
+    }));
+  }, [products]);
+
   // State for View Mode (Landing vs Listing)
   const [viewMode, setViewMode] = useState<'landing' | 'listing'>(initialBrand ? 'listing' : 'landing');
 
@@ -68,7 +129,7 @@ export function ProductsPageClient({ categories, initialBrand }: Props) {
   const productsHeaderRef = useRef<HTMLHeadingElement>(null);
 
   // Flatten all products for "View All" or multi-brand filtering
-  const allProducts = useMemo(() => categories.flatMap(c => c.products), [categories]);
+  const allProducts = useMemo(() => products, [products]);
 
   // Filter Logic
   const filteredProducts = useMemo(() => {
@@ -264,6 +325,23 @@ export function ProductsPageClient({ categories, initialBrand }: Props) {
     // Using price as a fallback sort since rating was removed, or just random/first few
     return all.slice(0, 5);
   }, [categories]);
+
+  // Show loading state while fetching products
+  if (loading) {
+    return (
+      <div className="space-y-6 pb-20">
+        <HeroSection onViewAll={handleViewAllClick} />
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center py-20">
+            <div className="text-center">
+              <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-brand-navy border-r-transparent"></div>
+              <p className="mt-4 text-slate-500">Loading products...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 pb-20">
