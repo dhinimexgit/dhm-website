@@ -38,11 +38,9 @@ export default async function DashboardLayout({
                         href="/dhm-myadmin" 
                         className="relative text-white hover:text-brand-red transition-colors"
                     >
-                        Product Manager
+                        Admin Dashboard
                         <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" />
                     </Link>
-                    <span className="text-white/50 cursor-not-allowed">Job Openings</span>
-                    <span className="text-white/50 cursor-not-allowed">Portfolios</span>
                 </nav>
             </div>
 

@@ -1,15 +1,12 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { careers } from "@/data/site-content";
-
+import { getAllCareers } from "@/lib/careers";
 import { HeroHeader } from "@/components/layout/hero-header";
 
 const heroImage = "/career.png";
 
-export default function CareersPage() {
+export default async function CareersPage() {
+  const careers = await getAllCareers();
   return (
     <div className="space-y-16 pb-20">
       {/* Hero Banner */}

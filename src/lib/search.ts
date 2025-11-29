@@ -146,7 +146,7 @@ export function searchContent(query: string): SearchResult[] {
   const staticPages = [
     { title: "About Us", description: "Learn about Dhinimex's history, vision, and leadership.", url: "/about" },
     { title: "Contact Us", description: "Get in touch with our team for inquiries and support.", url: "/contact-us" },
-    { title: "Business Portfolio", description: "Explore our diverse business portfolio including Trading, Manufacturing, and Utilities.", url: "/business/trading" },
+    { title: "Business", description: "Explore our diverse business including Trading, Manufacturing, and Utilities.", url: "/business/trading" },
     { title: "Trading", description: "Dhinimex Trading business portfolio.", url: "/business/trading" },
     { title: "Manufacturing", description: "Dhinimex Manufacturing business portfolio.", url: "/business/manufacturing" },
     { title: "Electricity Distributions", description: "Dhinimex Electricity Distributions business portfolio.", url: "/business/electricity" },

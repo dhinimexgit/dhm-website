@@ -1,15 +1,13 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { posts, newsHero } from "@/data/site-content";
-
+import { getAllPosts } from "@/lib/posts";
+import { newsHero } from "@/data/site-content";
 import { HeroHeader } from "@/components/layout/hero-header";
 
 const heroImage = "https://www.dhinimex.com/wp-content/uploads/2025/08/cover-slide.png";
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const posts = await getAllPosts();
   const featuredPost = posts[0];
   const secondaryPosts = posts.slice(1);
 

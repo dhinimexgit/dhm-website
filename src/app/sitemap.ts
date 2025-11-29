@@ -1,7 +1,9 @@
 import type { MetadataRoute } from "next";
-import { siteNav, posts } from "@/data/site-content";
+import { siteNav } from "@/data/site-content";
+import { getAllPosts } from "@/lib/posts";
+import { getAllCareers } from "@/lib/careers";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://dhinimex.com";
 
   // 1. Explicitly add the Home page
@@ -20,7 +22,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  // 3. Map blog posts
+  // 3. Map blog posts from Firebase
+  const posts = await getAllPosts();
   const postRoutes = posts.map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
     lastModified: new Date(post.date),
@@ -28,5 +31,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [homeRoute, ...staticRoutes, ...postRoutes];
+  // 4. Map careers from Firebase
+  const careers = await getAllCareers();
+  const careerRoutes = careers.map((career) => ({
+    url: `${baseUrl}/careers/${career.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.6,
+  }));
+
+  return [homeRoute, ...staticRoutes, ...postRoutes, ...careerRoutes];
 }

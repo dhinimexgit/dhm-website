@@ -19,6 +19,24 @@ service cloud.firestore {
       // For now, as requested, we will open it up for development/demo purposes.
       allow write: if true;
     }
+
+    // Allow public read access to posts
+    match /posts/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Allow public read access to careers
+    match /careers/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Allow read/write access to inquiries (admin only, but same pattern for now)
+    match /inquiries/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
   }
 }
 

@@ -1,7 +1,12 @@
 "use client";
 
 import { SeedButton } from "@/components/admin/seed-button";
+import { SeedPostsButton } from "@/components/admin/seed-posts-button";
+import { SeedCareersButton } from "@/components/admin/seed-careers-button";
+import { SeedPostsFromWPButton } from "@/components/admin/seed-posts-from-wp-button";
+import { SeedCareersFromWPButton } from "@/components/admin/seed-careers-from-wp-button";
 import { productCategories } from "@/data/product-categories";
+import { posts, careers } from "@/data/site-content";
 import Link from "next/link";
 
 export default function SeedPage() {
@@ -45,7 +50,7 @@ export default function SeedPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-2xl border border-slate-200 bg-white p-6">
           <p className="text-sm font-medium text-slate-500">Total Categories</p>
           <p className="mt-2 text-3xl font-bold text-brand-navy">
@@ -58,9 +63,55 @@ export default function SeedPage() {
             {totalProducts}
           </p>
         </div>
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 flex flex-col justify-center items-start">
-           <p className="text-sm font-medium text-slate-500 mb-2">Ready to Seed?</p>
-           <SeedButton />
+        <div className="rounded-2xl border border-slate-200 bg-white p-6">
+          <p className="text-sm font-medium text-slate-500">Total Posts</p>
+          <p className="mt-2 text-3xl font-bold text-brand-navy">
+            {posts.length}
+          </p>
+        </div>
+        <div className="rounded-2xl border border-slate-200 bg-white p-6">
+          <p className="text-sm font-medium text-slate-500">Total Careers</p>
+          <p className="mt-2 text-3xl font-bold text-brand-navy">
+            {careers.length}
+          </p>
+        </div>
+      </div>
+
+      {/* Seed Actions */}
+      <div className="space-y-8">
+        <div>
+          <h2 className="mb-4 text-xl font-semibold text-brand-navy">Seed from Static Files</h2>
+          <div className="grid gap-6 md:grid-cols-3">
+            <div className="rounded-2xl border border-slate-200 bg-white p-6">
+              <p className="text-sm font-medium text-slate-500 mb-4">Seed Products</p>
+              <SeedButton />
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-white p-6">
+              <p className="text-sm font-medium text-slate-500 mb-4">Seed Blog Posts</p>
+              <SeedPostsButton />
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-white p-6">
+              <p className="text-sm font-medium text-slate-500 mb-4">Seed Careers</p>
+              <SeedCareersButton />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 className="mb-4 text-xl font-semibold text-brand-navy">Seed from Live WordPress Site</h2>
+          <p className="mb-4 text-sm text-slate-600">Fetch and import data directly from https://www.dhinimex.com</p>
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="rounded-2xl border border-blue-200 bg-blue-50 p-6">
+              <p className="text-sm font-medium text-slate-700 mb-2">Seed Blog Posts from WordPress</p>
+              <p className="text-xs text-slate-500 mb-4">Fetches from /wp-json/wp/v2/posts</p>
+              <SeedPostsFromWPButton />
+            </div>
+            <div className="rounded-2xl border border-blue-200 bg-blue-50 p-6">
+              <p className="text-sm font-medium text-slate-700 mb-2">Seed Careers from WordPress</p>
+              <p className="text-xs text-slate-500 mb-4">Fetches from /careers/ pages</p>
+              <SeedCareersFromWPButton />
+            </div>
+          </div>
         </div>
       </div>
 

@@ -1,11 +1,9 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { stats, services, whyChooseUs, homePageBrands, posts } from "@/data/site-content";
+import { stats, services, whyChooseUs, homePageBrands } from "@/data/site-content";
 import { BrandCarousel } from "@/components/brand-carousel";
 import { HeroHeader } from "@/components/layout/hero-header";
+import { getLatestPosts } from "@/lib/posts";
 
 const heroImage = "https://www.dhinimex.com/wp-content/uploads/2025/08/cover-slide.png";
 const aboutImage = "https://www.dhinimex.com/wp-content/uploads/2025/11/Dhinimex-building_e.jpg";
@@ -14,10 +12,10 @@ const blogIntro =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,";
 const trustIcons = ["✔", "🛡️", "💬", "⏱️"];
 
-export default function Home() {
+export default async function Home() {
   const highlightedStats = stats.slice(0, 2);
   const featuredServices = services.slice(0, 4);
-  const latestPosts = posts.slice(0, 3);
+  const latestPosts = await getLatestPosts(3);
 
   return (
     <div className="space-y-16 pb-20">
