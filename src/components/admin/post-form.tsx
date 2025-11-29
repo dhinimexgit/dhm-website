@@ -118,7 +118,7 @@ export function PostForm({ initialData, onSuccess, onCancel }: Props) {
           <select
             required
             value={formData.tag}
-            onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
+            onChange={(e) => setFormData({ ...formData, tag: e.target.value as "News" | "Event" | "Insight" })}
             className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-700 focus:border-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-navy/20"
           >
             <option value="News">News</option>

@@ -1,0 +1,15 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Allow public read access to all files
+    match /{allPaths=**} {
+      allow read: if true;
+      // Allow write access to all files (for admin uploads)
+      // WARNING: This allows anyone with your config to write to Storage.
+      // To secure this properly, implement Firebase Auth and use:
+      // allow write: if request.auth != null;
+      allow write: if true;
+    }
+  }
+}
+
