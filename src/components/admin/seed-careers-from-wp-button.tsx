@@ -27,9 +27,10 @@ function parseCareerFromHtml(html: string, slug: string, title: string) {
     // Fallback for SSR
     return {
       description: extractTextFromHtml(html),
-      keyResponsibilities: [],
-      requirements: [],
-      whatWeOffer: [],
+      keyResponsibilities: [] as string[],
+      requirements: [] as string[],
+      whatWeOffer: [] as string[],
+      howToApply: "",
     };
   }
 
@@ -62,6 +63,7 @@ function parseCareerFromHtml(html: string, slug: string, title: string) {
     keyResponsibilities: responsibilities,
     requirements,
     whatWeOffer: offers,
+    howToApply: "",
   };
 }
 
