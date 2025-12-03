@@ -14,119 +14,7 @@ export const productCategories: ProductCategory[] = [
     focus: "Industrial crews",
     brandColor: "#FCD60C",
     heroImage: stanleyImage,
-    products: [
-      {
-        slug: "-impact-driver",
-        brand: "stanley",
-        model: "SFMCD720D2K",
-        name: " 20V Brushless Impact Driver",
-        price: 249,
-        categories: ["power-tools", "impact", "drills"],
-        subCategories: [],
-        featuredHighlights: [
-          "Includes 2× 4.0Ah batteries & fast charger",
-          "Smart trigger with 3 electronic speed presets",
-          "All-metal chuck with cold-weather clutch",
-        ],
-        specs: {
-          "Power / Voltage": "20V MAX",
-          "Motor Type": "Brushless",
-          Weight: "1.5 kg (tool only)",
-          Capacity: "1/2 in. chuck",
-          Runtime: "180 fastenings per charge",
-          Warranty: "3 years limited",
-          Accessories: "2 batteries, charger, kit box",
-        },
-        images: [
-          "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=1200&q=80",
-          "https://images.unsplash.com/photo-1516245550890-9ac95743e386?auto=format&fit=crop&w=1200&q=80",
-          "https://images.unsplash.com/photo-1479064555552-3ef4979f8908?auto=format&fit=crop&w=1200&q=80",
-        ],
-      },
-      {
-        slug: "-rotary-hammer",
-        brand: "stanley",
-        model: "SFMEH230K",
-        name: " SDS-Plus Rotary Hammer",
-        price: 329,
-        categories: ["power-tools", "rotary"],
-        subCategories: [],
-        featuredHighlights: [
-          "2.6 Joules impact energy",
-          "Constant speed control under load",
-          "Depth stop with metric markings",
-        ],
-        specs: {
-          "Power / Voltage": "800W / 220-240V",
-          "Motor Type": "Brushed, constant electronics",
-          Weight: "3.1 kg",
-          Capacity: "26 mm in concrete",
-          Runtime: "Continuous rated",
-          Warranty: "2 years limited",
-          Accessories: "Depth rod, side handle, kit box",
-        },
-        images: [
-          "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200&q=80",
-          "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1200&q=80",
-          "https://images.unsplash.com/photo-1504805572947-34fad45aed93?auto=format&fit=crop&w=1200&q=80",
-        ],
-      },
-      {
-        slug: "stanley-automotive-impact",
-        brand: "stanley",
-        model: "SFMCE123WB",
-        name: " 1/2\" Automotive Impact Wrench",
-        price: 279,
-        categories: ["automotive-tools", "wrenches"],
-        subCategories: [],
-        featuredHighlights: [
-          "700 ft-lbs breakaway torque",
-          "3-speed drive control",
-          "Protective boot included",
-        ],
-        specs: {
-          "Power / Voltage": "20V MAX",
-          "Motor Type": "Brushless",
-          Weight: "1.9 kg",
-          Capacity: "1/2 in. anvil with detent pin",
-          Runtime: "Up to 120 lug nuts per charge",
-          Warranty: "3 years limited",
-          Accessories: "Belt hook, protective boot",
-        },
-        images: [
-          "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1200&q=80",
-          "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?auto=format&fit=crop&w=1200&q=80",
-          "https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1200&q=80",
-        ],
-      },
-      {
-        slug: "stanley-dust-extractor",
-        brand: "stanley",
-        model: "SFMVC12",
-        name: " 12 Gallon Dust Extractor",
-        price: 319,
-        categories: ["dust-management", "extractors"],
-        subCategories: [],
-        featuredHighlights: [
-          "HEPA filter captures 99.97% @ 0.3 microns",
-          "Auto pulse-clean every 30 seconds",
-          "Power take-off for tool activation",
-        ],
-        specs: {
-          "Capacity": "45 L / 12 gal",
-          "Power / Voltage": "1,200 W / 220V",
-          Weight: "11.2 kg",
-          Runtime: "Continuous duty",
-          Warranty: "3 years limited",
-          Accessories: "HEPA filter, fleece bags, hose kit",
-        },
-        images: [
-          "https://images.unsplash.com/photo-1523419409543-0c1df022bddb?auto=format&fit=crop&w=1200&q=80",
-          "https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=1200&q=80",
-          "https://images.unsplash.com/photo-1457433575995-8407028a9970?auto=format&fit=crop&w=1200&q=80",
-        ],
-      },
-    ],
+    products: [],
   },
   {
     slug: "dewalt",
@@ -137,645 +25,560 @@ export const productCategories: ProductCategory[] = [
     focus: "Mega projects",
     brandColor: "#FDB927",
     heroImage: dewaltImage,
-    products: [
-      {
-        slug: "dewalt-dcm848p2-polisher",
-        brand: "dewalt",
-        model: "DCM848P2",
-        name: "20V MAX 5.0AH Brushless Dual Action Polisher",
-        price: 0,
-        categories: ["power-tools", "automotive-tools"],
-        subCategories: ["polishers", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Motor Type": "Brushless",
-          "Voltage V": "20V Max",
-          "Battery Capacity": "5.0 Ah",
-          "No Load Speed": "2000 - 5500 rpm",
-          "Max. Disc Diameter": "125 mm",
-          "Switch Type": "Trigger",
-          "Variable Speed": "Yes"
-        },
-        images: []
-      },
-      {
-        slug: "dewalt-dcn890p2-concrete-nailer",
-        brand: "dewalt",
-        model: "DCN890P2",
-        name: "18V 5.0AH Brushless Concrete Nailer",
-        price: 0,
-        categories: ["power-tools", "fastening-tools"],
-        subCategories: ["nailers", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Voltage": "18V",
-          "Battery Capacity": "5.0 Ah",
-          "Nail Diameter": "2.6 - 3.7 mm",
-          "Nail Length": "13 - 57 mm",
-          "Magazine Capacity": "Up to 30 Nails",
-          "Operating Mode": "Sequential and Rapid Cycle",
-          "Weight (Bare Tool)": "4.8 kg"
-        },
-        images: []
-      },
-      {
-        slug: "dewalt-dcn660d2-finish-nailer",
-        brand: "dewalt",
-        model: "DCN660D2",
-        name: "18V XR 2.0AH 16GA Finish Nailer",
-        price: 0,
-        categories: ["power-tools", "fastening-tools"],
-        subCategories: ["nailers", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Voltage": "18V",
-          "Battery Capacity": "2.0Ah",
-          "Nail Diameter": "1.6 mm",
-          "Nail Length": "32 - 63 mm",
-          "Magazine Angle": "20°",
-          "Magazine Capacity": "110 Nails",
-          "Operating Mode": "Bump and Sequential",
-          "Weight (Bare Tool)": "2.8 kg"
-        },
-        images: []
-      },
-    
-      // --- IMPACT WRENCHES ---
-      {
-        slug: "dewalt-dcf902d2-impact-wrench",
-        brand: "dewalt",
-        model: "DCF902D2",
-        name: "12V 2.0AH Sub-Compact Impact Wrench",
-        price: 0,
-        categories: ["power-tools", "automotive-tools"],
-        subCategories: ["impact-wrenches", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Motor Type": "Brushless",
-          "Voltage": "12V",
-          "Battery Capacity": "2.0 Ah",
-          "Tool Holder": "3/8\" / 9.5 mm",
-          "Max. Torque": "168 Nm",
-          "No Load Speed": "0–2850 min-1",
-          "Weight (Bare Tool)": "0.8 kg"
-        },
-        images: []
-      },
-      {
-        slug: "dewalt-dcf911p2-impact-wrench",
-        brand: "dewalt",
-        model: "DCF911P2",
-        name: "20V MAX 5.0AH 1/2\" Brushless Compact Impact Wrench",
-        price: 0,
-        categories: ["power-tools", "automotive-tools"],
-        subCategories: ["impact-wrenches", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Motor Type": "Brushless",
-          "Voltage V": "20V Max",
-          "Battery Capacity": "5 Ah",
-          "No-load speed": "0-2850 rpm",
-          "Max tightening torque": "338 Nm",
-          "Max breakaway torque": "542 Nm",
-          "Tool holder": "12.7 mm",
-          "Weight (Bare Tool)": "1.0 Kg"
-        },
-        images: []
-      },
-      {
-        slug: "dewalt-dcf922m2-impact-wrench",
-        brand: "dewalt",
-        model: "DCF922M2",
-        name: "20V MAX 4.0AH 1/2\" Compact Impact WR - Detent",
-        price: 0,
-        categories: ["power-tools", "automotive-tools"],
-        subCategories: ["impact-wrenches", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Motor Type": "Brushless",
-          "Voltage V": "20V Max",
-          "Battery Capacity": "4.0 A",
-          "No-load speed": "0-2500 rpm",
-          "Max tightening torque": "406 Nm",
-          "Max breakaway torque": "610 Nm",
-          "Tool holder": "12.7 mm",
-          "Weight (Bare Tool)": "1.1 Kg"
-        },
-        images: []
-      },
-      {
-        slug: "dewalt-dcf892p2t-mid-impact-wrench",
-        brand: "dewalt",
-        model: "DCF892P2T",
-        name: "20V MAX 5.0AH 1/2\" Mid-Range Impact Wrench",
-        price: 0,
-        categories: ["power-tools", "automotive-tools"],
-        subCategories: ["impact-wrenches", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Voltage": "20V Max",
-          "Battery Capacity": "5.0 Ah",
-          "No Load Speed": "0-2000 rpm",
-          "Max Tightening Torque": "812 Nm",
-          "Max breakaway torque": "1084 Nm",
-          "Tool holder": "12.7 mm",
-          "Weight (Bare Tool)": "1.67 kg"
-        },
-        images: []
-      },
-    
-      // --- DRILL DRIVERS & IMPACT DRIVERS ---
-      {
-        slug: "dewalt-dcd7771d2-drill-driver",
-        brand: "dewalt",
-        model: "DCD7771D2",
-        name: "20V MAX 2AH Compact Brushless Drill Driver",
-        price: 0,
-        categories: ["power-tools", "drills"],
-        subCategories: ["drill-drivers", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Voltage": "20V Max",
-          "Battery Capacity": "2.0 Ah",
-          "Max Torque (Hard)": "65 Nm",
-          "Max Torque (Soft)": "26 Nm",
-          "No Load Speed": "0-500 / 1750 rpm",
-          "Chuck Capacity": "1.5-13 mm",
-          "Weight (Bare Tool)": "1.15 kg"
-        },
-        images: []
-      },
-      {
-        slug: "dewalt-dcd708s2t-drill-driver",
-        brand: "dewalt",
-        model: "DCD708S2T",
-        name: "20V MAX 1.5AH Compact Brushless Drill Driver",
-        price: 0,
-        categories: ["power-tools", "drills"],
-        subCategories: ["drill-drivers", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Voltage": "20V Max",
-          "Battery Capacity": "1.5 Ah",
-          "Max. Torque (Hard/Soft)": "65/26Nm",
-          "No Load Speed": "0-450 / 1650 rpm",
-          "Chuck Capacity": "1.5-13 mm",
-          "Weight (Bare Tool)": "1.45 kg"
-        },
-        images: []
-      },
-      {
-        slug: "dewalt-dcd771s2-drill-driver",
-        brand: "dewalt",
-        model: "DCD771S2",
-        name: "20V MAX 1.5AH Compact Drill Driver",
-        price: 0,
-        categories: ["power-tools", "drills"],
-        subCategories: ["drill-drivers", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Voltage": "20V Max",
-          "Battery Capacity": "1.5 Ah",
-          "Max. Torque (Hard)": "42 Nm",
-          "Max. Torque (Soft)": "24 Nm",
-          "No Load Speed": "0-450 / 1500 rpm",
-          "Chuck Capacity": "1.5-13 mm",
-          "Weight (Bare Tool)": "1.65 kg"
-        },
-        images: []
-      },
-      {
-        slug: "dewalt-dcf801d2-impact-driver",
-        brand: "dewalt",
-        model: "DCF801D2",
-        name: "12V 2.0AH Compact Brushless Impact Driver",
-        price: 0,
-        categories: ["power-tools", "drills"],
-        subCategories: ["impact-drivers", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Motor Type": "Brushless",
-          "Voltage": "12V",
-          "Battery Capacity": "2.0 Ah",
-          "No-load speed": "0–2850 rpm",
-          "Max. torque": "163 Nm",
-          "Tool holder": "6.35 mm",
-          "Weight (Bare Tool)": "0.8 kg"
-        },
-        images: []
-      },
-      {
-        slug: "dewalt-dcf850d2-impact-driver",
-        brand: "dewalt",
-        model: "DCF850D2",
-        name: "18V 2.0AH 3 Speed Brushless Impact Driver",
-        price: 0,
-        categories: ["power-tools", "drills"],
-        subCategories: ["impact-drivers", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Motor Type": "Brushless",
-          "Voltage": "18V",
-          "Battery Capacity": "2.0 Ah",
-          "Max. Torque": "205 Nm",
-          "Mode Select": "3 Speed",
-          "Length": "100 mm",
-          "Weight (Bare Tool)": "0.95 kg"
-        },
-        images: []
-      },
-      {
-        slug: "dewalt-dcf809l2t-impact-driver",
-        brand: "dewalt",
-        model: "DCF809L2T",
-        name: "18V XR 3.0AH Impact Brushless Driver Kit",
-        price: 0,
-        categories: ["power-tools", "drills"],
-        subCategories: ["impact-drivers", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Motor Type": "Brushless",
-          "Voltage": "18V",
-          "Battery Capacity": "3.0 Ah",
-          "Max. Torque": "190 Nm",
-          "No Load Speed": "0-2800 rpm",
-          "Max. Bolt Dia.": "M12",
-          "Tool Holder": "6.35 mm (1/4\")",
-          "Weight (Bare Tool)": "1.25 kg"
-        },
-        images: []
-      },
-    
-      // --- HAMMER DRILLS & SDS ---
-      {
-        slug: "dewalt-dcd709s2t-hammer-drill",
-        brand: "dewalt",
-        model: "DCD709S2T",
-        name: "20V MAX 1.5AH Compact Brushless Hammer Drill Driver",
-        price: 0,
-        categories: ["power-tools", "drills"],
-        subCategories: ["hammer-drills", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Voltage": "20V Max",
-          "Battery Capacity": "1.5 Ah",
-          "Max. Torque (Hard/Soft)": "65/26 Nm",
-          "No Load Speed": "0-450 / 1650 rpm",
-          "Beats Per Minute": "0-7650 / 28050 bpm",
-          "Chuck Capacity": "1.5-13 mm",
-          "Drilling Capacity [Wood/Metal/Masonry]": "30/13/13 mm",
-          "Weight (Bare Tool)": "1.2 kg"
-        },
-        images: []
-      },
-      {
-        slug: "dewalt-dcd996p2-hammer-drill",
-        brand: "dewalt",
-        model: "DCD996P2",
-        name: "20V MAX 5.0AH Premium Brushless Hammer Drill Driver",
-        price: 0,
-        categories: ["power-tools", "drills"],
-        subCategories: ["hammer-drills", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Voltage": "20V Max",
-          "Battery Capacity": "5.0 Ah",
-          "Max. Torque (Hard)": "95 Nm",
-          "Max. Torque (Soft)": "66 Nm",
-          "No Load Speed": "0-450/1300/2000 rpm",
-          "Beats Per Minute": "0-8600/25500/38250 bpm",
-          "Chuck Capacity": "1.5-13 mm",
-          "Weight (Bare Tool)": "2.2 kg"
-        },
-        images: []
-      },
-      {
-        slug: "dewalt-dch172m2-sds-hammer",
-        brand: "dewalt",
-        model: "DCH172M2",
-        name: "18V 4.0AH Compact Brushless Hammer",
-        price: 0,
-        categories: ["power-tools", "concrete-tools"],
-        subCategories: ["rotary-hammers", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Motor Type": "Brushless",
-          "Voltage": "18V",
-          "Battery Capacity": "4.0 Ah",
-          "Tool Holder": "SDS-Plus",
-          "Impact Energy": "1.4 J",
-          "No Load Speed": "0-1060 rpm",
-          "Weight (Bare Tool)": "1.78 kg"
-        },
-        images: []
-      },
-      {
-        slug: "dewalt-dch133m1-sds-hammer",
-        brand: "dewalt",
-        model: "DCH133M1",
-        name: "18V 4.0AH Brushless SDS Plus Hammer",
-        price: 0,
-        categories: ["power-tools", "concrete-tools"],
-        subCategories: ["rotary-hammers", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Motor Type": "Brushless",
-          "Voltage": "18V",
-          "Battery Capacity": "4.0 Ah",
-          "Tool Holder": "SDS-Plus",
-          "Max. Impact Energy": "2.8 J",
-          "No Load Speed": "0-1500 rpm",
-          "Weight (Bare Tool)": "2.3 kg"
-        },
-        images: []
-      },
-      {
-        slug: "dewalt-dch263p2-sds-hammer",
-        brand: "dewalt",
-        model: "DCH263P2",
-        name: "18V 5.0AH Brushless SDS Plus Hammer",
-        price: 0,
-        categories: ["power-tools", "concrete-tools"],
-        subCategories: ["rotary-hammers", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Motor Type": "Brushless",
-          "Voltage": "18V",
-          "Battery Capacity": "5.0 Ah",
-          "Single impact energy": "3.0 J",
-          "No Load Speed": "0–1165 min-1",
-          "Max. Drilling Capacity [Concrete/Wood/Metal]": "28/30/13 mm",
-          "Weight (Bare Tool)": "2.7kg"
-        },
-        images: []
-      },
-      {
-        slug: "dewalt-dcd716d2-hammer-drill",
-        brand: "dewalt",
-        model: "DCD716D2",
-        name: "12V MAX 2.0AH Hammer Drill Driver",
-        price: 0,
-        categories: ["power-tools", "drills"],
-        subCategories: ["hammer-drills", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Voltage": "12V Max",
-          "Battery Capacity": "2.0 Ah",
-          "Max. Torque (Hard / Soft)": "30 / 16 Nm",
-          "No Load Speed": "0–400 / 1500 rpm",
-          "Beats per Minute": "0-6000 / 22500 bpm",
-          "Chuck Capacity": "1-10 mm",
-          "Weight (Bare Tool)": "1.18 kg"
-        },
-        images: []
-      },
-      {
-        slug: "dewalt-dcd776d2-hammer-drill",
-        brand: "dewalt",
-        model: "DCD776D2",
-        name: "20V MAX 2.0AH Hammer Drill Driver",
-        price: 0,
-        categories: ["power-tools", "drills"],
-        subCategories: ["hammer-drills", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Voltage": "20V Max",
-          "Battery Capacity": "2.0 Ah",
-          "Max. Torque (Hard)": "42 Nm",
-          "Max. Torque (Soft)": "24 Nm",
-          "No Load Speed": "0-450 / 1800 rpm",
-          "Beats Per Minute": "0-7650 / 25500 bpm",
-          "Chuck Capacity": "1.5-13 mm",
-          "Weight (Bare Tool)": "1.7 kg"
-        },
-        images: []
-      },
-      {
-        slug: "dewalt-dcd7781d2-hammer-drill",
-        brand: "dewalt",
-        model: "DCD7781D2",
-        name: "20V MAX 2.0AH Compact Brushless Hammer Drill",
-        price: 0,
-        categories: ["power-tools", "drills"],
-        subCategories: ["hammer-drills", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Voltage": "20V Max",
-          "Battery Capacity": "2.0 Ah",
-          "Max Torque (Hard)": "65 Nm",
-          "Max Torque (Soft)": "26 Nm",
-          "No Load Speed": "0-500 / 1750 rpm",
-          "Beats per Minute": "0-8500 / 29750 bpm",
-          "Chuck Capacity": "1.5-13 mm",
-          "Weight (Bare Tool)": "1.18 kg"
-        },
-        images: []
-      },
-    
-      // --- GRINDERS ---
-      {
-        slug: "dewalt-dcg405p2-grinder",
-        brand: "dewalt",
-        model: "DCG405P2",
-        name: "18V 5.0AH Brushless Slide Mag Kit",
-        price: 0,
-        categories: ["power-tools", "metal-working"],
-        subCategories: ["angle-grinders", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Motor Type": "Brushless",
-          "Voltage": "18V",
-          "Battery Capacity": "5.0 Ah",
-          "Disc Diameter DCG405P2 (XJ)": "125 mm",
-          "Disc Diameter DCG405P2 (IN)": "100 mm",
-          "No Load Speed": "9000 rpm",
-          "Switch Type": "Slider",
-          "Weight (Bare Tool)": "1.74 kg"
-        },
-        images: []
-      },
-    
-      // --- 12V DRILL DRIVERS ---
-      {
-        slug: "dewalt-dcd700d2-drill-driver",
-        brand: "dewalt",
-        model: "DCD700D2",
-        name: "12V 2.0AH Compact Drill Driver",
-        price: 0,
-        categories: ["power-tools", "drills"],
-        subCategories: ["drill-drivers", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Voltage": "12V Max",
-          "Battery Capacity": "2.0 Ah",
-          "Max Torque (Hard/Soft)": "24/15 Nm",
-          "Chuck Capacity": "10 mm",
-          "Max Drilling Capacity (Wood)": "20 mm",
-          "Max Drilling Capacity (Metal)": "10 mm",
-          "Weight (Bare Tool)": "0.91 Kg"
-        },
-        images: []
-      },
-      {
-        slug: "dewalt-dcd710d2-drill-driver",
-        brand: "dewalt",
-        model: "DCD710D2",
-        name: "12V 2.0AH Cordless Drill Driver",
-        price: 0,
-        categories: ["power-tools", "drills"],
-        subCategories: ["drill-drivers", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Voltage": "12V Max",
-          "Battery Capacity": "2.0 Ah",
-          "Max Torque (Hard/Soft)": "24/15 Nm",
-          "No Load Speed": "0-400 / 1500 rpm",
-          "Chuck Capacity": "1-10 mm",
-          "Weight (Bare Tool)": "1.1 kg"
-        },
-        images: []
-      },
-      {
-        slug: "dewalt-dcd703d2-multi-head-drill",
-        brand: "dewalt",
-        model: "DCD703D2",
-        name: "12V 2.0AH Brushless Multi-Head Drill",
-        price: 0,
-        categories: ["power-tools", "drills"],
-        subCategories: ["drill-drivers", "cordless"],
-        featuredHighlights: [],
-        specs: {
-          "Motor Type": "Brushless",
-          "Voltage V": "12V Max",
-          "No Load Speed": "0-425 / 1500 rpm",
-          "Max Torque (Hard / Soft)": "57.5 / 25.5 Nm",
-          "Chuck Capacity": "10 mm",
-          "Max Drilling Capacity (Wood)": "20 mm",
-          "Weight (Bare Tool)": "0.73 Kg"
-        },
-        images: []
-      }
-    ],
+    products: [],
   },
   {
-    slug: "black-decker",
+    slug: "black-and-decker",
     name: "BLACK+DECKER",
-    tagline: "Agile solutions for maintenance teams.",
-    description:
-      "Lightweight, budget-friendly kits for facility managers, after-sales crews, and mobile service technicians.",
-    focus: "Maintenance crews",
-    brandColor: "#FF5A2C",
+    tagline: "Easy by Design.",
+    description: "User-friendly power tools, outdoor equipment, and cleaning solutions designed to make everyday home and automotive tasks easier.",
+    focus: "Home & DIY",
+    brandColor: "#FF5C00",
     heroImage: blackDeckerImage,
     products: [
+      // =========================================================
+      // CATEGORY: POWER TOOLS (ID: power-tools)
+      // Subcats used: outdoor, woodworking, saws
+      // =========================================================
+      
+      // --- OUTDOOR & GARDEN (Mowers, Trimmers, Blowers, Chainsaws) ---
       {
-        slug: "bd-compact-drill",
-        brand: "black-decker",
-        model: "BDCDD12KIT",
-        name: "12V Compact Drill Driver Kit",
-        price: 119,
-        categories: ["power-tools", "drills"],
-        subCategories: [],
-        featuredHighlights: [
-          "23-position clutch prevents stripping",
-          "Integrated bit storage",
-          "USB-C charging dock",
-        ],
-        specs: {
-          "Power / Voltage": "12V MAX",
-          Weight: "1.04 kg",
-          Capacity: "10 mm keyless chuck",
-          Runtime: "Up to 150 screws per charge",
-          Warranty: "2 years limited",
-          Accessories: "Carrying case, drill & driver bit set",
-        },
-        images: [
-          "https://images.unsplash.com/photo-1516245834210-c4c142787335?auto=format&fit=crop&w=1200&q=80",
-          "https://images.unsplash.com/photo-1476357471311-43c0db9fb2b4?auto=format&fit=crop&w=1200&q=80",
-          "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200&q=80",
-        ],
+        slug: "black-and-decker-becs2245-chainsaw",
+        brand: "black-and-decker",
+        model: "BECS2245",
+        name: "18\" Electric Chainsaw",
+        price: 0,
+        categories: ["power-tools"], // Matches tree ID
+        subCategories: ["saws", "outdoor"], // Matches tree IDs
+        featuredHighlights: [],
+        specs: { "Bar length": "45cm", "Power": "220-240V", "Weight": "4.3kg" },
+        images: []
       },
       {
-        slug: "bd-multitool",
-        brand: "black-decker",
-        model: "BDMT220C",
-        name: "Oscillating Multi-Tool Kit",
-        price: 149,
-        categories: ["power-tools", "multi-tool"],
-        subCategories: [],
-        featuredHighlights: [
-          "20,000 OPM variable speed",
-          "Tool-free blade changes",
-          "LED light for tight spaces",
-        ],
-        specs: {
-          "Power / Voltage": "4.5A / 220V",
-          Weight: "1.4 kg",
-          Capacity: "0-20,000 OPM",
-          Runtime: "Corded continuous",
-          Warranty: "2 years limited",
-          Accessories: "Wood blade, semi-circle blade, sanding pad",
-        },
-        images: [
-          "https://images.unsplash.com/photo-1459478309853-2c33a60058e7?auto=format&fit=crop&w=1200&q=80",
-          "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=1200&q=80",
-          "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&w=1200&q=80",
-        ],
+        slug: "black-and-decker-bemw471bh-mower",
+        brand: "black-and-decker",
+        model: "BEMW471BH",
+        name: "Rotary Lawn Mower 38cm",
+        price: 0,
+        categories: ["power-tools"],
+        subCategories: ["outdoor"],
+        featuredHighlights: [],
+        specs: { "Power": "1600W", "Weight": "14.7kg", "Type": "Rotary" },
+        images: []
       },
       {
-        slug: "bd-car-polisher",
-        brand: "black-decker",
-        model: "BDPW1200",
-        name: "Random Orbit Car Polisher",
-        price: 179,
-        categories: ["automotive-tools", "polishers"],
-        subCategories: [],
-        featuredHighlights: [
-          "3,000 RPM random orbit",
-          "D-handle plus side handle",
-          "6\" hook & loop pad",
-        ],
-        specs: {
-          "Power / Voltage": "1,200 W / 220V",
-          Weight: "2.7 kg",
-          Capacity: "6 in. pad",
-          Runtime: "Corded continuous",
-          Warranty: "2 years limited",
-          Accessories: "Polishing bonnet, microfiber cover",
-        },
-        images: [
-          "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=1200&q=80",
-          "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=1200&q=80",
-          "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=1200&q=80",
-        ],
+        slug: "black-and-decker-bemwh551-hover-mower",
+        brand: "black-and-decker",
+        model: "BEMWH551",
+        name: "Hover Mower",
+        price: 0,
+        categories: ["power-tools"],
+        subCategories: ["outdoor"],
+        featuredHighlights: [],
+        specs: { "Power": "1200W", "Weight": "2Kg", "Deck Size": "30cm" },
+        images: []
       },
       {
-        slug: "bd-wet-dry-vac",
-        brand: "black-decker",
-        model: "BDWDV18",
-        name: "18L Wet/Dry Vacuum",
-        price: 159,
-        categories: ["dust-management", "vacuums"],
-        subCategories: [],
-        featuredHighlights: [
-          "1,000 W motor with blower mode",
-          "On-board accessory caddy",
-          "Quick-drain plug",
-        ],
-        specs: {
-          Capacity: "18 L",
-          "Power / Voltage": "1,000 W / 220V",
-          Weight: "6 kg",
-          Runtime: "Continuous duty",
-          Warranty: "2 years limited",
-          Accessories: "Crevice nozzle, floor tool, foam filter",
-        },
-        images: [
-          "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1200&q=80",
-          "https://images.unsplash.com/photo-1475081698730-8dfc0be1d7c5?auto=format&fit=crop&w=1200&q=80",
-          "https://images.unsplash.com/photo-1477447763950-b649ad27c1d8?auto=format&fit=crop&w=1200&q=80",
-        ],
+        slug: "black-and-decker-bemw451bh-mower",
+        brand: "black-and-decker",
+        model: "BEMW451BH",
+        name: "Rotary Lawn Mower 32cm",
+        price: 0,
+        categories: ["power-tools"],
+        subCategories: ["outdoor"],
+        featuredHighlights: [],
+        specs: { "Power": "1200W", "Weight": "9.35kg", "Dimension": "63.7cm" },
+        images: []
       },
-    ],
-  },
-];
+      {
+        slug: "black-and-decker-bemw461bh-mower",
+        brand: "black-and-decker",
+        model: "BEMW461BH",
+        name: "Rotary Lawn Mower 34cm",
+        price: 0,
+        categories: ["power-tools"],
+        subCategories: ["outdoor"],
+        featuredHighlights: [],
+        specs: { "Power": "1400W", "Weight": "13.5kg", "Dimension": "75.2cm" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-gl350l-trimmer",
+        brand: "black-and-decker",
+        model: "GL350L",
+        name: "350W Grass String Trimmer",
+        price: 0,
+        categories: ["power-tools"],
+        subCategories: ["outdoor"],
+        featuredHighlights: [],
+        specs: { "Power": "350W", "Cutting Width": "23cm", "Weight": "1.6kg" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-stc1820epcf-trimmer",
+        brand: "black-and-decker",
+        model: "STC1820EPCF",
+        name: "18V Easy Feed String Trimmer",
+        price: 0,
+        categories: ["power-tools"],
+        subCategories: ["outdoor"],
+        featuredHighlights: [],
+        specs: { "Voltage": "18V", "Battery": "2.0Ah", "Feature": "Wheeled Edger" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-gtc18502pcf-hedge-trimmer",
+        brand: "black-and-decker",
+        model: "GTC18502PCF",
+        name: "18V Power Cut Hedge Trimmer",
+        price: 0,
+        categories: ["power-tools"],
+        subCategories: ["outdoor"],
+        featuredHighlights: [],
+        specs: { "Voltage": "18V", "Blade Length": "50cm", "Feature": "Anti-jam button" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-bcss20d1-shear-shrubber",
+        brand: "black-and-decker",
+        model: "BCSS20D1",
+        name: "18V 2.0Ah Shear Shrubber",
+        price: 0,
+        categories: ["power-tools"],
+        subCategories: ["outdoor"],
+        featuredHighlights: [],
+        specs: { "Voltage": "18V", "Blade Type": "Dual Action", "Usage": "Detail Trimming" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-gwc1820pcf-blower",
+        brand: "black-and-decker",
+        model: "GWC1820PCF",
+        name: "18V Power Command Boost Blower",
+        price: 0,
+        categories: ["power-tools"],
+        subCategories: ["outdoor"],
+        featuredHighlights: [],
+        specs: { "Voltage": "18V", "Max Speed": "209 Kmh", "Weight": "1.6kg" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-beblv300-blower-vac",
+        brand: "black-and-decker",
+        model: "BEBLV300-GB",
+        name: "3000W 3-in-1 Blower Vacuum",
+        price: 0,
+        categories: ["power-tools"],
+        subCategories: ["outdoor"],
+        featuredHighlights: [],
+        specs: { "Power": "3000W", "Capacity": "72L Backpack", "Functions": "Blow/Vac/Mulch" },
+        images: []
+      },
+      
+      // --- WOODWORKING (Sanders) ---
+      {
+        slug: "black-and-decker-bew210-sander",
+        brand: "black-and-decker",
+        model: "BEW210-QS",
+        name: "125 mm Orbital Sander",
+        price: 0,
+        categories: ["power-tools"],
+        subCategories: ["woodworking"],
+        featuredHighlights: [],
+        specs: { "Power": "230 W", "Speed": "13000 RPM", "Dust Bag": "Included" },
+        images: []
+      },
 
+      // =========================================================
+      // CATEGORY: CLEANING & FLOOR CARE (ID: cleaning)
+      // Subcats used: pressure-washers, vacuums, robot-vacs, steam
+      // =========================================================
+
+      // --- PRESSURE WASHERS ---
+      {
+        slug: "black-and-decker-bepw1600-pressure-washer",
+        brand: "black-and-decker",
+        model: "BEPW1600",
+        name: "1600 PSI 110 Bar Pressure Washer",
+        price: 0,
+        categories: ["cleaning"], // Matches tree ID
+        subCategories: ["pressure-washers"], // Matches tree ID
+        featuredHighlights: [],
+        specs: { "Pressure": "110 bar", "Flow": "396 l/h", "Power": "1600 W" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-bepw1750-pressure-washer",
+        brand: "black-and-decker",
+        model: "BEPW1750",
+        name: "1740 PSI 120 Bar Pressure Washer",
+        price: 0,
+        categories: ["cleaning"],
+        subCategories: ["pressure-washers"],
+        featuredHighlights: [],
+        specs: { "Pressure": "120 bar", "Flow": "408 l/h", "Power": "1500 W" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-bepw1800t-pressure-washer",
+        brand: "black-and-decker",
+        model: "BEPW1800T",
+        name: "1810 PSI 125 Bar Pressure Washer",
+        price: 0,
+        categories: ["cleaning"],
+        subCategories: ["pressure-washers"],
+        featuredHighlights: [],
+        specs: { "Pressure": "125 bar", "Flow": "408 l/h", "Power": "1700W" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-bepw2200-pressure-washer",
+        brand: "black-and-decker",
+        model: "BEPW2200",
+        name: "2175 PSI 150 Bar Pressure Washer",
+        price: 0,
+        categories: ["cleaning"],
+        subCategories: ["pressure-washers"],
+        featuredHighlights: [],
+        specs: { "Pressure": "150 bar", "Flow": "450 l/h", "Power": "2000W" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-bepw1600h-pressure-washer",
+        brand: "black-and-decker",
+        model: "BEPW1600H",
+        name: "1600 PSI 110 Bar Horizontal Washer",
+        price: 0,
+        categories: ["cleaning"],
+        subCategories: ["pressure-washers"],
+        featuredHighlights: [],
+        specs: { "Pressure": "110 bar", "Design": "Horizontal", "Power": "1300W" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-bepwb1740-pressure-washer",
+        brand: "black-and-decker",
+        model: "BEPWB1740",
+        name: "120 Bar Induction Pressure Washer",
+        price: 0,
+        categories: ["cleaning"],
+        subCategories: ["pressure-washers"],
+        featuredHighlights: [],
+        specs: { "Motor": "Brushless Induction", "Pressure": "120 Bar", "Power": "1500W" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-bepwb2400-pressure-washer",
+        brand: "black-and-decker",
+        model: "BEPWB2400",
+        name: "165 Bar Induction Pressure Washer",
+        price: 0,
+        categories: ["cleaning"],
+        subCategories: ["pressure-washers"],
+        featuredHighlights: [],
+        specs: { "Motor": "Brushless Induction", "Pressure": "165 Bar", "Power": "2100W" },
+        images: []
+      },
+      // Note: The Pressurized Sprayer is technically a cleaning tool
+      {
+        slug: "black-and-decker-bcpc20d1-pressurized-sprayer",
+        brand: "black-and-decker",
+        model: "BCPC20D1",
+        name: "18V 2.0Ah Pressurized Sprayer",
+        price: 0,
+        categories: ["cleaning"],
+        subCategories: ["pressure-washers"], // Mapped here for visibility
+        featuredHighlights: [],
+        specs: { "Voltage": "18V", "Pressure": "350 PSI", "Source": "Any fresh water" },
+        images: []
+      },
+
+      // --- VACUUMS (Wet/Dry, Floor, Handheld) ---
+      {
+        slug: "black-and-decker-wdbd10-vacuum",
+        brand: "black-and-decker",
+        model: "WDBD10",
+        name: "10L Wet & Dry Vacuum Cleaner",
+        price: 0,
+        categories: ["cleaning"],
+        subCategories: ["vacuums"], // Matches tree ID "vacuums"
+        featuredHighlights: [],
+        specs: { "Power": "1200W", "Capacity": "10L", "Type": "Wet & Dry" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-wdbd15-vacuum",
+        brand: "black-and-decker",
+        model: "WDBD15",
+        name: "15L Wet & Dry Vacuum Cleaner",
+        price: 0,
+        categories: ["cleaning"],
+        subCategories: ["vacuums"],
+        featuredHighlights: [],
+        specs: { "Power": "1400W", "Capacity": "15L", "Type": "Wet & Dry" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-wdbds30-vacuum",
+        brand: "black-and-decker",
+        model: "WDBDS30",
+        name: "30L Wet & Dry Vacuum Cleaner",
+        price: 0,
+        categories: ["cleaning"],
+        subCategories: ["vacuums"],
+        featuredHighlights: [],
+        specs: { "Power": "1600W", "Capacity": "30L", "Tank": "Stainless Steel" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-bdwd08-vacuum",
+        brand: "black-and-decker",
+        model: "BDWD08",
+        name: "8L Wet & Dry Vacuum Cleaner",
+        price: 0,
+        categories: ["cleaning"],
+        subCategories: ["vacuums"],
+        featuredHighlights: [],
+        specs: { "Power": "1000W", "Capacity": "8L", "Type": "Compact" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-vm1200-vacuum",
+        brand: "black-and-decker",
+        model: "VM1200",
+        name: "1000W Bagged Vacuum Cleaner",
+        price: 0,
+        categories: ["cleaning"],
+        subCategories: ["vacuums"],
+        featuredHighlights: [],
+        specs: { "Power": "1000W", "Type": "Bagged", "Capacity": "1.0L" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-vm1680-vacuum",
+        brand: "black-and-decker",
+        model: "VM1680",
+        name: "1600W Multicyclonic Bagless Vacuum",
+        price: 0,
+        categories: ["cleaning"],
+        subCategories: ["vacuums"],
+        featuredHighlights: [],
+        specs: { "Power": "1600W", "Type": "Bagless", "Capacity": "2.5L" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-wdc215wa-handheld",
+        brand: "black-and-decker",
+        model: "WDC215WA",
+        name: "7.2 V Wet & Dry Handheld Vacuum",
+        price: 0,
+        categories: ["cleaning"],
+        subCategories: ["vacuums"],
+        featuredHighlights: [],
+        specs: { "Power": "7.2V", "Type": "Handheld", "Function": "Wet & Dry" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-pv1820lf-handheld",
+        brand: "black-and-decker",
+        model: "PV1820LF",
+        name: "18V Pivot Handheld Vacuum",
+        price: 0,
+        categories: ["cleaning"],
+        subCategories: ["vacuums"],
+        featuredHighlights: [],
+        specs: { "Voltage": "18V", "Feature": "Pivot Nozzle", "Suction": "35AW" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-pd1420lp-handheld",
+        brand: "black-and-decker",
+        model: "PD1420LP",
+        name: "14.4V Dustbuster Flexi Handheld",
+        price: 0,
+        categories: ["cleaning"],
+        subCategories: ["vacuums"],
+        featuredHighlights: [],
+        specs: { "Voltage": "14.4V", "Feature": "Flexible Hose", "Suction": "20AW" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-wda320b-handheld",
+        brand: "black-and-decker",
+        model: "WDA320B",
+        name: "10.8V Wet & Dry Handheld Vacuum",
+        price: 0,
+        categories: ["cleaning"],
+        subCategories: ["vacuums"],
+        featuredHighlights: [],
+        specs: { "Voltage": "10.8V", "Type": "Wet & Dry", "Capacity": "240ml" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-nvb115jm-handheld",
+        brand: "black-and-decker",
+        model: "NVB115JM",
+        name: "3.6V EPP Dry Handheld Vacuum",
+        price: 0,
+        categories: ["cleaning"],
+        subCategories: ["vacuums"],
+        featuredHighlights: [],
+        specs: { "Voltage": "3.6V", "Type": "Dry Only", "Weight": "0.65kg" },
+        images: []
+      },
+
+      // --- ROBOT VACUUMS ---
+      {
+        slug: "black-and-decker-brva425b10-robot-vac",
+        brand: "black-and-decker",
+        model: "BRVA425B10",
+        name: "2-in-1 Robotic Vacuum and Mop",
+        price: 0,
+        categories: ["cleaning"],
+        subCategories: ["robot-vacs"], // Matches tree ID
+        featuredHighlights: [],
+        specs: { "Run time": "120 min", "Suction": "2150 Pa", "Height": "7.02cm" },
+        images: []
+      },
+
+      // --- STEAM MOPS ---
+      {
+        slug: "black-and-decker-fsm1605-steam-mop",
+        brand: "black-and-decker",
+        model: "FSM1605",
+        name: "1300W Steam Mop",
+        price: 0,
+        categories: ["cleaning"],
+        subCategories: ["steam"], // Matches tree ID "steam"
+        featuredHighlights: [],
+        specs: { "Power": "1300W", "Heat-up": "30 sec", "Kills": "99.9% germs" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-fsmh13e5-steam-mop",
+        brand: "black-and-decker",
+        model: "FSMH13E5",
+        name: "1300W 5-in-1 Steam Mop",
+        price: 0,
+        categories: ["cleaning"],
+        subCategories: ["steam"],
+        featuredHighlights: [],
+        specs: { "Power": "1300W", "Functions": "5-in-1", "Cord": "4m" },
+        images: []
+      },
+
+      // =========================================================
+      // CATEGORY: AUTOMOTIVE TOOLS (ID: automotive-tools)
+      // Subcats used: accessories, inflators, battery-care
+      // =========================================================
+
+      // --- AUTO VACUUMS (Mapped to Accessories to match your tree structure usually) ---
+      // OR mapped to "vacuums" in cleaning if you prefer. 
+      // Based on tree "Auto Accessories & Coolers", I'll place them here.
+      {
+        slug: "black-and-decker-adv1210-auto-vac",
+        brand: "black-and-decker",
+        model: "ADV1210",
+        name: "12V DC Cyclonic Auto Vac",
+        price: 0,
+        categories: ["automotive-tools"],
+        subCategories: ["accessories"],
+        featuredHighlights: [],
+        specs: { "Power": "12V DC", "Cord": "5m", "Action": "Cyclonic" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-pd1200av-auto-vac",
+        brand: "black-and-decker",
+        model: "PD1200AV",
+        name: "12V Dustbuster Flexi Auto Vac",
+        price: 0,
+        categories: ["automotive-tools"],
+        subCategories: ["accessories"],
+        featuredHighlights: [],
+        specs: { "Power": "12V DC", "Feature": "Flexible Hose", "Suction": "12.5AW" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-pv1200av-auto-vac",
+        brand: "black-and-decker",
+        model: "PV1200AV",
+        name: "12V Pivot Auto Vac",
+        price: 0,
+        categories: ["automotive-tools"],
+        subCategories: ["accessories"],
+        featuredHighlights: [],
+        specs: { "Power": "12V DC", "Feature": "Pivot Nozzle", "Suction": "12.5AW" },
+        images: []
+      },
+
+      // --- INFLATORS ---
+      {
+        slug: "black-and-decker-asi200-inflator",
+        brand: "black-and-decker",
+        model: "ASI200-XJ",
+        name: "12V Compressor with Digital Display",
+        price: 0,
+        categories: ["automotive-tools"],
+        subCategories: ["inflators"], // Matches tree ID
+        featuredHighlights: [],
+        specs: { "Voltage": "12V", "Max Pressure": "120 PSI", "Display": "Digital" },
+        images: []
+      },
+
+      // --- BATTERY CHARGERS ---
+      {
+        slug: "black-and-decker-bc12-charger",
+        brand: "black-and-decker",
+        model: "BC12",
+        name: "Smart Battery Charger 2/8/12Amp",
+        price: 0,
+        categories: ["automotive-tools"],
+        subCategories: ["battery-care"], // Matches tree ID "battery-care"
+        featuredHighlights: [],
+        specs: { "Amps": "2/8/12A", "Voltage": "12V", "Type": "Automatic/Manual" },
+        images: []
+      },
+
+      // --- COOLERS (Accessories) ---
+      {
+        slug: "black-and-decker-bdc8-cooler",
+        brand: "black-and-decker",
+        model: "BDC8",
+        name: "8L Cooler and Warmer",
+        price: 0,
+        categories: ["automotive-tools"],
+        subCategories: ["accessories"], // Matches tree ID "accessories"
+        featuredHighlights: [],
+        specs: { "Volume": "8L", "Power": "12V DC", "Function": "Cool & Warm" },
+        images: []
+      },
+      {
+        slug: "black-and-decker-bdc24l-cooler",
+        brand: "black-and-decker",
+        model: "BDC24L",
+        name: "24L Cooler and Warmer",
+        price: 0,
+        categories: ["automotive-tools"],
+        subCategories: ["accessories"],
+        featuredHighlights: [],
+        specs: { "Volume": "24L", "Power": "12V/220V", "Function": "Cool & Warm" },
+        images: []
+      },
+
+      // --- ACCESSORIES (Batteries) ---
+      {
+        slug: "black-and-decker-bl2018-battery",
+        brand: "black-and-decker",
+        model: "BL2018",
+        name: "2.0Ah 18V Lithium-Ion Battery",
+        price: 0,
+        categories: ["power-tools"], // Or "Accessories" if you have a top level for that
+        subCategories: [], // No specific subcat in tree for tool batteries, usually goes with tools
+        featuredHighlights: [],
+        specs: { "Voltage": "18V", "Capacity": "2.0Ah" },
+        images: []
+      },
+    ]
+  }
+];

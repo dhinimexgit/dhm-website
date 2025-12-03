@@ -25,8 +25,11 @@ const categoryTree = [
       { id: "drills", label: "Drills & Drivers" },
       { id: "impact", label: "Impact & Fastening" },
       { id: "rotary", label: "Rotary & Demolition" },
-      { id: "multi-tool", label: "Cutting & Multi-Tools" },
+      // NEW: For B+D Sanders and DeWalt Planers/Routers
+      { id: "woodworking", label: "Woodworking & Sanders" },
       { id: "saws", label: "Saws & Cutting" },
+      // NEW: Huge category for B+D Mowers, Trimmers, Blowers
+      { id: "outdoor", label: "Outdoor & Garden" },
     ],
   },
   {
@@ -35,21 +38,33 @@ const categoryTree = [
     children: [
       { id: "wrenches", label: "Impact Wrenches" },
       { id: "polishers", label: "Polishers & Finishers" },
-      { id: "mechanic-sets", label: "Mechanic Sets" },
+      // NEW: For B+D ASI200 Inflator
+      { id: "inflators", label: "Inflators & Compressors" },
+      // NEW: For B+D Smart Chargers
+      { id: "battery-care", label: "Battery Chargers" },
+      // NEW: For B+D Coolers and 12V Car Vacs
+      { id: "accessories", label: "Auto Accessories & Coolers" },
     ],
   },
   {
-    id: "dust-management",
-    label: "Dust Management",
+    // RENAMED: "Dust Management" is too industrial. 
+    // "Cleaning & Floor Care" covers DeWalt jobsite vacs AND B+D home appliances.
+    id: "cleaning", 
+    label: "Cleaning & Floor Care",
     children: [
-      { id: "vacuums", label: "Vacuums" },
-      { id: "extractors", label: "Silica Extractors" },
-      { id: "air-movers", label: "Air Movers" },
-      { id: "filters", label: "Filters & Bags" },
+      // NEW: For B+D BEPW series
+      { id: "pressure-washers", label: "Pressure Washers" },
+      // Merges DeWalt extractors with B+D Handheld/Stick vacs
+      { id: "vacuums", label: "Vacuums (Wet/Dry & Handheld)" },
+      // NEW: For B+D Robot Vacs
+      { id: "robot-vacs", label: "Robot Vacuums" },
+      // NEW: For B+D Steam Mops
+      { id: "steam", label: "Steam Mops" },
+      // Kept for DeWalt Silica safety tools
+      { id: "extractors", label: "Dust Extractors" },
     ],
   },
 ];
-
 // Helper to convert Firestore data to Product type (same as admin page)
 const docToProduct = (doc: any): Product => {
   const data = doc.data ? doc.data() : doc;
