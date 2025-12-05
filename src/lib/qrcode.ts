@@ -10,9 +10,10 @@ import {
   Timestamp,
   doc,
   updateDoc,
-  getDoc
+  getDoc,
+  deleteDoc
 } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL, deleteObject, listAll } from 'firebase/storage';
 
 // QR Code History Interface
 export interface QRCodeHistory {
@@ -266,16 +267,71 @@ export async function generateNewQRCode(generatedBy: string): Promise<{
   const sessionSalt = generateSessionSalt();
   const securityHash = generateSecurityHash(version, generatedBy, timestamp, sessionSalt);
   
-  // QR links to verification page - user must enter PIN to see the message
-  // This prevents easy copying since just scanning doesn't reveal the content
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://verify-product.netlify.app';
-  const qrContent = `${baseUrl}/verify-pin`;
+  // QR links to verification page
+  const qrContent = 'https://verify-product.netlify.app/';
   
   // Generate QR code with unique pattern based on version
   // Each version uses different error correction + mask pattern combination
   const qrCodeDataUrl = await generateQRCodeDataURL(qrContent, version);
   
   // Save to storage and database with full security tracking
+  const history = await saveQRCode(
+    qrCodeDataUrl,
+    qrContent,
+    generatedBy,
+    version,
+    securityHash,
+    sessionSalt
+  );
+  
+  return {
+    qrCodeDataUrl,
+    history
+  };
+}
+
+/**
+ * Reset all QR codes and generate a fresh v1
+ * This deletes all history from Firestore and Storage
+ */
+export async function resetAndGenerateQRCode(generatedBy: string): Promise<{
+  qrCodeDataUrl: string;
+  history: QRCodeHistory;
+}> {
+  // 1. Delete all documents from Firestore
+  const historyRef = collection(db, 'qr_codes');
+  const snapshot = await getDocs(historyRef);
+  
+  const deletePromises = snapshot.docs.map(docSnapshot => 
+    deleteDoc(doc(db, 'qr_codes', docSnapshot.id))
+  );
+  await Promise.all(deletePromises);
+  
+  // 2. Delete all files from Storage qr-codes folder
+  try {
+    const storageRef = ref(storage, 'qr-codes');
+    const fileList = await listAll(storageRef);
+    
+    const deleteFilePromises = fileList.items.map(fileRef => 
+      deleteObject(fileRef)
+    );
+    await Promise.all(deleteFilePromises);
+  } catch (err) {
+    // Folder might not exist yet, which is fine
+    console.log('No existing QR files to delete or error deleting:', err);
+  }
+  
+  // 3. Generate fresh v1 QR code
+  const version = 1;
+  const timestamp = Date.now();
+  const sessionSalt = generateSessionSalt();
+  const securityHash = generateSecurityHash(version, generatedBy, timestamp, sessionSalt);
+  
+  // QR links to verification page
+  const qrContent = 'https://verify-product.netlify.app/';
+  
+  const qrCodeDataUrl = await generateQRCodeDataURL(qrContent, version);
+  
   const history = await saveQRCode(
     qrCodeDataUrl,
     qrContent,
