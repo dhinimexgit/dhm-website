@@ -268,7 +268,7 @@ export async function generateNewQRCode(generatedBy: string): Promise<{
   
   // QR links to verification page - user must enter PIN to see the message
   // This prevents easy copying since just scanning doesn't reveal the content
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dhinimex.netlify.app';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://verify-product.netlify.app';
   const qrContent = `${baseUrl}/verify-pin`;
   
   // Generate QR code with unique pattern based on version
