@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { logout } from "@/app/actions/auth";
+import { logout, getCurrentUser, type UserRole } from "@/app/actions/auth";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -15,6 +15,11 @@ export default async function DashboardLayout({
   if (!session) {
     redirect("/dhm-myadmin/login");
   }
+
+  // Get current user info
+  const user = await getCurrentUser();
+  const userEmail = user?.email || 'Unknown';
+  const userRole = user?.role || 'admin';
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
@@ -45,9 +50,14 @@ export default async function DashboardLayout({
             </div>
 
             <div className="flex items-center gap-4">
-                 {/* <span className="hidden text-sm text-white/80 md:inline">
-                    Admin Session
-                 </span> */}
+                 <div className="hidden md:flex flex-col items-end text-right">
+                    <span className="text-sm font-medium text-white/90">
+                      {userEmail}
+                    </span>
+                    <span className="text-xs text-white/60 capitalize">
+                      {userRole === 'marketing' ? 'Marketing' : 'Administrator'}
+                    </span>
+                 </div>
                  <form action={logout}>
                     <button
                         type="submit"
@@ -60,8 +70,12 @@ export default async function DashboardLayout({
         </div>
       </div>
 
-      {/* Main Content */}
-      <main className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+      {/* Main Content - Pass user info via data attributes for client components */}
+      <main 
+        className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8"
+        data-user-email={userEmail}
+        data-user-role={userRole}
+      >
         {children}
       </main>
     </div>

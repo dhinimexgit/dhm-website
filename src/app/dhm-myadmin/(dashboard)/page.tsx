@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ProductUploadForm } from "@/components/admin/product-upload-form";
 import { ProductList } from "@/components/admin/product-list";
 import { PostList } from "@/components/admin/post-list";
@@ -11,13 +11,50 @@ import { CareerForm } from "@/components/admin/career-form";
 import { SeedButton } from "@/components/admin/seed-button";
 import { InquiryList } from "@/components/admin/inquiry-list";
 import { InquiryBadge } from "@/components/admin/inquiry-badge";
+import { QRCodeManager } from "@/components/admin/qr-code-manager";
+
+type TabType = "products" | "posts" | "careers" | "inquiries" | "qrcode";
+type UserRole = "admin" | "marketing";
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState<"products" | "posts" | "careers" | "inquiries">("products");
+  const [activeTab, setActiveTab] = useState<TabType>("products");
   const [view, setView] = useState<"list" | "form">("list");
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [editingPost, setEditingPost] = useState<any>(null);
   const [editingCareer, setEditingCareer] = useState<any>(null);
+  const [userEmail, setUserEmail] = useState<string>("");
+  const [userRole, setUserRole] = useState<UserRole>("admin");
+
+  // Get user info from parent element's data attributes
+  useEffect(() => {
+    const mainElement = document.querySelector('main[data-user-email]');
+    if (mainElement) {
+      const email = mainElement.getAttribute('data-user-email') || '';
+      const role = (mainElement.getAttribute('data-user-role') || 'admin') as UserRole;
+      setUserEmail(email);
+      setUserRole(role);
+      
+      // If marketing user, default to QR Code tab
+      if (role === 'marketing') {
+        setActiveTab('qrcode');
+      }
+    }
+  }, []);
+
+  // Check if a tab is accessible for the current user role
+  const isTabAccessible = (tab: TabType): boolean => {
+    if (userRole === 'admin') return true;
+    // Marketing users can only access QR Code tab
+    return tab === 'qrcode';
+  };
+
+  const handleTabClick = (tab: TabType) => {
+    if (!isTabAccessible(tab)) return;
+    setActiveTab(tab);
+    if (tab !== 'qrcode' && tab !== 'inquiries') {
+      setView("list");
+    }
+  };
 
   const handleProductEdit = (product: any) => {
     setEditingProduct(product);
@@ -59,37 +96,54 @@ export default function AdminDashboard() {
     setEditingCareer(null);
   };
 
+  // Tab button component with role-based styling
+  const TabButton = ({ 
+    tab, 
+    label, 
+    badge 
+  }: { 
+    tab: TabType; 
+    label: string; 
+    badge?: React.ReactNode;
+  }) => {
+    const accessible = isTabAccessible(tab);
+    const isActive = activeTab === tab;
+    
+    return (
+      <button 
+        onClick={() => handleTabClick(tab)}
+        disabled={!accessible}
+        className={`pb-4 text-sm font-medium transition relative ${
+          isActive 
+            ? "border-b-2 border-brand-red text-brand-navy" 
+            : accessible 
+              ? "text-slate-500 hover:text-slate-700" 
+              : "text-slate-300 cursor-not-allowed"
+        }`}
+        title={!accessible ? "Access restricted for your role" : undefined}
+      >
+        <span className="flex items-center gap-2">
+          {label}
+          {badge}
+          {!accessible && (
+            <svg className="h-3.5 w-3.5 text-slate-300" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+            </svg>
+          )}
+        </span>
+      </button>
+    );
+  };
+
   return (
     <div className="space-y-8">
       {/* Main Tab Navigation */}
-      <div className="flex gap-8 border-b border-slate-200">
-        <button 
-            onClick={() => { setActiveTab("products"); setView("list"); }}
-            className={`pb-4 text-sm font-medium transition ${activeTab === "products" ? "border-b-2 border-brand-red text-brand-navy" : "text-slate-500 hover:text-slate-700"}`}
-        >
-            Products
-        </button>
-        <button 
-            onClick={() => { setActiveTab("posts"); setView("list"); }}
-            className={`pb-4 text-sm font-medium transition ${activeTab === "posts" ? "border-b-2 border-brand-red text-brand-navy" : "text-slate-500 hover:text-slate-700"}`}
-        >
-            Blog Posts
-        </button>
-        <button 
-            onClick={() => { setActiveTab("careers"); setView("list"); }}
-            className={`pb-4 text-sm font-medium transition ${activeTab === "careers" ? "border-b-2 border-brand-red text-brand-navy" : "text-slate-500 hover:text-slate-700"}`}
-        >
-            Careers
-        </button>
-        <button 
-            onClick={() => setActiveTab("inquiries")}
-            className={`relative pb-4 text-sm font-medium transition ${activeTab === "inquiries" ? "border-b-2 border-brand-red text-brand-navy" : "text-slate-500 hover:text-slate-700"}`}
-        >
-            <span className="flex items-center gap-2">
-              Inquiries
-              <InquiryBadge />
-            </span>
-        </button>
+      <div className="flex gap-8 border-b border-slate-200 overflow-x-auto">
+        <TabButton tab="products" label="Products" />
+        <TabButton tab="posts" label="Blog Posts" />
+        <TabButton tab="careers" label="Careers" />
+        <TabButton tab="inquiries" label="Inquiries" badge={isTabAccessible('inquiries') ? <InquiryBadge /> : undefined} />
+        <TabButton tab="qrcode" label="QR Code" />
       </div>
 
       {activeTab === "products" ? (
@@ -252,7 +306,7 @@ export default function AdminDashboard() {
                 </div>
             )}
         </>
-      ) : (
+      ) : activeTab === "inquiries" ? (
           <>
             <div className="flex flex-col gap-6 border-b border-slate-200 pb-8 sm:flex-row sm:items-end sm:justify-between">
                 <div className="space-y-2">
@@ -269,7 +323,9 @@ export default function AdminDashboard() {
             </div>
             <InquiryList />
           </>
-      )}
+      ) : activeTab === "qrcode" ? (
+          <QRCodeManager userEmail={userEmail} />
+      ) : null}
     </div>
   );
 }
