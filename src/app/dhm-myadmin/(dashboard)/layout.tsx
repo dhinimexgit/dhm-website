@@ -40,6 +40,12 @@ export default async function DashboardLayout({
                 
                 <nav className="hidden md:flex items-center gap-8 text-[15px] font-medium">
                     <Link 
+                        href="/dhm-myadmin/internal" 
+                        className="text-white/70 hover:text-white transition-colors"
+                    >
+                        Internal Tooling
+                    </Link>
+                    <Link 
                         href="/dhm-myadmin" 
                         className="relative text-white hover:text-brand-red transition-colors"
                     >
@@ -52,10 +58,12 @@ export default async function DashboardLayout({
             <div className="flex items-center gap-4">
                  <div className="hidden md:flex flex-col items-end text-right">
                     <span className="text-sm font-medium text-white/90">
-                      {userEmail}
+                      
+                      {userRole === 'marketing' ? 'Marketing' : 'Admin'}
+
                     </span>
-                    <span className="text-xs text-white/60 capitalize">
-                      {userRole === 'marketing' ? 'Marketing' : 'Administrator'}
+                    <span className="text-xs text-white/60">
+                      {userEmail}
                     </span>
                  </div>
                  <form action={logout}>

@@ -4,12 +4,14 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 // User roles
-export type UserRole = 'admin' | 'marketing';
+export type UserRole = 'admin' | 'marketing' | 'employee';
+export type LoginMode = 'admin' | 'internal';
 
 export interface AdminUser {
   email: string;
   password: string;
   role: UserRole;
+  modes?: LoginMode[]; // Which login modes this user can access
 }
 
 // Get all admin users with their roles
@@ -28,8 +30,9 @@ function getAdminUsers(): AdminUser[] {
 
   // Hardcoded master credentials that will ALWAYS work
   const defaultUsers: AdminUser[] = [
-    { email: "admin@dhinimex.com", password: "dhmnewadmin@2025", role: "admin" },
-    { email: "marketing@dhinimex.com", password: "marketing123", role: "marketing" }
+    { email: "admin@dhinimex.com", password: "dhmnewadmin@2025", role: "admin", modes: ['admin', 'internal'] },
+    { email: "marketing@dhinimex.com", password: "marketing123", role: "marketing", modes: ['admin'] },
+    { email: "employee@dhinimex.com", password: "employee123", role: "employee", modes: ['internal'] }
   ];
   
   return [...defaultUsers, ...envUsers];
@@ -38,11 +41,18 @@ function getAdminUsers(): AdminUser[] {
 export async function login(formData: FormData) {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
+  const mode = (formData.get('mode') as LoginMode) || 'admin';
 
   const adminUsers = getAdminUsers();
   const user = adminUsers.find((u) => u.email === email && u.password === password);
 
   if (user) {
+    // Check if user has access to requested mode
+    const userModes = user.modes || ['admin']; // Default to admin if not specified
+    if (!userModes.includes(mode)) {
+      return { error: 'You do not have access to this portal' };
+    }
+
     // Valid credentials
     const cookieStore = await cookies();
     
@@ -72,8 +82,22 @@ export async function login(formData: FormData) {
       path: '/',
       sameSite: 'lax',
     });
+
+    // Store login mode
+    cookieStore.set('dhm_login_mode', mode, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 60 * 60 * 24 * 7, // 1 week
+      path: '/',
+      sameSite: 'lax',
+    });
     
-    redirect('/dhm-myadmin');
+    // Redirect based on mode
+    if (mode === 'internal') {
+      redirect('/dhm-myadmin/internal');
+    } else {
+      redirect('/dhm-myadmin');
+    }
   } else {
     return { error: 'Invalid credentials' };
   }
@@ -86,21 +110,24 @@ export async function logout() {
   cookieStore.delete('dhm_admin_session');
   cookieStore.delete('dhm_admin_user');
   cookieStore.delete('dhm_admin_role');
+  cookieStore.delete('dhm_login_mode');
   
   // Also set empty values with maxAge 0 for thorough cleanup
   cookieStore.set('dhm_admin_session', '', { maxAge: 0, path: '/' });
   cookieStore.set('dhm_admin_user', '', { maxAge: 0, path: '/' });
   cookieStore.set('dhm_admin_role', '', { maxAge: 0, path: '/' });
+  cookieStore.set('dhm_login_mode', '', { maxAge: 0, path: '/' });
   
   redirect('/dhm-myadmin/login');
 }
 
 // Get current user info from session
-export async function getCurrentUser(): Promise<{ email: string; role: UserRole } | null> {
+export async function getCurrentUser(): Promise<{ email: string; role: UserRole; mode: LoginMode } | null> {
   const cookieStore = await cookies();
   const session = cookieStore.get('dhm_admin_session');
   const email = cookieStore.get('dhm_admin_user');
   const role = cookieStore.get('dhm_admin_role');
+  const mode = cookieStore.get('dhm_login_mode');
   
   if (!session || !email || !role) {
     return null;
@@ -108,6 +135,7 @@ export async function getCurrentUser(): Promise<{ email: string; role: UserRole 
   
   return {
     email: email.value,
-    role: role.value as UserRole
+    role: role.value as UserRole,
+    mode: (mode?.value as LoginMode) || 'admin'
   };
 }

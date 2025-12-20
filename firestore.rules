@@ -43,6 +43,32 @@ service cloud.firestore {
       allow read: if true;
       allow write: if true;
     }
+
+    // Booking system collections
+    match /rooms/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /room_bookings/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /cars/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /car_bookings/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /booking_notifications/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
   }
 }
 

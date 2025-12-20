@@ -1,13 +1,16 @@
 'use client';
 
 import { login } from "@/app/actions/auth";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 
 const initialState = {
   error: "",
 };
 
+export type LoginMode = 'admin' | 'internal';
+
 export function LoginForm() {
+  const [mode, setMode] = useState<LoginMode>('internal');
   const [state, formAction, isPending] = useActionState(async (_: any, formData: FormData) => {
       return await login(formData);
   }, initialState);
@@ -24,14 +27,43 @@ export function LoginForm() {
           <div className="flex flex-col items-center mb-8">
             {/* Logo can be re-enabled here if needed */}
             <h2 className="mt-4 text-2xl font-bold tracking-tight text-slate-800">
-              Admin Dashboard
+              {mode === 'admin' ? 'Admin Dashboard' : 'Internal Tooling'}
             </h2>
             <p className="mt-2 text-sm text-slate-500">
-              Sign in to manage content
+              {mode === 'admin' ? 'Sign in to manage content' : 'Book rooms and cars for your team'}
             </p>
           </div>
 
+          {/* Mode Toggle */}
+          <div className="mb-6 relative">
+            <div className="flex rounded-full bg-gradient-to-r from-[#2E388C] to-[#3d4ba3] p-1 shadow-lg">
+              <button
+                type="button"
+                onClick={() => setMode('internal')}
+                className={`flex-1 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-300 ${
+                  mode === 'internal'
+                    ? 'bg-white text-[#2E388C] shadow-md'
+                    : 'text-white hover:bg-white/10'
+                }`}
+              >
+                Internal Tooling
+              </button>
+              <button
+                type="button"
+                onClick={() => setMode('admin')}
+                className={`flex-1 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-300 ${
+                  mode === 'admin'
+                    ? 'bg-white text-[#2E388C] shadow-md'
+                    : 'text-white hover:bg-white/10'
+                }`}
+              >
+                Admin
+              </button>
+            </div>
+          </div>
+
           <form action={formAction} className="space-y-6">
+            <input type="hidden" name="mode" value={mode} />
             <div className="space-y-5">
               <div>
                 <label htmlFor="email-address" className="block text-sm font-medium leading-6 text-slate-700 mb-1.5">
