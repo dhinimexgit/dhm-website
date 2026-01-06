@@ -17,10 +17,14 @@
   --font-sans: var(--font-dhinimex-sans);
 }
 
+:root {
+  --font-sans: var(--font-dhinimex-sans);
+}
+
 body {
   background: var(--page-background);
   color: var(--brand-ink);
-  font-family: var(--font-dhinimex-sans), "Inter", Arial, sans-serif;
+  font-family: var(--font-sans, var(--font-dhinimex-sans), "Inter", Arial, sans-serif);
   overflow-x: hidden;
 }
 
