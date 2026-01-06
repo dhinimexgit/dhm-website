@@ -2,12 +2,62 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 type Props = {
   isVisible: boolean;
 };
 
 export function StickyHeader({ isVisible }: Props) {
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchPanelRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchOpen(false);
+      setSearchQuery("");
+    }
+  };
+
+  // Focus input when search opens
+  useEffect(() => {
+    if (searchOpen && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [searchOpen]);
+
+  // Close on escape key or click outside
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSearchOpen(false);
+        setSearchQuery("");
+      }
+    };
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchPanelRef.current && !searchPanelRef.current.contains(e.target as Node)) {
+        setSearchOpen(false);
+        setSearchQuery("");
+      }
+    };
+
+    if (searchOpen) {
+      document.addEventListener("keydown", handleEscape);
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("keydown", handleEscape);
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [searchOpen]);
+
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 hidden lg:block transition-all duration-300 ${
@@ -66,7 +116,12 @@ export function StickyHeader({ isVisible }: Props) {
               </Link>
             </nav>
             <div className="flex items-center gap-3">
-              <button className="p-2 text-white/80 transition hover:text-white" aria-label="Search">
+              {/* Search Button */}
+              <button 
+                onClick={() => setSearchOpen(!searchOpen)}
+                className={`p-2 transition ${searchOpen ? "text-white" : "text-white/80 hover:text-white"}`}
+                aria-label="Search"
+              >
                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
@@ -87,7 +142,53 @@ export function StickyHeader({ isVisible }: Props) {
           </div>
         </div>
       </div>
+
+      {/* Search Dropdown - Absolutely positioned below navbar */}
+      {searchOpen && (
+        <div 
+          ref={searchPanelRef}
+          className="absolute left-0 right-0 top-full bg-white shadow-2xl"
+        >
+          <div className="mx-auto max-w-7xl px-8 py-4">
+            <form onSubmit={handleSearchSubmit} className="flex items-center gap-4">
+              <div className="relative flex-1">
+                <svg 
+                  className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search for services, products, careers..."
+                  className="w-full rounded-lg bg-slate-100 py-3 pl-12 pr-4 text-slate-900 placeholder-slate-500 outline-none transition focus:bg-white focus:shadow-inner"
+                />
+              </div>
+              <button
+                type="submit"
+                className="rounded-lg bg-brand-navy px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-navy/90"
+              >
+                Search
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchOpen(false);
+                  setSearchQuery("");
+                }}
+                className="rounded-lg px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
+              >
+                Cancel
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
-

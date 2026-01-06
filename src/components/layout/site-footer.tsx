@@ -79,9 +79,9 @@ export function SiteFooter() {
       <div className="absolute -right-40 bottom-20 h-80 w-80 rounded-full bg-white/5 blur-3xl" />
 
       <div className="relative mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-20">
-        <div className="grid gap-12 lg:grid-cols-6">
+        <div className="grid gap-12 lg:grid-cols-12">
           {/* Company Info */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-4">
             <Link href="/" className="inline-block">
               <Image
                 src="/logo-dhinimex.png"
@@ -91,18 +91,17 @@ export function SiteFooter() {
                 className="h-auto w-[160px]"
               />
             </Link>
-            <p className="mt-6 text-sm leading-relaxed text-white/70">
+            <p className="mt-6 max-w-sm text-sm leading-relaxed text-white/70">
               {aboutCopy}
             </p>
           </div>
 
           {/* Our Businesses - Split into 2 columns (5 left, 4 right) */}
-          <div className="lg:col-span-2">
+          {/* <div className="lg:col-span-2">
             <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-white">
               Our Businesses
             </h3>
             <div className="grid grid-cols-2 gap-y-3">
-              {/* Left column - first 5 items */}
               <ul className="space-y-3">
                 {ourBusinesses.slice(0, 5).map((item) => (
                   <li key={item.label}>
@@ -116,7 +115,6 @@ export function SiteFooter() {
                   </li>
                 ))}
               </ul>
-              {/* Right column - remaining 4 items */}
               <ul className="space-y-3">
                 {ourBusinesses.slice(5).map((item) => (
                   <li key={item.label}>
@@ -131,21 +129,21 @@ export function SiteFooter() {
                 ))}
               </ul>
             </div>
-          </div>
+          </div> */}
 
           {/* Quick Links */}
-          <div>
+          <div className="lg:col-span-3 lg:pl-4">
             <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-white">
               Quick Links
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-2.5">
               {quickLinks.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="group inline-flex items-center gap-2 text-sm text-white/70 transition hover:text-brand-red"
+                    className="group inline-flex items-center gap-2.5 text-sm text-white/70 transition-colors hover:text-brand-red"
                   >
-                    <span className="h-1 w-1 rounded-full bg-brand-red transition-transform group-hover:scale-150" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-brand-red transition-transform group-hover:scale-125" />
                     {item.label}
                   </Link>
                 </li>
@@ -154,12 +152,12 @@ export function SiteFooter() {
           </div>
 
           {/* Contact Info */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-5 lg:pl-4">
             <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-white">
               Contact Info
             </h3>
 
-            <ul className="space-y-4 text-sm text-white/70">
+            <ul className="space-y-3.5 text-sm text-white/70">
               <li className="flex items-start gap-3">
                 <svg className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -188,14 +186,14 @@ export function SiteFooter() {
             </ul>
 
             {/* Social Media Icons */}
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-6 flex flex-wrap gap-2.5">
               {contactInfo.social.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-all hover:bg-brand-red hover:scale-110"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition-all hover:bg-brand-red hover:scale-110"
                   aria-label={link.label}
                 >
                   {socialIconMap[link.label] ?? (
