@@ -23,7 +23,7 @@ export function SiteHeader() {
   const isHomePage = pathname === "/";
   const isAboutPage = pathname === "/about";
   const isServicesPage = pathname.startsWith("/services");
-  const isBusinessPage = pathname.startsWith("/business/");
+  const isBusinessPage = pathname === "/business" || pathname.startsWith("/business/");
   const isCareersPage = pathname === "/careers" || pathname.startsWith("/careers/");
   const isBlogPage = pathname === "/blog" || pathname.startsWith("/blog/");
   const isContactPage = pathname === "/contact-us";
@@ -60,7 +60,7 @@ export function SiteHeader() {
     { label: t.nav.about, href: "/about" },
     {
       label: t.nav.business,
-      href: "#",
+      href: "/business",
       dropdown: [
         { label: t.business.trading, href: "/business/trading" },
         { label: t.business.manufacturing, href: "/business/manufacturing" },
@@ -127,18 +127,18 @@ export function SiteHeader() {
         <nav className="hidden items-center gap-5 md:flex">
           {navItems.map((item) => {
             if (item.dropdown) {
-              const isActive = item.dropdown.some((link) => pathname.startsWith(link.href));
+              const isActive = pathname === item.href || item.dropdown.some((link) => pathname.startsWith(link.href));
               return (
                 <div key={item.label} className="group relative text-sm font-semibold">
-                  <button
-                    type="button"
+                  <Link
+                    href={item.href}
                     className={`flex items-center gap-1 transition ${
                       isActive ? "text-brand-red" : "text-white/80 group-hover:text-brand-red"
                     }`}
                   >
                     {item.label}
                     <span className="text-[10px]">▼</span>
-                  </button>
+                  </Link>
                   <span
                     className={`absolute -bottom-1 left-0 h-0.5 bg-brand-red transition-all duration-300 ${
                       isActive ? "w-full" : "w-0 group-hover:w-full"
@@ -278,21 +278,35 @@ export function SiteHeader() {
 
             {navItems.map((item) => {
               if (item.dropdown) {
-                const isBusinessActive = pathname.startsWith("/business/");
+                const isBusinessActive = pathname === item.href || pathname.startsWith("/business/");
                 return (
                   <div key={item.label}>
-                    <button
-                      type="button"
-                      className={`flex w-full items-center justify-between py-3 text-left text-sm font-semibold ${
-                        isBusinessActive ? "text-brand-red" : "text-white/80"
-                      }`}
-                      onClick={() => setMobileDropdownOpen(mobileDropdownOpen === item.label ? null : item.label)}
-                    >
-                      {item.label}
-                      <span className={`text-xs transition-transform ${mobileDropdownOpen === item.label ? 'rotate-180' : ''}`}>
-                        ▼
-                      </span>
-                    </button>
+                    <div className="flex w-full items-center justify-between py-3">
+                      {/* Clickable label that navigates to the page */}
+                      <Link
+                        href={item.href}
+                        className={`flex-1 text-left text-sm font-semibold ${
+                          isBusinessActive ? "text-brand-red" : "text-white/80"
+                        }`}
+                        onClick={() => {
+                          setIsOpen(false);
+                          setMobileDropdownOpen(null);
+                        }}
+                      >
+                        {item.label}
+                      </Link>
+                      {/* Arrow button that toggles dropdown */}
+                      <button
+                        type="button"
+                        className="p-2 text-white/80"
+                        onClick={() => setMobileDropdownOpen(mobileDropdownOpen === item.label ? null : item.label)}
+                        aria-label="Toggle submenu"
+                      >
+                        <span className={`text-xs transition-transform inline-block ${mobileDropdownOpen === item.label ? 'rotate-180' : ''}`}>
+                          ▼
+                        </span>
+                      </button>
+                    </div>
                     {mobileDropdownOpen === item.label && (
                       <div className="ml-4 flex flex-col border-l-2 border-white/20 pl-4">
                         {item.dropdown.map((subItem) => {

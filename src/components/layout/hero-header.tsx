@@ -23,7 +23,7 @@ export function HeroHeader() {
     { label: t.nav.about, href: "/about", caret: false },
     { 
       label: t.nav.business,
-      href: "#", 
+      href: "/business", 
       caret: true,
       dropdown: [
         { label: t.business.trading, href: "/business/trading" },
@@ -85,14 +85,13 @@ export function HeroHeader() {
           >
             {item.dropdown ? (
               (() => {
-                const isActive = item.dropdown.some((link) => pathname.startsWith(link.href));
+                const isActive = pathname === item.href || item.dropdown.some((link) => pathname.startsWith(link.href));
                 return (
-                  <button
-                    type="button"
+                  <Link
+                    href={item.href}
                     className={`group relative flex items-center gap-1.5 whitespace-nowrap transition-colors ${
                       isActive ? "text-brand-red" : "hover:text-brand-red"
                     }`}
-                    onClick={(e) => e.preventDefault()}
                   >
                     {item.label}
                     {item.caret && <span className="text-[11px]">▼</span>}
@@ -101,7 +100,7 @@ export function HeroHeader() {
                         isActive ? "w-full" : "w-0 group-hover:w-full"
                       }`}
                     />
-                  </button>
+                  </Link>
                 );
               })()
             ) : (
