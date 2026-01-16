@@ -286,7 +286,7 @@ export const services: Service[] = [
   },
   {
     slug: "electrical-and-heavy-equipment-supply",
-    name: "Electrical and Heavy Equipment Supply Services",
+    name: "Electrical and Heavy Equipment Supply",
     description:
       "We provide a comprehensive range of high-quality electrical and heavy equipment solutions to support power distribution, installation, and maintenance projects.",
     details:
