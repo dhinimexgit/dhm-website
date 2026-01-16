@@ -24,9 +24,55 @@ export default function ServicesPage() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [quoteModalOpen, setQuoteModalOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    service: "",
+    message: "",
+  });
+  const [formSubmitting, setFormSubmitting] = useState(false);
+  const [formSuccess, setFormSuccess] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchPanelRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormSubmitting(true);
+    // Simulate form submission
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setFormSubmitting(false);
+    setFormSuccess(true);
+    setTimeout(() => {
+      setQuoteModalOpen(false);
+      setFormSuccess(false);
+      setFormData({ name: "", phone: "", service: "", message: "" });
+    }, 2000);
+  };
+
+  // Close modal on escape or click outside
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setQuoteModalOpen(false);
+    };
+    const handleClickOutside = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        setQuoteModalOpen(false);
+      }
+    };
+    if (quoteModalOpen) {
+      document.addEventListener("keydown", handleEscape);
+      document.addEventListener("mousedown", handleClickOutside);
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.removeEventListener("keydown", handleEscape);
+        document.removeEventListener("mousedown", handleClickOutside);
+        document.body.style.overflow = "";
+      };
+    }
+  }, [quoteModalOpen]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -217,16 +263,16 @@ export default function ServicesPage() {
                   From manufacturing and installation to testing and utilities provision, 
                   Dhinimex delivers end-to-end EPC services backed by 21+ years of expertise.
                 </p>
-                <div className="flex flex-wrap gap-4 pt-4">
-                  <Link
-                    href="/contact-us"
+                <div className="flex flex-wrap gap-4 pt-4 mb-6">
+                  <button
+                    onClick={() => setQuoteModalOpen(true)}
                     className="inline-flex items-center gap-2 rounded-lg bg-brand-red px-8 py-4 text-sm font-semibold text-white shadow-lg transition hover:bg-[#c91e21]"
                   >
                     Request a Quote
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
-                  </Link>
+                  </button>
                   <Link
                     href="#services"
                     className="inline-flex items-center gap-2 rounded-lg border-2 border-white/30 bg-white/10 px-8 py-4 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
@@ -276,7 +322,7 @@ export default function ServicesPage() {
         </section> */}
 
         {/* Services Grid Section */}
-        <section id="services" className="full-bleed bg-slate-50/50 py-20">
+        <section id="services" className="full-bleed bg-slate-50/50 py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="space-y-6">
           <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
@@ -511,15 +557,15 @@ export default function ServicesPage() {
               design, and execute your infrastructure project with excellence.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
-              <Link
-                href="/contact-us"
+              <button
+                onClick={() => setQuoteModalOpen(true)}
                 className="inline-flex items-center gap-2 rounded-lg bg-white px-8 py-4 text-sm font-semibold text-brand-navy shadow-lg transition hover:bg-slate-100"
               >
                 Get a Free Quote
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
-              </Link>
+              </button>
               <Link
                 href="tel:011753940"
                 className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-8 py-4 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
@@ -533,6 +579,169 @@ export default function ServicesPage() {
           </div>
         </section>
       </div>
+
+      {/* Quote Request Modal */}
+      {quoteModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 px-4 py-8 backdrop-blur-sm">
+          <div
+            ref={modalRef}
+            className="relative my-auto w-full max-w-lg rounded-2xl bg-white shadow-2xl"
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setQuoteModalOpen(false)}
+              className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition hover:bg-slate-200 hover:text-slate-700"
+            >
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {/* Modal Content */}
+            <div className="p-8">
+              {formSuccess ? (
+                <div className="py-12 text-center">
+                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+                    <svg className="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <h3 className="mb-2 text-xl font-bold text-brand-navy">Thank You!</h3>
+                  <p className="text-slate-600">We&apos;ll get back to you within one business day.</p>
+                </div>
+              ) : (
+                <>
+                  <div className="mb-6">
+                    <h3 className="text-2xl font-bold text-brand-navy">How can we help?</h3>
+                    <p className="mt-1 text-sm text-slate-500">
+                      Fill out the form below and we&apos;ll get back to you shortly.
+                    </p>
+                  </div>
+
+                  <form onSubmit={handleFormSubmit} className="space-y-5">
+                    {/* Name */}
+                    <div>
+                      <label className="mb-1.5 block text-sm font-medium text-brand-navy">
+                        Full Name
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        placeholder="Your name"
+                        className="w-full rounded-lg border border-slate-200 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-brand-navy focus:ring-1 focus:ring-brand-navy"
+                      />
+                    </div>
+
+                    {/* Phone */}
+                    <div>
+                      <label className="mb-1.5 block text-sm font-medium text-brand-navy">
+                        Phone
+                      </label>
+                      <div className="flex">
+                        <span className="inline-flex items-center rounded-l-lg border border-r-0 border-slate-200 bg-slate-50 px-3 text-sm text-slate-600">
+                          +855
+                        </span>
+                        <input
+                          type="tel"
+                          required
+                          value={formData.phone}
+                          onChange={(e) => {
+                            // Only allow digits, remove leading 0, and format as XX XXX XXXX
+                            let digits = e.target.value.replace(/\D/g, "");
+                            // Remove leading zero if present
+                            if (digits.startsWith("0")) {
+                              digits = digits.slice(1);
+                            }
+                            digits = digits.slice(0, 9);
+                            let formatted = "";
+                            if (digits.length > 0) {
+                              formatted = digits.slice(0, 2);
+                              if (digits.length > 2) {
+                                formatted += " " + digits.slice(2, 5);
+                              }
+                              if (digits.length > 5) {
+                                formatted += " " + digits.slice(5, 9);
+                              }
+                            }
+                            setFormData({ ...formData, phone: formatted });
+                          }}
+                          placeholder="12 345 6789"
+                          className="w-full rounded-r-lg border border-slate-200 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-brand-navy focus:ring-1 focus:ring-brand-navy"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Service Category */}
+                    <div>
+                      <label className="mb-1.5 block text-sm font-medium text-brand-navy">
+                        Service Category
+                      </label>
+                      <div className="relative">
+                        <select
+                          required
+                          value={formData.service}
+                          onChange={(e) => setFormData({ ...formData, service: e.target.value })}
+                          className="w-full cursor-pointer appearance-none rounded-lg border border-slate-200 bg-white py-3 pl-4 pr-10 text-sm text-slate-900 outline-none transition focus:border-brand-navy focus:ring-1 focus:ring-brand-navy"
+                        >
+                          <option value="" disabled>Select a service</option>
+                          {services.map((service) => (
+                            <option key={service.slug} value={service.slug}>
+                              {service.name}
+                            </option>
+                          ))}
+                          <option value="other">Other / General Inquiry</option>
+                        </select>
+                        {/* Dropdown Arrow */}
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                          <svg className="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Message */}
+                    <div>
+                      <label className="mb-1.5 block text-sm font-medium text-brand-navy">
+                        How can we help?
+                      </label>
+                      <textarea
+                        required
+                        rows={4}
+                        value={formData.message}
+                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                        placeholder="Tell us about your project or inquiry..."
+                        className="w-full resize-none rounded-lg border border-slate-200 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-brand-navy focus:ring-1 focus:ring-brand-navy"
+                      />
+                    </div>
+
+                    {/* Submit Button */}
+                    <button
+                      type="submit"
+                      disabled={formSubmitting}
+                      className="w-full rounded-lg bg-brand-navy py-3.5 text-sm font-semibold text-white transition hover:bg-brand-navy/90 disabled:cursor-not-allowed disabled:opacity-70"
+                    >
+                      {formSubmitting ? (
+                        <span className="inline-flex items-center gap-2">
+                          <svg className="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                          </svg>
+                          Sending...
+                        </span>
+                      ) : (
+                        "Send Message"
+                      )}
+                    </button>
+                  </form>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
