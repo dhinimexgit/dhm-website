@@ -1,18 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Montserrat, Inter } from "next/font/google";
+import { Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 import { ConditionalHeader } from "@/components/layout/conditional-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 
-const display = Montserrat({
+const sourceSans = Source_Sans_3({
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-dhinimex-display",
-});
-
-const sans = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-dhinimex-sans",
 });
 
@@ -52,7 +46,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="overflow-x-hidden">
       <body
-        className={`${display.variable} ${sans.variable} overflow-x-hidden antialiased`}
+        className={`${sourceSans.variable} overflow-x-hidden antialiased`}
       >
         <LanguageProvider>
           <ConditionalHeader />

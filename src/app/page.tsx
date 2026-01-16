@@ -5,7 +5,6 @@ import { StatsSection } from "@/components/home/stats-section";
 import { BusinessPortfolio } from "@/components/home/business-portfolio";
 import { ServicesCarousel } from "@/components/home/services-carousel";
 import { BlogSection } from "@/components/home/blog-section";
-import { FontSwitcher } from "@/components/font-switcher";
 
 export default async function Home() {
   const latestPosts = await getLatestPosts(3);
@@ -26,9 +25,6 @@ export default async function Home() {
       
       {/* Blog Section */}
       <BlogSection posts={latestPosts} />
-      
-      {/* Font Switcher - Temporary Feature */}
-      <FontSwitcher />
     </div>
   );
 }
