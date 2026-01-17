@@ -3,11 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { db } from "@/lib/firebase";
 import { collection, onSnapshot } from "firebase/firestore";
 import type { ProductCategory, Product } from "@/data/site-content";
 import { productCategories } from "@/data/site-content";
-import { HeroHeader } from "@/components/layout/hero-header";
+import { StickyHeader } from "@/components/home/sticky-header";
 import { ContactModal } from "@/components/contact-modal";
 
 const sortOptions = [
@@ -107,6 +108,14 @@ export function ProductsPageClient({ initialBrand }: Props) {
   // Real-time products from Firebase (like admin page)
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // Sticky header scroll state
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchPanelRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   // Fetch products client-side using onSnapshot (real-time, no caching)
   useEffect(() => {
@@ -121,6 +130,57 @@ export function ProductsPageClient({ initialBrand }: Props) {
 
     return () => unsubscribe();
   }, []);
+
+  // Scroll detection for sticky header
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 100);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Focus input when search opens
+  useEffect(() => {
+    if (searchOpen && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [searchOpen]);
+
+  // Close on escape key or click outside
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSearchOpen(false);
+        setSearchQuery("");
+      }
+    };
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchPanelRef.current && !searchPanelRef.current.contains(e.target as Node)) {
+        setSearchOpen(false);
+        setSearchQuery("");
+      }
+    };
+
+    if (searchOpen) {
+      document.addEventListener("keydown", handleEscape);
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("keydown", handleEscape);
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [searchOpen]);
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchOpen(false);
+      setSearchQuery("");
+    }
+  };
 
   // Build categories structure from products
   const categories = useMemo(() => {
@@ -344,54 +404,98 @@ export function ProductsPageClient({ initialBrand }: Props) {
   // Show loading state while fetching products
   if (loading) {
     return (
-      <div className="space-y-6 pb-20">
-        <HeroSection onViewAll={handleViewAllClick} />
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-center py-20">
-            <div className="text-center">
-              <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-brand-navy border-r-transparent"></div>
-              <p className="mt-4 text-slate-500">Loading products...</p>
+      <>
+        <StickyHeader isVisible={isScrolled} />
+        <div className="pb-20">
+          <HeroSection 
+            onViewAll={handleViewAllClick}
+            searchOpen={searchOpen}
+            setSearchOpen={setSearchOpen}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            searchInputRef={searchInputRef}
+            searchPanelRef={searchPanelRef}
+            handleSearchSubmit={handleSearchSubmit}
+          />
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-center py-20">
+              <div className="text-center">
+                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-brand-navy border-r-transparent"></div>
+                <p className="mt-4 text-slate-500">Loading products...</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="space-y-6 pb-20">
-      <HeroSection onViewAll={handleViewAllClick} />
+    <>
+      <StickyHeader isVisible={isScrolled} />
+      <div className="pb-20">
+        <HeroSection 
+          onViewAll={handleViewAllClick}
+          searchOpen={searchOpen}
+          setSearchOpen={setSearchOpen}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          searchInputRef={searchInputRef}
+          searchPanelRef={searchPanelRef}
+          handleSearchSubmit={handleSearchSubmit}
+        />
       
       {viewMode === 'landing' ? (
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <>
           {/* Shop by Categories */}
-          <section className="py-10 text-center">
-            <h3 className="text-[16px] font-bold uppercase tracking-widest text-brand-red">Shop by Categories</h3>
-            <p className="mt-2 text-sm text-slate-500">Check out all the feature categories for simple product discovery.</p>
+          <section className="full-bleed bg-slate-50/50 py-16">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <div className="mb-10 text-center">
+                <p className="mb-3 inline-flex items-center justify-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
+                  <span className="h-5 w-1 bg-brand-red" />
+                  Browse Collection
+                </p>
+                <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
+                  Shop by Categories
+                </h2>
+                <p className="mx-auto max-w-2xl text-base text-slate-500">
+                  Explore our comprehensive range of professional tools organized by category for easy discovery.
+                </p>
+              </div>
             
-            <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
-              {displayCategories.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => handleCategoryClick(cat.id)}
-                  className="group flex flex-col items-center justify-center gap-4 rounded-xl border border-slate-200 bg-slate-50/50 py-8 transition-all hover:border-[#2E388C] hover:bg-white hover:shadow-md"
-                >
-                  <CategoryIcon id={cat.id} className="h-10 w-10 text-slate-400 transition-colors group-hover:text-brand-navy" />
-                  <div className="text-center">
-                    <span className="block text-sm font-semibold text-slate-700 group-hover:text-brand-navy">{cat.label}</span>
-                    {/* <span className="text-xs text-slate-400">({cat.count})</span> */}
-                  </div>
-                </button>
-              ))}
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
+                {displayCategories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => handleCategoryClick(cat.id)}
+                    className="group flex flex-col items-center justify-center gap-4 rounded-xl border border-slate-200 bg-white py-8 transition-all hover:border-brand-navy hover:shadow-lg"
+                  >
+                    <CategoryIcon id={cat.id} className="h-10 w-10 text-slate-400 transition-colors group-hover:text-brand-navy" />
+                    <div className="text-center">
+                      <span className="block text-sm font-semibold text-slate-700 group-hover:text-brand-navy">{cat.label}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
           </section>
 
           {/* Featured Products */}
-          <section className="py-2 text-center">
-            <h3 className="text-[16px] font-bold uppercase tracking-widest text-brand-red">Featured Products</h3>
-            <p className="mt-2 text-sm text-slate-500">Check out our collection of the top Featured Products that encourage conversion.</p>
+          <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+            <div className="mb-10 text-center">
+              <p className="mb-3 inline-flex items-center justify-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
+                <span className="h-5 w-1 bg-brand-red" />
+                Top Picks
+              </p>
+              <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
+                Featured Products
+              </h2>
+              <p className="mx-auto max-w-2xl text-base text-slate-500">
+                Discover our most popular tools and equipment, handpicked for quality and performance.
+              </p>
+            </div>
             
-            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
               {featuredProducts.map((product) => (
                 <FeaturedProductCard key={product.slug} product={product} categorySlug={categories.find(c => c.slug === product.brand)?.slug || 'stanley'} />
               ))}
@@ -399,34 +503,51 @@ export function ProductsPageClient({ initialBrand }: Props) {
           </section>
 
           {/* Brand Banners */}
-          <section className="grid gap-6 py-10 md:grid-cols-3">
-            {categories.map((brand) => (
-               <div key={brand.slug} className="group relative aspect-[3/4] overflow-hidden rounded-2xl">
-                 <Image 
-                   src={brand.heroImage} 
-                   alt={brand.name}
-                   fill
-                   className="object-cover transition-transform duration-700 group-hover:scale-110"
-                 />
-                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                 <div className="absolute bottom-0 left-0 w-full p-8 text-center">
-                   <div className="mb-4 h-12 w-full relative flex items-center justify-center">
-                      <h3 className="text-2xl font-bold text-white">{brand.name}</h3>
-                   </div>
-                   <Link
-                      href={`/products/${brand.slug}`}
-                      className="inline-block rounded-full bg-brand-navy px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-brand-navy"
-                   >
-                     Shop Brand
-                   </Link>
-                 </div>
-               </div>
-            ))}
+          <section className="full-bleed bg-slate-50/50 py-16">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <div className="mb-10 text-center">
+                <p className="mb-3 inline-flex items-center justify-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
+                  <span className="h-5 w-1 bg-brand-red" />
+                  Our Partners
+                </p>
+                <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
+                  Shop by Brand
+                </h2>
+                <p className="mx-auto max-w-2xl text-base text-slate-500">
+                  We proudly partner with industry-leading brands to bring you the best tools and equipment.
+                </p>
+              </div>
+
+              <div className="grid gap-6 md:grid-cols-3">
+                {categories.map((brand) => (
+                  <div key={brand.slug} className="group relative aspect-[3/4] overflow-hidden rounded-2xl">
+                    <Image 
+                      src={brand.heroImage} 
+                      alt={brand.name}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    <div className="absolute bottom-0 left-0 w-full p-8 text-center">
+                      <div className="mb-4 h-12 w-full relative flex items-center justify-center">
+                        <h3 className="text-2xl font-bold text-white">{brand.name}</h3>
+                      </div>
+                      <Link
+                        href={`/products/${brand.slug}`}
+                        className="inline-block rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-brand-navy"
+                      >
+                        Shop Brand
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </section>
-        </div>
+        </>
       ) : (
         // PLP Layout (Sidebar + Grid)
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
           <nav className="mb-8 flex items-center gap-2 text-sm text-slate-600">
             <Link href="/" className="hover:text-brand-red">Home</Link>
@@ -655,9 +776,50 @@ export function ProductsPageClient({ initialBrand }: Props) {
               )}
             </main>
           </div>
-        </div>
+        </section>
       )}
-    </div>
+
+      {/* CTA Section */}
+      <section className="full-bleed relative overflow-hidden bg-brand-navy py-24">
+        {/* Subtle Background Pattern */}
+        <div className="absolute inset-0">
+          <div className="absolute -left-32 -top-32 h-64 w-64 rounded-full bg-white/5" />
+          <div className="absolute -bottom-16 -right-16 h-80 w-80 rounded-full bg-white/5" />
+          <div className="absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[0.02]" />
+        </div>
+
+        <div className="relative mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
+          <h2 className="mb-5 text-3xl font-bold text-white lg:text-4xl">
+            Need Help Finding the Right Product?
+          </h2>
+          <p className="mb-10 text-lg leading-relaxed text-white/70">
+            Our team of experts is here to help you select the perfect tools and equipment 
+            for your project. Contact us for personalized recommendations and bulk pricing.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Link
+              href="/contact-us"
+              className="inline-flex items-center gap-2 rounded-lg bg-white px-8 py-4 text-sm font-semibold text-brand-navy shadow-lg transition hover:bg-slate-100"
+            >
+              Contact Our Team
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+            <Link
+              href="tel:011753940"
+              className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-8 py-4 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              Call: 011 753 940
+            </Link>
+          </div>
+        </div>
+      </section>
+      </div>
+    </>
   );
 }
 
@@ -804,39 +966,185 @@ function CategoryIcon({ id, className }: { id: string, className?: string }) {
   );
 }
 
-function HeroSection({ onViewAll }: { onViewAll: () => void }) {
-  // Using the hero image from page.tsx for consistency as requested
-  const heroImage = "/products.png";
+type HeroSectionProps = {
+  onViewAll: () => void;
+  searchOpen: boolean;
+  setSearchOpen: (open: boolean) => void;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  searchInputRef: React.RefObject<HTMLInputElement | null>;
+  searchPanelRef: React.RefObject<HTMLDivElement | null>;
+  handleSearchSubmit: (e: React.FormEvent) => void;
+};
+
+function HeroSection({ 
+  onViewAll,
+  searchOpen,
+  setSearchOpen,
+  searchQuery,
+  setSearchQuery,
+  searchInputRef,
+  searchPanelRef,
+  handleSearchSubmit
+}: HeroSectionProps) {
+  const heroImage = "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=1920&q=80";
 
   return (
-    <section className="full-bleed relative overflow-hidden">
-      <div className="relative h-[500px] w-full sm:h-[600px] lg:h-[700px]">
+    <section className="relative min-h-[70vh] overflow-hidden lg:min-h-[80vh]">
+      {/* Background Image with Overlay */}
+      <div className="absolute inset-0 z-0">
         <Image
           src={heroImage}
-          alt=""
+          alt="Dhinimex Products"
           fill
           priority
           className="object-cover"
           sizes="100vw"
         />
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
       </div>
-      <div className="absolute left-1/2 top-20 z-20 hidden w-[min(95%,1300px)] -translate-x-1/2 lg:flex">
-        <HeroHeader />
+
+      {/* Header - Desktop Only */}
+      <div className="relative z-30 hidden lg:block">
+        <div className="mx-auto max-w-7xl px-8 pt-6">
+          <div className="relative rounded-xl bg-brand-navy shadow-lg">
+            <div className="flex items-center justify-between px-8 py-4">
+              <Link href="/" className="flex-shrink-0">
+                <Image
+                  src="/logo-dhinimex.png"
+                  alt="Dhinimex logo"
+                  width={160}
+                  height={46}
+                  priority
+                  className="h-auto w-[160px]"
+                />
+              </Link>
+              <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
+                <Link href="/about" className="group relative transition hover:text-white/80">
+                  About Us
+                  <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                </Link>
+                <div className="group relative">
+                  <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">
+                    Business Portfolio
+                    <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </Link>
+                  <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                  <div className="invisible absolute left-0 top-full mt-3 w-56 rounded-xl bg-white p-2 opacity-0 shadow-2xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
+                    <Link href="/business/trading" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Trading</Link>
+                    <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Manufacturing</Link>
+                    <Link href="/business/electricity" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Electricity Distribution</Link>
+                    <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Water Supply</Link>
+                    <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Scientific</Link>
+                  </div>
+                </div>
+                <Link href="/services" className="group relative transition hover:text-white/80">
+                  Services
+                  <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                </Link>
+                {/* Products - Active */}
+                <Link href="/products" className="group relative transition hover:text-white/80">
+                  Products
+                  <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" />
+                </Link>
+                <Link href="/blog" className="group relative transition hover:text-white/80">
+                  Blog
+                  <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                </Link>
+                <Link href="/careers" className="group relative transition hover:text-white/80">
+                  Careers
+                  <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                </Link>
+              </nav>
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => setSearchOpen(!searchOpen)}
+                  className={`p-2 transition ${searchOpen ? "text-white" : "text-white/80 hover:text-white"}`}
+                  aria-label="Search"
+                >
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </button>
+                <span className="text-white/30">|</span>
+                <Link href="mailto:info@dhinimex.com.kh" className="p-2 text-white/80 transition hover:text-white" aria-label="Email">
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </Link>
+                <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">
+                  Contact Us
+                </Link>
+              </div>
+            </div>
+
+            {/* Search Dropdown */}
+            {searchOpen && (
+              <div
+                ref={searchPanelRef}
+                className="absolute left-0 right-0 top-full z-50 mt-2 rounded-xl bg-white shadow-2xl"
+              >
+                <div className="px-8 py-4">
+                  <form onSubmit={handleSearchSubmit} className="flex items-center gap-4">
+                    <div className="relative flex-1">
+                      <svg className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                      <input
+                        ref={searchInputRef}
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Search for services, products, careers..."
+                        className="w-full rounded-lg bg-slate-100 py-3 pl-12 pr-4 text-slate-900 placeholder-slate-500 outline-none transition focus:bg-white focus:shadow-inner"
+                      />
+                    </div>
+                    <button type="submit" className="rounded-lg bg-brand-navy px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-navy/90">Search</button>
+                    <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} className="rounded-lg px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100">Cancel</button>
+                  </form>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-6 px-6 text-center text-white">
-        <p className="text-sm font-semibold uppercase tracking-[0.35em] text-white/80">
-          Products
-        </p>
-        <h1 className="max-w-7xl text-4xl font-semibold leading-tight sm:text-5xl lg:text-[56px] lg:leading-tight">
-          Shop industrial-grade Tools Curated for Utilities and Services
-        </h1>
-        <div className="flex flex-wrap justify-center gap-4">
-          <button
-            onClick={onViewAll}
-            className="mt-2 bg-[#2E388C] px-9 py-3 text-[15px] font-semibold text-[#ffffff] transition hover:bg-[#252f6e]"
-          >
-            View All Products
-          </button>
+
+      {/* Hero Content */}
+      <div className="relative z-20 mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="flex min-h-[calc(70vh-120px)] items-center py-16 lg:min-h-[calc(80vh-120px)] lg:py-0 lg:pt-4">
+          <div className="max-w-2xl space-y-6">
+            <p className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-white/90">
+              <span className="h-px w-8 bg-brand-red" />
+              Our Products
+            </p>
+            <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-[64px] xl:leading-[1.1]">
+              Industrial-Grade Tools for Utilities & Services
+            </h1>
+            <p className="max-w-xl text-lg text-white/80">
+              Discover our curated selection of professional tools and equipment from leading brands, 
+              designed for construction, electrical work, and industrial applications.
+            </p>
+            <div className="flex flex-wrap gap-4 pt-4 mb-6">
+              <button
+                onClick={onViewAll}
+                className="inline-flex items-center gap-2 rounded-lg bg-brand-red px-8 py-4 text-sm font-semibold text-white shadow-lg transition hover:bg-[#c91e21]"
+              >
+                View All Products
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </button>
+              <Link
+                href="/contact-us"
+                className="inline-flex items-center gap-2 rounded-lg border-2 border-white/30 bg-white/10 px-8 py-4 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+              >
+                Request Quote
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </section>
