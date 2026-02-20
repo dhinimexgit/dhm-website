@@ -54,7 +54,7 @@ export function SeedPostsFromWPButton() {
   const [status, setStatus] = useState("");
 
   const handleSeed = async () => {
-    if (!confirm("This will fetch blog posts from https://www.dhinimex.com/blog/ and populate Firebase. Existing posts with the same slug will be updated. Continue?")) {
+    if (!confirm("This will fetch news posts from https://www.dhinimex.com/news/ and populate Firebase. Existing posts with the same slug will be updated. Continue?")) {
       return;
     }
 

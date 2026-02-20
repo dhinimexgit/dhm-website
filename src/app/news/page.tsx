@@ -151,14 +151,14 @@ export default function BlogPage() {
     <>
       <StickyHeader isVisible={isScrolled} />
 
-      <div className="pb-20">
+      <div>
         {/* Hero Banner Section */}
         <section className="relative min-h-[60vh] overflow-hidden lg:min-h-[70vh]">
           {/* Background Image with Overlay */}
           <div className="absolute inset-0 z-0">
             <Image
               src={heroImage}
-              alt="Dhinimex Blog"
+              alt="Dhinimex News"
               fill
               priority
               className="object-cover"
@@ -175,7 +175,7 @@ export default function BlogPage() {
                 <div className="flex items-center justify-between px-8 py-4">
                   <Link href="/" className="flex-shrink-0">
                     <Image
-                      src="/logo-dhinimex.png"
+                      src="/brands/DHM-WHITE.png"
                       alt="Dhinimex logo"
                       width={160}
                       height={46}
@@ -212,9 +212,9 @@ export default function BlogPage() {
                       Products
                       <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
-                    {/* Blog - Active */}
-                    <Link href="/blog" className="group relative transition hover:text-white/80">
-                      Blog
+                    {/* News - Active */}
+                    <Link href="/news" className="group relative transition hover:text-white/80">
+                      News
                       <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" />
                     </Link>
                     <Link href="/careers" className="group relative transition hover:text-white/80">
@@ -280,11 +280,11 @@ export default function BlogPage() {
             <div className="flex min-h-[calc(60vh-120px)] items-end pb-16 pt-24 lg:min-h-[calc(70vh-120px)] lg:pb-20 lg:pt-0 lg:pt-4">
               <div className="max-w-3xl space-y-6">
                 <p className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-white/90">
-                  <span className="h-px w-8 bg-brand-red" />
-                  Blog
+                  
+                  News
                 </p>
                 <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-[64px] xl:leading-[1.1]">
-                  Stories From the Teams Powering Cambodia&apos;s Growth
+                  News and Insights From Our Group
                 </h1>
                 <p className="max-w-xl text-lg text-white/80">
                   Discover insights, project highlights, and company culture from across our business units.
@@ -320,7 +320,7 @@ export default function BlogPage() {
               {/* Featured Post - Large Card */}
               {featuredPost && (
                 <section>
-                  <Link href={`/blog/${featuredPost.slug}`} className="group block">
+                  <Link href={`/news/${featuredPost.slug}`} className="group block">
                     <article className="grid gap-8 lg:grid-cols-2 lg:gap-12">
                       {/* Image */}
                       <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-slate-100 lg:aspect-[4/3]">
@@ -375,7 +375,7 @@ export default function BlogPage() {
                   </div>
                   <div className="grid gap-8 md:grid-cols-2">
                     {secondaryPosts.map((post, index) => (
-                      <Link key={post.slug} href={`/blog/${post.slug}`} className="group block">
+                      <Link key={post.slug} href={`/news/${post.slug}`} className="group block">
                         <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
                           <div className="relative aspect-[16/9] overflow-hidden">
                             <Image
@@ -427,7 +427,7 @@ export default function BlogPage() {
                   </div>
                   <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     {remainingPosts.map((post, index) => (
-                      <Link key={post.slug} href={`/blog/${post.slug}`} className="group block">
+                      <Link key={post.slug} href={`/news/${post.slug}`} className="group block">
                         <article className="h-full overflow-hidden rounded-xl border border-slate-100 bg-white transition-all duration-300 hover:border-slate-200 hover:shadow-lg">
                           <div className="relative aspect-[16/10] overflow-hidden">
                             <Image

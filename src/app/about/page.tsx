@@ -162,7 +162,7 @@ export default function AboutPage() {
     <>
       <StickyHeader isVisible={isScrolled} />
       
-      <div className="pb-20">
+      <div>
         {/* Hero Banner Section - Following home-hero.tsx pattern */}
         <section className="relative min-h-[70vh] overflow-hidden lg:min-h-[80vh]">
           {/* Background Image with Overlay */}
@@ -186,7 +186,7 @@ export default function AboutPage() {
                 <div className="flex items-center justify-between px-8 py-4">
                   <Link href="/" className="flex-shrink-0">
                     <Image
-                      src="/logo-dhinimex.png"
+                      src="/brands/DHM-WHITE.png"
                       alt="Dhinimex logo"
                       width={160}
                       height={46}
@@ -224,8 +224,8 @@ export default function AboutPage() {
                       Products
                       <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
-                    <Link href="/blog" className="group relative transition hover:text-white/80">
-                      Blog
+                    <Link href="/news" className="group relative transition hover:text-white/80">
+                      News
                       <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
                     <Link href="/careers" className="group relative transition hover:text-white/80">
@@ -314,7 +314,7 @@ export default function AboutPage() {
             <div className="flex min-h-[calc(70vh-120px)] items-center py-16 lg:min-h-[calc(80vh-120px)] lg:py-0">
               <div className="max-w-2xl space-y-6">
                 <p className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-white/90">
-                  <span className="h-px w-8 bg-brand-red" />
+                  
                   About Us
                 </p>
                 <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-[64px] xl:leading-[1.1]">
@@ -332,7 +332,7 @@ export default function AboutPage() {
             <div className="space-y-8">
               <div>
                 <p className="mb-2 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
-                  <span className="h-5 w-1 bg-brand-red" />
+                  
                   Who We Are
                 </p>
                 <h2 className="text-3xl font-bold text-brand-navy lg:text-4xl">
@@ -376,7 +376,7 @@ export default function AboutPage() {
                   <p className="text-sm leading-relaxed text-slate-600">
                     With a legacy dating back to 2003, we have demonstrated leadership.
                   </p>
-                  <Link href="/blog" className="inline-flex items-center gap-1 text-sm font-semibold text-brand-red hover:underline">
+                  <Link href="/news" className="inline-flex items-center gap-1 text-sm font-semibold text-brand-red hover:underline">
                     Explore Here <span>→</span>
                   </Link>
                 </div>
@@ -414,7 +414,7 @@ export default function AboutPage() {
               <div className="grid items-center gap-8 lg:grid-cols-12">
                 <div className="lg:col-span-4">
                   <p className="mb-2 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
-                    <span className="h-5 w-1 bg-brand-red" />
+                    
                     Our Vision
                   </p>
                   <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
@@ -463,7 +463,7 @@ export default function AboutPage() {
                 </div>
                 <div className="order-1 lg:order-2 lg:col-span-4">
                   <p className="mb-2 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
-                    <span className="h-5 w-1 bg-brand-red" />
+                    
                     Our Mission
                   </p>
                   <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
@@ -482,7 +482,7 @@ export default function AboutPage() {
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
             {/* Image */}
             <div className="relative">
-              <div className="relative aspect-square overflow-hidden rounded-2xl bg-gradient-to-br from-brand-navy/5 to-brand-red/5 shadow-lg lg:aspect-[3/4]">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-gradient-to-br from-brand-navy/5 to-brand-red/5 shadow-lg lg:aspect-[1/1]">
                 <Image
                   src={placeholderImages.coreValues}
                   alt="Core Values - Team Collaboration"
@@ -496,7 +496,7 @@ export default function AboutPage() {
             <div className="space-y-6">
               <div>
                 <p className="mb-2 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
-                  <span className="h-5 w-1 bg-brand-red" />
+                  
                   What We Stand For
                 </p>
                 <h2 className="text-3xl font-bold text-brand-navy lg:text-4xl">
@@ -563,7 +563,7 @@ export default function AboutPage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mb-12 text-center">
               <p className="mb-2 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
-                <span className="h-5 w-1 bg-brand-red" />
+                
                 Our Leadership
               </p>
               <h2 className="text-3xl font-bold text-brand-navy lg:text-4xl">
@@ -619,7 +619,7 @@ export default function AboutPage() {
         <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <div className="mb-12 text-center">
             <p className="mb-2 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
-              <span className="h-5 w-1 bg-brand-red" />
+              
               Directors
             </p>
             <h2 className="text-3xl font-bold text-brand-navy lg:text-4xl">

@@ -36,15 +36,15 @@ export function BlogSection({ posts }: Props) {
         <div className="mb-12 flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
           <div>
             <p className="mb-4 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-brand-red">
-              <span className="h-px w-8 bg-brand-red" />
+              
               Latest Insights
             </p>
             <h2 className="text-3xl font-bold text-brand-navy sm:text-4xl lg:text-5xl">
-              From Our Blog
+              From Our News
             </h2>
           </div>
           <Link
-            href="/blog"
+            href="/news"
             className="group inline-flex items-center gap-2 rounded-full border border-brand-navy px-6 py-3 text-sm font-semibold text-brand-navy transition-all hover:bg-brand-navy hover:text-white"
           >
             View all articles
@@ -54,7 +54,7 @@ export function BlogSection({ posts }: Props) {
           </Link>
         </div>
 
-        {/* Blog Cards Grid - JP Morgan Style */}
+        {/* News Cards Grid - JP Morgan Style */}
         <div className="grid gap-8 md:grid-cols-3">
           {posts.map((post, index) => (
             <article
@@ -90,7 +90,7 @@ export function BlogSection({ posts }: Props) {
 
                 {/* Title */}
                 <h3 className="mb-3 text-xl font-bold leading-snug text-brand-navy transition-colors group-hover:text-brand-red">
-                  <Link href={`/blog/${post.slug}`} className="hover:underline">
+                  <Link href={`/news/${post.slug}`} className="hover:underline">
                     {post.title}
                   </Link>
                 </h3>
@@ -111,7 +111,7 @@ export function BlogSection({ posts }: Props) {
 
                 {/* Read More Link */}
                 <Link
-                  href={`/blog/${post.slug}`}
+                  href={`/news/${post.slug}`}
                   className="group/link inline-flex items-center gap-2 text-sm font-semibold text-brand-red transition hover:gap-3"
                 >
                   Read more

@@ -69,7 +69,7 @@ export function StickyHeader({ isVisible }: Props) {
           <div className="flex items-center justify-between py-3">
             <Link href="/" className="flex-shrink-0">
               <Image
-                src="/logo-dhinimex.png"
+                src="/brands/DHM-WHITE.png"
                 alt="Dhinimex logo"
                 width={140}
                 height={40}
@@ -106,8 +106,8 @@ export function StickyHeader({ isVisible }: Props) {
                 Products
                 <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
               </Link>
-              <Link href="/blog" className="group relative transition hover:text-white/80">
-                Blog
+              <Link href="/news" className="group relative transition hover:text-white/80">
+                News
                 <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
               </Link>
               <Link href="/careers" className="group relative transition hover:text-white/80">

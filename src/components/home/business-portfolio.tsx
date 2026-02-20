@@ -7,12 +7,12 @@ const companyLogos = [
   { name: "ThiPha Cable", logo: "/brands/ALL-LOGO-01.png", href: "/business/trading" },
   { name: "Mitsubishi Electric", logo: "/brands/ALL-LOGO-02.png", href: "/business/manufacturing" },
   { name: "LS VINA", logo: "/brands/ALL-LOGO-03.png", href: "/business/electricity" },
+  { name: "Partner Brand", logo: "/brands/ALL-LOGO-04.png", href: "#" },
   { name: "Black+Decker", logo: "/brands/ALL-LOGO-05.png", href: "/business/scientific" },
   { name: "Stanley", logo: "/brands/ALL-LOGO-06.png", href: "#" },
   { name: "Hi-Min Solar", logo: "/brands/ALL-LOGO-07.png", href: "#" },
-  { name: "Partner 8", logo: "/brands/ALL-LOGO-08.png", href: "#" },
-  { name: "Partner 9", logo: "/brands/ALL-LOGO-09.png", href: "#" },
-  { name: "Partner 10", logo: "/brands/ALL-LOGO-10.png", href: "#" },
+  { name: "Partner Brand", logo: "/brands/ALL-LOGO-10.png", href: "#" },
+  { name: "Partner Brand", logo: "/brands/ALL-LOGO-11.png", href: "#" },
 ];
 
 export function BusinessPortfolio() {
@@ -30,9 +30,9 @@ export function BusinessPortfolio() {
         {/* Section Header */}
         <div className="mb-16 text-center">
           <p className="mb-4 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-brand-red">
-            <span className="h-px w-8 bg-brand-red" />
+            
             Business Portfolio
-            <span className="h-px w-8 bg-brand-red" />
+            
           </p>
           <h2 className="mb-6 text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
             Our Family of Companies
@@ -45,10 +45,10 @@ export function BusinessPortfolio() {
         </div>
 
         {/* Logo Carousel - Full color logos with border */}
-        <div className="relative overflow-hidden rounded-xl border-2 border-white/20 bg-white/5 backdrop-blur-sm py-10 px-4">
+        <div className="relative overflow-hidden rounded-xl border-2 border-white/30 bg-white/95 backdrop-blur-sm py-10 px-4 shadow-xl">
           {/* Fade edges */}
-          <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-24 bg-gradient-to-r from-brand-navy/80 to-transparent" />
-          <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-24 bg-gradient-to-l from-brand-navy/80 to-transparent" />
+          <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-24 bg-gradient-to-r from-white/95 to-transparent" />
+          <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-24 bg-gradient-to-l from-white/95 to-transparent" />
           
           <div className="portfolio-marquee flex items-center gap-16">
             {items.map((company, index) => (
@@ -63,6 +63,7 @@ export function BusinessPortfolio() {
                   width={160}
                   height={80}
                   className="h-full w-full object-contain opacity-90 transition-opacity duration-300 group-hover:opacity-100"
+                  unoptimized
                 />
               </Link>
             ))}

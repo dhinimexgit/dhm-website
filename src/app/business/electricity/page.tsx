@@ -11,43 +11,37 @@ const heroImage = "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?
 const licenses = [
   {
     name: "Akissni Touk Meas",
-    customers: "50,733",
-    description: "As our largest licensed area, 50,733 customers are connected under the Touk Meas license. This area represents a core part of our electricity distribution portfolio, supported by substantial infrastructure to meet growing demand.",
+    description: "Our largest licensed area representing a core part of our electricity distribution portfolio, supported by substantial infrastructure to meet growing demand in Kampot Province.",
     link: "/business/electricity/touk-meas",
     image: "/elect_distribute-1.png",
+    logo: "/brands/Vector Smart Object.png",
     province: "Kampot"
   },
   {
     name: "Akissni Dong Tong",
-    customers: "10,215",
-    description: "Providing electricity to 10,215 customers, this license supports smaller but vital communities in Dong Tong. Our operations here focus on accessibility, reliability, and continuous improvement in service delivery.",
+    description: "Supporting vital communities in Dong Tong with operations focused on accessibility, reliability, and continuous improvement in service delivery.",
     link: "/business/electricity/dong-tong",
     image: "/elect_distribute-2.png",
+    logo: null,
     province: "Kampong Speu"
   },
   {
     name: "Akissni EPOSE",
-    customers: "25,455",
-    description: "With a customer base of 25,455 users, this license ensures electricity supply to the EPOSE region. Our investment supports rural development by strengthening grid reliability and expanding access to modern energy.",
+    description: "Ensuring electricity supply to the EPOSE region with investment supporting rural development by strengthening grid reliability and expanding access to modern energy.",
     link: "/business/electricity/epose",
     image: "/elect_distribute-1.png",
+    logo: "/brands/EPOSE LOGO-01.png",
     province: "Prey Veng"
   },
   {
     name: "Akissni KEANSVAY",
-    customers: "29,052",
-    description: "Serving 29,052 customers, this license covers the distribution of electricity across the Keansvay area, where we have invested in infrastructure to deliver stable and affordable energy to households and businesses.",
+    description: "Covering distribution of electricity across the Keansvay area with infrastructure investments delivering stable and affordable energy to households and businesses.",
     link: "/business/electricity/keansvay",
     image: "/elect_distribute-2.png",
+    logo: "/brands/ELEK-01.png",
     province: "Kandal"
   },
 ];
-
-// Calculate total customers
-const totalCustomers = licenses.reduce((sum, license) => {
-  const num = parseInt(license.customers.replace(/,/g, ''));
-  return sum + num;
-}, 0);
 
 export default function ElectricityPage() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -99,7 +93,7 @@ export default function ElectricityPage() {
     <>
       <StickyHeader isVisible={isScrolled} />
 
-      <div className="pb-20">
+      <div>
         {/* Hero Banner Section */}
         <section className="relative min-h-[60vh] overflow-hidden lg:min-h-[70vh]">
           <div className="absolute inset-0 z-0">
@@ -113,7 +107,7 @@ export default function ElectricityPage() {
               <div className="relative rounded-xl bg-brand-navy/80 shadow-lg backdrop-blur-sm">
                 <div className="flex items-center justify-between px-8 py-4">
                   <Link href="/" className="flex-shrink-0">
-                    <Image src="/logo-dhinimex.png" alt="Dhinimex logo" width={160} height={46} priority className="h-auto w-[160px]" />
+                    <Image src="/brands/DHM-WHITE.png" alt="Dhinimex logo" width={160} height={46} priority className="h-auto w-[160px]" />
                   </Link>
                   <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
                     <Link href="/about" className="group relative transition hover:text-white/80">
@@ -138,7 +132,7 @@ export default function ElectricityPage() {
                     </div>
                     <Link href="/services" className="group relative transition hover:text-white/80">Services<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                     <Link href="/products" className="group relative transition hover:text-white/80">Products<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/blog" className="group relative transition hover:text-white/80">Blog<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/news" className="group relative transition hover:text-white/80">News<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                     <Link href="/careers" className="group relative transition hover:text-white/80">Careers<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                   </nav>
                   <div className="flex items-center gap-4">
@@ -186,7 +180,7 @@ export default function ElectricityPage() {
                 </h1>
                 <p className="max-w-xl text-lg text-white/80">
                   Powering communities across Cambodia through licensed electricity distribution 
-                  networks serving over 115,000 customers in multiple provinces.
+                  networks in multiple provinces with reliable and sustainable energy solutions.
                 </p>
                 <div className="flex items-center gap-6 pt-4">
                   <div className="flex items-center gap-2">
@@ -204,12 +198,12 @@ export default function ElectricityPage() {
                   <div className="flex items-center gap-2">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-red/20">
                       <svg className="h-6 w-6 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-white">{totalCustomers.toLocaleString()}+</p>
-                      <p className="text-sm text-white/60">Customers</p>
+                      <p className="text-2xl font-bold text-white">4</p>
+                      <p className="text-sm text-white/60">Provinces</p>
                     </div>
                   </div>
                 </div>
@@ -262,14 +256,22 @@ export default function ElectricityPage() {
                       </span>
                     </div>
 
-                    {/* Customer count */}
-                    <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
-                      <span className="text-4xl font-bold text-white">
-                        {license.customers}
-                      </span>
-                      <span className="text-sm font-medium text-white/80">
-                        Customers Connected
-                      </span>
+                    {/* Logo and Name */}
+                    <div className="absolute bottom-6 left-6 flex items-center gap-4">
+                      {license.logo && (
+                        <div className="flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-xl bg-white/20 p-2 shadow-lg backdrop-blur-md ring-1 ring-white/30">
+                          <Image
+                            src={license.logo}
+                            alt={`${license.name} logo`}
+                            width={56}
+                            height={56}
+                            className="object-contain drop-shadow-md"
+                          />
+                        </div>
+                      )}
+                      <h3 className="text-2xl font-bold text-white drop-shadow-lg">
+                        {license.name}
+                      </h3>
                     </div>
                   </div>
 
@@ -278,9 +280,6 @@ export default function ElectricityPage() {
                     {/* Decorative line */}
                     <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-brand-red via-brand-navy to-brand-red opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                     
-                    <h3 className="mb-3 text-2xl font-bold text-brand-navy transition-colors group-hover:text-brand-red">
-                      {license.name}
-                    </h3>
                     <p className="mb-6 text-base leading-relaxed text-slate-600">
                       {license.description}
                     </p>
@@ -300,38 +299,17 @@ export default function ElectricityPage() {
           </div>
         </section>
 
-        {/* Stats Section */}
-        <section className="bg-brand-navy py-16">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="grid gap-8 md:grid-cols-4">
-              <div className="text-center">
-                <div className="mb-2 text-4xl font-bold text-white lg:text-5xl">{licenses.length}</div>
-                <div className="text-sm font-medium text-white/60">Licensed Areas</div>
-              </div>
-              <div className="text-center">
-                <div className="mb-2 text-4xl font-bold text-white lg:text-5xl">{totalCustomers.toLocaleString()}+</div>
-                <div className="text-sm font-medium text-white/60">Total Customers</div>
-              </div>
-              <div className="text-center">
-                <div className="mb-2 text-4xl font-bold text-white lg:text-5xl">4</div>
-                <div className="text-sm font-medium text-white/60">Provinces Covered</div>
-              </div>
-              <div className="text-center">
-                <div className="mb-2 text-4xl font-bold text-white lg:text-5xl">24/7</div>
-                <div className="text-sm font-medium text-white/60">Service Support</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* CTA Section */}
-        <section className="relative overflow-hidden bg-slate-100 py-20">
+        <section className="relative overflow-hidden bg-brand-navy py-20">
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
+          </div>
           <div className="relative mx-auto max-w-4xl px-6 text-center lg:px-8">
-            <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
+            <h2 className="mb-4 text-3xl font-bold text-white lg:text-4xl">
               Questions About Our Services?
             </h2>
-            <p className="mb-8 text-lg text-slate-600">
-              Contact us to learn more about electricity distribution in your area.
+            <p className="mb-8 text-lg text-white/80">
+              Contact us to learn more about electricity distribution services and solutions.
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
@@ -345,7 +323,7 @@ export default function ElectricityPage() {
               </Link>
               <Link
                 href="/services"
-                className="inline-flex items-center gap-2 rounded-lg border-2 border-brand-navy px-8 py-4 text-base font-semibold text-brand-navy transition hover:bg-brand-navy hover:text-white"
+                className="inline-flex items-center gap-2 rounded-lg border-2 border-white/30 px-8 py-4 text-base font-semibold text-white transition hover:bg-white/10"
               >
                 View All Services
               </Link>

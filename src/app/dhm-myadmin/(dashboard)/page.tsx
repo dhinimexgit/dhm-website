@@ -140,7 +140,7 @@ export default function AdminDashboard() {
       {/* Main Tab Navigation */}
       <div className="flex gap-8 border-b border-slate-200 overflow-x-auto">
         <TabButton tab="products" label="Products" />
-        <TabButton tab="posts" label="Blog Posts" />
+        <TabButton tab="posts" label="News Posts" />
         <TabButton tab="careers" label="Careers" />
         <TabButton tab="inquiries" label="Inquiries" badge={isTabAccessible('inquiries') ? <InquiryBadge /> : undefined} />
         <TabButton tab="qrcode" label="QR Code" />
@@ -214,10 +214,10 @@ export default function AdminDashboard() {
                     Content
                 </p>
                 <h1 className="text-4xl font-semibold text-brand-navy">
-                    Manage Blog Posts
+                    Manage News Posts
                 </h1>
                 <p className="max-w-2xl text-lg text-slate-600">
-                    Create and manage blog posts. Entries are instantly published to the live site.
+                    Create and manage news posts. Entries are instantly published to the live site.
                 </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-4">
@@ -246,7 +246,7 @@ export default function AdminDashboard() {
             ) : (
                 <div className="rounded-[24px] border border-slate-200 bg-white p-8 shadow-sm">
                     <h2 className="mb-6 text-xl font-semibold text-brand-navy">
-                        {editingPost ? `Edit: ${editingPost.title}` : "New Blog Post"}
+                        {editingPost ? `Edit: ${editingPost.title}` : "New News Post"}
                     </h2>
                     <PostForm 
                         initialData={editingPost} 

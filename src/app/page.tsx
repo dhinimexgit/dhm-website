@@ -23,7 +23,7 @@ export default async function Home() {
       {/* Services Carousel Section (JP Morgan Style) */}
       <ServicesCarousel services={services} />
       
-      {/* Blog Section */}
+      {/* News Section */}
       <BlogSection posts={latestPosts} />
     </div>
   );

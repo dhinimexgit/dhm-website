@@ -14,7 +14,7 @@ const companies = [
     description: "Khmer Concrete Factory (KCC), based in Kandal Province, is a leading manufacturer of durable and high-quality concrete products. Our state-of-the-art facility produces concrete poles, pipes, and other infrastructure components.",
     link: "/business/manufacturing/khmer-concrete",
     image: "/kcc.jpg",
-    established: "2012",
+    logo: "/brands/ALL-LOGO-12.png",
     specialty: "Concrete Products"
   },
   {
@@ -22,7 +22,7 @@ const companies = [
     description: "Vong Chan Cable is a manufacturer of high-quality LV/MV cables that meet international standards. Our cables are used in power distribution networks across Cambodia.",
     link: "/business/manufacturing/vong-chan-cable",
     image: "/vcc.jpg",
-    established: "2015",
+    logo: "/brands/ALL-LOGO-11.png",
     specialty: "LV/MV Cables"
   },
   {
@@ -30,7 +30,7 @@ const companies = [
     description: "Saekaraj Transfo, Cambodia's first transformer manufacturer, delivers high-quality transformers and nationwide maintenance services to support reliable power infrastructure.",
     link: "/business/manufacturing/saekaraj-transfo",
     image: "/saekaraj.jpg",
-    established: "2017",
+    logo: "/brands/ALL-LOGO-13.png",
     specialty: "Transformers"
   },
 ];
@@ -85,7 +85,7 @@ export default function ManufacturingPage() {
     <>
       <StickyHeader isVisible={isScrolled} />
 
-      <div className="pb-20">
+      <div>
         {/* Hero Banner Section */}
         <section className="relative min-h-[60vh] overflow-hidden lg:min-h-[70vh]">
           <div className="absolute inset-0 z-0">
@@ -99,7 +99,7 @@ export default function ManufacturingPage() {
               <div className="relative rounded-xl bg-brand-navy/80 shadow-lg backdrop-blur-sm">
                 <div className="flex items-center justify-between px-8 py-4">
                   <Link href="/" className="flex-shrink-0">
-                    <Image src="/logo-dhinimex.png" alt="Dhinimex logo" width={160} height={46} priority className="h-auto w-[160px]" />
+                    <Image src="/brands/DHM-WHITE.png" alt="Dhinimex logo" width={160} height={46} priority className="h-auto w-[160px]" />
                   </Link>
                   <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
                     <Link href="/about" className="group relative transition hover:text-white/80">
@@ -124,7 +124,7 @@ export default function ManufacturingPage() {
                     </div>
                     <Link href="/services" className="group relative transition hover:text-white/80">Services<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                     <Link href="/products" className="group relative transition hover:text-white/80">Products<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/blog" className="group relative transition hover:text-white/80">Blog<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/news" className="group relative transition hover:text-white/80">News<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                     <Link href="/careers" className="group relative transition hover:text-white/80">Careers<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                   </nav>
                   <div className="flex items-center gap-4">
@@ -245,11 +245,20 @@ export default function ManufacturingPage() {
                       </span>
                     </div>
 
-                    {/* Year badge */}
-                    <div className="absolute bottom-4 left-4">
-                      <span className="text-3xl font-bold text-white/90">
-                        Est. {company.established}
-                      </span>
+                    {/* Logo and Name */}
+                    <div className="absolute bottom-4 left-4 flex items-center gap-3">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-white/20 p-2 shadow-lg backdrop-blur-md ring-1 ring-white/30">
+                        <Image
+                          src={company.logo}
+                          alt={`${company.name} logo`}
+                          width={46}
+                          height={46}
+                          className="object-contain drop-shadow-md"
+                        />
+                      </div>
+                      <h3 className="text-lg font-bold text-white drop-shadow-lg">
+                        {company.name}
+                      </h3>
                     </div>
                   </div>
 
@@ -258,9 +267,6 @@ export default function ManufacturingPage() {
                     {/* Decorative line */}
                     <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-brand-red via-brand-navy to-brand-red opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                     
-                    <h3 className="mb-2 text-xl font-bold text-brand-navy transition-colors group-hover:text-brand-red">
-                      {company.name}
-                    </h3>
                     <p className="mb-4 line-clamp-3 text-sm leading-relaxed text-slate-600">
                       {company.description}
                     </p>
@@ -287,10 +293,10 @@ export default function ManufacturingPage() {
           </div>
           <div className="relative mx-auto max-w-4xl px-6 text-center lg:px-8">
             <h2 className="mb-4 text-3xl font-bold text-white lg:text-4xl">
-              Need Custom Manufacturing?
+              Questions About Our Services?
             </h2>
             <p className="mb-8 text-lg text-white/80">
-              Our manufacturing facilities can meet your specific infrastructure requirements.
+              Contact us to learn more about our manufacturing capabilities and solutions.
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
@@ -306,7 +312,7 @@ export default function ManufacturingPage() {
                 href="/services"
                 className="inline-flex items-center gap-2 rounded-lg border-2 border-white/30 px-8 py-4 text-base font-semibold text-white transition hover:bg-white/10"
               >
-                View Services
+                View All Services
               </Link>
             </div>
           </div>

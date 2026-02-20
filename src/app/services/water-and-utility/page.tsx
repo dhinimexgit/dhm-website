@@ -37,7 +37,7 @@ export default function WaterAndUtilityDetailPage() {
     <>
       <StickyHeader isVisible={isScrolled} />
 
-      <div className="pb-20">
+      <div>
         {/* Hero Banner Section */}
         <section className="relative min-h-[50vh] overflow-hidden lg:min-h-[60vh]">
           <div className="absolute inset-0 z-0">
@@ -51,7 +51,7 @@ export default function WaterAndUtilityDetailPage() {
               <div className="relative rounded-xl bg-brand-navy/80 shadow-lg backdrop-blur-sm">
                 <div className="flex items-center justify-between px-8 py-4">
                   <Link href="/" className="flex-shrink-0">
-                    <Image src="/logo-dhinimex.png" alt="Dhinimex logo" width={160} height={46} priority className="h-auto w-[160px]" />
+                    <Image src="/brands/DHM-WHITE.png" alt="Dhinimex logo" width={160} height={46} priority className="h-auto w-[160px]" />
                   </Link>
                   <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
                     <Link href="/about" className="group relative transition hover:text-white/80">About Us<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
@@ -70,7 +70,7 @@ export default function WaterAndUtilityDetailPage() {
                     </div>
                     <Link href="/services" className="group relative transition hover:text-white/80">Services<span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" /></Link>
                     <Link href="/products" className="group relative transition hover:text-white/80">Products<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/blog" className="group relative transition hover:text-white/80">Blog<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/news" className="group relative transition hover:text-white/80">News<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                     <Link href="/careers" className="group relative transition hover:text-white/80">Careers<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                   </nav>
                   <div className="flex items-center gap-4">
@@ -106,7 +106,7 @@ export default function WaterAndUtilityDetailPage() {
         {/* Content Section */}
         <section className="relative bg-gradient-to-b from-slate-50 to-white py-20 lg:py-28">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="grid gap-16 lg:grid-cols-2 lg:items-start">
+            <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
               {/* Image Side */}
               <div className="relative">
                 <div className="absolute -left-4 -top-4 h-full w-full rounded-2xl bg-brand-navy/10 lg:-left-6 lg:-top-6" />

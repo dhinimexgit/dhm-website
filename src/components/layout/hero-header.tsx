@@ -35,7 +35,7 @@ export function HeroHeader() {
     },
     { label: t.nav.services, href: "/services", caret: false },
     { label: t.nav.products, href: "/products", caret: false },
-    { label: t.nav.blog, href: "/blog", caret: false },
+    { label: t.nav.blog, href: "/news", caret: false },
     { label: t.nav.careers, href: "/careers", caret: false },
   ];
 
@@ -67,7 +67,7 @@ export function HeroHeader() {
     <div className="flex w-full items-center justify-between bg-[#2E388C] px-14 py-5 shadow-lg">
       <Link href="/" className="flex-shrink-0">
         <Image
-          src="/logo-dhinimex.png"
+          src="/brands/DHM-WHITE.png"
           alt="Dhinimex logo"
           width={170}
           height={49}

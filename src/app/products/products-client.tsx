@@ -406,7 +406,7 @@ export function ProductsPageClient({ initialBrand }: Props) {
     return (
       <>
         <StickyHeader isVisible={isScrolled} />
-        <div className="pb-20">
+        <div>
           <HeroSection 
             onViewAll={handleViewAllClick}
             searchOpen={searchOpen}
@@ -433,7 +433,7 @@ export function ProductsPageClient({ initialBrand }: Props) {
   return (
     <>
       <StickyHeader isVisible={isScrolled} />
-      <div className="pb-20">
+      <div>
         <HeroSection 
           onViewAll={handleViewAllClick}
           searchOpen={searchOpen}
@@ -452,7 +452,7 @@ export function ProductsPageClient({ initialBrand }: Props) {
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <div className="mb-10 text-center">
                 <p className="mb-3 inline-flex items-center justify-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
-                  <span className="h-5 w-1 bg-brand-red" />
+                  
                   Browse Collection
                 </p>
                 <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
@@ -484,7 +484,7 @@ export function ProductsPageClient({ initialBrand }: Props) {
           <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
             <div className="mb-10 text-center">
               <p className="mb-3 inline-flex items-center justify-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
-                <span className="h-5 w-1 bg-brand-red" />
+                
                 Top Picks
               </p>
               <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
@@ -507,7 +507,7 @@ export function ProductsPageClient({ initialBrand }: Props) {
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <div className="mb-10 text-center">
                 <p className="mb-3 inline-flex items-center justify-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
-                  <span className="h-5 w-1 bg-brand-red" />
+                  
                   Our Partners
                 </p>
                 <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
@@ -1012,7 +1012,7 @@ function HeroSection({
             <div className="flex items-center justify-between px-8 py-4">
               <Link href="/" className="flex-shrink-0">
                 <Image
-                  src="/logo-dhinimex.png"
+                  src="/brands/DHM-WHITE.png"
                   alt="Dhinimex logo"
                   width={160}
                   height={46}
@@ -1050,8 +1050,8 @@ function HeroSection({
                   Products
                   <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" />
                 </Link>
-                <Link href="/blog" className="group relative transition hover:text-white/80">
-                  Blog
+                <Link href="/news" className="group relative transition hover:text-white/80">
+                  News
                   <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                 </Link>
                 <Link href="/careers" className="group relative transition hover:text-white/80">
@@ -1117,7 +1117,7 @@ function HeroSection({
         <div className="flex min-h-[calc(70vh-120px)] items-center py-16 lg:min-h-[calc(80vh-120px)] lg:py-0 lg:pt-4">
           <div className="max-w-2xl space-y-6">
             <p className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-white/90">
-              <span className="h-px w-8 bg-brand-red" />
+              
               Our Products
             </p>
             <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-[64px] xl:leading-[1.1]">

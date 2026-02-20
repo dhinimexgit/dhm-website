@@ -109,7 +109,7 @@ export function HomeHero() {
               <div className="flex items-center justify-between px-8 py-4">
                 <Link href="/" className="flex-shrink-0">
                   <Image
-                    src="/logo-dhinimex.png"
+                    src="/brands/DHM-WHITE.png"
                     alt="Dhinimex logo"
                     width={160}
                     height={46}
@@ -146,8 +146,8 @@ export function HomeHero() {
                     Products
                     <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                   </Link>
-                  <Link href="/blog" className="group relative transition hover:text-white/80">
-                    Blog
+                  <Link href="/news" className="group relative transition hover:text-white/80">
+                    News
                     <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                   </Link>
                   <Link href="/careers" className="group relative transition hover:text-white/80">
@@ -241,7 +241,7 @@ export function HomeHero() {
                   <span className="h-px w-10 bg-brand-red" />
                     <strong className="text-lg text-brand-navy">Since 2003</strong>
                 </p>
-                <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-[64px] xl:leading-[1.1]">
+                <h1 className="text-3xl font-bold leading-tight text-white sm:text-3xl lg:text-6xl xl:text-[62px] xl:leading-[1.1]">
                   Driven by Quality,
                   <br />
                   <span>Guided by Standards</span>

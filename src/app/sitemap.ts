@@ -22,10 +22,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  // 3. Map blog posts from Firebase
+  // 3. Map news posts from Firebase
   const posts = await getAllPosts();
   const postRoutes = posts.map((post) => ({
-    url: `${baseUrl}/blog/${post.slug}`,
+    url: `${baseUrl}/news/${post.slug}`,
     lastModified: new Date(post.date),
     changeFrequency: 'weekly' as const,
     priority: 0.6,

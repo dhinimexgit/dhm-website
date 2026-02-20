@@ -121,8 +121,8 @@ export default function ContactPage() {
   return (
     <>
       <StickyHeader isVisible={isScrolled} />
-      
-      <div className="pb-20">
+
+      <div>
         {/* Hero Banner Section */}
         <section className="relative min-h-[50vh] overflow-hidden lg:min-h-[60vh]">
           {/* Background Image with Overlay */}
@@ -146,7 +146,7 @@ export default function ContactPage() {
                 <div className="flex items-center justify-between px-8 py-4">
                   <Link href="/" className="flex-shrink-0">
                     <Image
-                      src="/logo-dhinimex.png"
+                      src="/brands/DHM-WHITE.png"
                       alt="Dhinimex logo"
                       width={160}
                       height={46}
@@ -183,8 +183,8 @@ export default function ContactPage() {
                       Products
                       <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
-                    <Link href="/blog" className="group relative transition hover:text-white/80">
-                      Blog
+                    <Link href="/news" className="group relative transition hover:text-white/80">
+                      News
                       <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
                     <Link href="/careers" className="group relative transition hover:text-white/80">
@@ -269,12 +269,15 @@ export default function ContactPage() {
             <div className="flex min-h-[calc(50vh-120px)] items-center py-16 lg:min-h-[calc(60vh-120px)] lg:py-0">
               <div className="max-w-2xl space-y-6">
                 <p className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-white/90">
-                  <span className="h-px w-8 bg-brand-red" />
+                  
                   Contact Us
                 </p>
                 <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-[56px] xl:leading-[1.1]">
-                  Get In Touch With the Team Powering Cambodia&apos;s Infrastructure
+                  Get In Touch
                 </h1>
+                <p className="text-lg text-white/90 sm:text-xl">
+                  Have a question or would like to learn more about our group? Get in touch with us and our team will be happy to assist.
+                </p>
               </div>
             </div>
           </div>
@@ -297,21 +300,6 @@ export default function ContactPage() {
           </div>
 
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            {/* Section Header */}
-            <div className="mb-12 text-center">
-              <p className="mb-3 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
-                <span className="h-5 w-1 bg-brand-red" />
-                Get in touch
-              </p>
-              <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
-                Contact us
-              </h2>
-              <p className="mx-auto max-w-2xl text-lg text-slate-600">
-                Get in touch and ask us anything. The difference between bookkeeping and
-                accounting, how to start a project, which solution fits your needs – we answer it all.
-              </p>
-            </div>
-
             {/* Contact Form Card */}
             <div className="mx-auto max-w-3xl">
               {submitStatus === "success" ? (

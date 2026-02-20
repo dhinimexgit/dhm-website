@@ -10,7 +10,7 @@ export type SearchResult = {
   title: string;
   description: string;
   url: string;
-  type: "Service" | "Product" | "Blog Post" | "Career" | "FAQ" | "Page" | "Category" | "Brand";
+  type: "Service" | "Product" | "News Post" | "Career" | "FAQ" | "Page" | "Category" | "Brand";
 };
 
 const productCategoryList = [
@@ -95,7 +95,7 @@ export function searchContent(query: string): SearchResult[] {
     }
   });
 
-  // Search Blog Posts
+  // Search News Posts
   posts.forEach((post) => {
     if (
       post.title.toLowerCase().includes(lowerQuery) ||
@@ -105,8 +105,8 @@ export function searchContent(query: string): SearchResult[] {
       results.push({
         title: post.title,
         description: post.excerpt,
-        url: `/blog/${post.slug}`,
-        type: "Blog Post",
+        url: `/news/${post.slug}`,
+        type: "News Post",
       });
     }
   });
@@ -155,7 +155,7 @@ export function searchContent(query: string): SearchResult[] {
     { title: "Services", description: "Our comprehensive range of services.", url: "/services" },
     { title: "Products", description: "Browse our complete product catalog.", url: "/products" },
     { title: "Careers", description: "Join our team.", url: "/careers" },
-    { title: "Blog", description: "Latest news and updates.", url: "/blog" },
+    { title: "News", description: "Latest news and updates.", url: "/news" },
   ];
 
   staticPages.forEach((page) => {

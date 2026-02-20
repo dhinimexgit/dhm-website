@@ -150,7 +150,7 @@ export default function CareersPage() {
                 <div className="flex items-center justify-between px-8 py-4">
                   <Link href="/" className="flex-shrink-0">
                     <Image
-                      src="/logo-dhinimex.png"
+                      src="/brands/DHM-WHITE.png"
                       alt="Dhinimex logo"
                       width={160}
                       height={46}
@@ -187,8 +187,8 @@ export default function CareersPage() {
                       Products
                       <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
-                    <Link href="/blog" className="group relative transition hover:text-white/80">
-                      Blog
+                    <Link href="/news" className="group relative transition hover:text-white/80">
+                      News
                       <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
                     {/* Careers - Active */}

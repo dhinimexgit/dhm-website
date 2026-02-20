@@ -24,7 +24,7 @@ const quickLinks = [
   { label: "Our Services", href: "/services" },
   { label: "Products", href: "/products" },
   { label: "Careers", href: "/careers" },
-  { label: "Blog", href: "/blog" },
+  { label: "News", href: "/news" },
   { label: "Contact Us", href: "/contact-us" },
 ];
 
@@ -84,7 +84,7 @@ export function SiteFooter() {
           <div className="lg:col-span-4">
             <Link href="/" className="inline-block">
               <Image
-                src="/logo-dhinimex.png"
+                src="/brands/DHM-WHITE.png"
                 alt="Dhinimex logo"
                 width={160}
                 height={46}

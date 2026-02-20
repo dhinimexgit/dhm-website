@@ -87,7 +87,7 @@ export default function SeedPage() {
               <SeedButton />
             </div>
             <div className="rounded-2xl border border-slate-200 bg-white p-6">
-              <p className="text-sm font-medium text-slate-500 mb-4">Seed Blog Posts</p>
+              <p className="text-sm font-medium text-slate-500 mb-4">Seed News Posts</p>
               <SeedPostsButton />
             </div>
             <div className="rounded-2xl border border-slate-200 bg-white p-6">
@@ -102,7 +102,7 @@ export default function SeedPage() {
           <p className="mb-4 text-sm text-slate-600">Fetch and import data directly from https://www.dhinimex.com</p>
           <div className="grid gap-6 md:grid-cols-2">
             <div className="rounded-2xl border border-blue-200 bg-blue-50 p-6">
-              <p className="text-sm font-medium text-slate-700 mb-2">Seed Blog Posts from WordPress</p>
+              <p className="text-sm font-medium text-slate-700 mb-2">Seed News Posts from WordPress</p>
               <p className="text-xs text-slate-500 mb-4">Fetches from /wp-json/wp/v2/posts</p>
               <SeedPostsFromWPButton />
             </div>

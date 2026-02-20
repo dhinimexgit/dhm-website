@@ -190,7 +190,7 @@ export default function BusinessPortfolioPage() {
     <>
       <StickyHeader isVisible={isScrolled} />
 
-      <div className="pb-20">
+      <div>
         {/* Hero Banner Section */}
         <section ref={heroRef} className="relative min-h-[70vh] overflow-hidden lg:min-h-[80vh]">
           <div className="absolute inset-0 z-0">
@@ -205,7 +205,7 @@ export default function BusinessPortfolioPage() {
               <div className="relative rounded-xl bg-brand-navy shadow-lg">
                 <div className="flex items-center justify-between px-8 py-4">
                   <Link href="/" className="flex-shrink-0">
-                    <Image src="/logo-dhinimex.png" alt="Dhinimex logo" width={160} height={46} priority className="h-auto w-[160px]" />
+                    <Image src="/brands/DHM-WHITE.png" alt="Dhinimex logo" width={160} height={46} priority className="h-auto w-[160px]" />
                   </Link>
                   <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
                     <Link href="/about" className="group relative transition hover:text-white/80">
@@ -230,7 +230,7 @@ export default function BusinessPortfolioPage() {
                     </div>
                     <Link href="/services" className="group relative transition hover:text-white/80">Services<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                     <Link href="/products" className="group relative transition hover:text-white/80">Products<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/blog" className="group relative transition hover:text-white/80">Blog<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/news" className="group relative transition hover:text-white/80">News<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                     <Link href="/careers" className="group relative transition hover:text-white/80">Careers<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                   </nav>
                   <div className="flex items-center gap-4">
@@ -267,7 +267,7 @@ export default function BusinessPortfolioPage() {
             <div className="flex min-h-[calc(70vh-120px)] items-center py-16 lg:min-h-[calc(80vh-120px)] lg:py-0">
               <div className="max-w-2xl space-y-6">
                 <p className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-white/90">
-                  <span className="h-px w-8 bg-brand-red" />
+                  
                   Business Portfolio
                 </p>
                 <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-[64px] xl:leading-[1.1]">

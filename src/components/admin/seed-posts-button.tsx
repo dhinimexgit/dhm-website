@@ -10,7 +10,7 @@ export function SeedPostsButton() {
   const [status, setStatus] = useState("");
 
   const handleSeed = async () => {
-    if (!confirm("This will populate the database with blog posts from your static files. Existing posts with the same slug will be updated. Continue?")) {
+    if (!confirm("This will populate the database with news posts from your static files. Existing posts with the same slug will be updated. Continue?")) {
       return;
     }
 

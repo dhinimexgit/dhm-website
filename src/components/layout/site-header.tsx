@@ -25,7 +25,7 @@ export function SiteHeader() {
   const isServicesPage = pathname.startsWith("/services");
   const isBusinessPage = pathname === "/business" || pathname.startsWith("/business/");
   const isCareersPage = pathname === "/careers" || pathname.startsWith("/careers/");
-  const isBlogPage = pathname === "/blog" || pathname.startsWith("/blog/");
+  const isBlogPage = pathname === "/news" || pathname.startsWith("/news/");
   const isContactPage = pathname === "/contact-us";
   // Hide global navbar for Products Landing (/products) and Brand Landing (/products/brand) 
   // but show it for Product Detail (/products/brand/slug)
@@ -71,7 +71,7 @@ export function SiteHeader() {
     },
     { label: t.nav.services, href: "/services" },
     { label: t.nav.products, href: "/products" },
-    { label: t.nav.blog, href: "/blog" },
+    { label: t.nav.blog, href: "/news" },
     { label: t.nav.careers, href: "/careers" },
     { label: t.nav.contact, href: "/contact-us" },
   ];
@@ -107,20 +107,22 @@ export function SiteHeader() {
           className="absolute left-1/2 -translate-x-1/2 md:relative md:left-auto md:translate-x-0 md:ml-8 lg:ml-12"
         >
           <Image
-            src="/logo-dhinimex.png"
+            src="/brands/DHM-WHITE.png"
             alt="Dhinimex logo"
             width={150}
             height={44}
             priority
             className="h-auto w-[150px] md:hidden"
+            unoptimized
           />
           <Image
-            src="https://dhinimex.com/wp-content/uploads/2025/09/ALL-LOGO-25.png"
+            src="/brands/ALL-LOGO-25.png"
             alt="Dhinimex bilingual logo"
             width={48}
             height={16}
             priority
             className="hidden h-auto w-[48px] md:block"
+            unoptimized
           />
         </Link>
         <div className="w-10 md:hidden" />

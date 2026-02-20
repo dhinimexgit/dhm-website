@@ -14,7 +14,7 @@ const companies = [
     description: "Dhinimex Co., Ltd., established in 2003, is a leading provider of electrical equipment, appliances, and solar solutions in Cambodia. With over two decades of experience, we have built a reputation for quality products and reliable service.",
     link: "/business/trading/dhinimex",
     image: "/dhinimex.jpg",
-    established: "2003",
+    logo: "/brands/ALL-LOGO-25.png",
     specialty: "Electrical Equipment & Solar"
   },
   {
@@ -22,7 +22,7 @@ const companies = [
     description: "Nicole Home Mart (NHM) is the official distributor of high-quality mechanical and electrical tools, home appliances, and safety equipment. We partner with leading global brands to bring the best products to Cambodian consumers.",
     link: "/business/trading/nicole-home-mart",
     image: "/nicole.jpg",
-    established: "2010",
+    logo: "/brands/nicole home mart logo.png",
     specialty: "Tools & Home Appliances"
   },
 ];
@@ -77,7 +77,7 @@ export default function TradingPage() {
     <>
       <StickyHeader isVisible={isScrolled} />
 
-      <div className="pb-20">
+      <div>
         {/* Hero Banner Section */}
         <section className="relative min-h-[60vh] overflow-hidden lg:min-h-[70vh]">
           <div className="absolute inset-0 z-0">
@@ -91,7 +91,7 @@ export default function TradingPage() {
               <div className="relative rounded-xl bg-brand-navy/80 shadow-lg backdrop-blur-sm">
                 <div className="flex items-center justify-between px-8 py-4">
                   <Link href="/" className="flex-shrink-0">
-                    <Image src="/logo-dhinimex.png" alt="Dhinimex logo" width={160} height={46} priority className="h-auto w-[160px]" />
+                    <Image src="/brands/DHM-WHITE.png" alt="Dhinimex logo" width={160} height={46} priority className="h-auto w-[160px]" />
                   </Link>
                   <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
                     <Link href="/about" className="group relative transition hover:text-white/80">
@@ -116,7 +116,7 @@ export default function TradingPage() {
                     </div>
                     <Link href="/services" className="group relative transition hover:text-white/80">Services<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                     <Link href="/products" className="group relative transition hover:text-white/80">Products<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/blog" className="group relative transition hover:text-white/80">Blog<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/news" className="group relative transition hover:text-white/80">News<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                     <Link href="/careers" className="group relative transition hover:text-white/80">Careers<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                   </nav>
                   <div className="flex items-center gap-4">
@@ -237,11 +237,20 @@ export default function TradingPage() {
                       </span>
                     </div>
 
-                    {/* Year badge */}
-                    <div className="absolute bottom-6 left-6">
-                      <span className="text-4xl font-bold text-white/90">
-                        Est. {company.established}
-                      </span>
+                    {/* Logo and Name */}
+                    <div className="absolute bottom-6 left-6 flex items-center gap-4">
+                      <div className="flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-xl bg-white/20 p-2 shadow-lg backdrop-blur-md ring-1 ring-white/30">
+                        <Image
+                          src={company.logo}
+                          alt={`${company.name} logo`}
+                          width={56}
+                          height={56}
+                          className="object-contain drop-shadow-md"
+                        />
+                      </div>
+                      <h3 className="text-xl font-bold text-white drop-shadow-lg">
+                        {company.name}
+                      </h3>
                     </div>
                   </div>
 
@@ -250,9 +259,6 @@ export default function TradingPage() {
                     {/* Decorative line */}
                     <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-brand-red via-brand-navy to-brand-red opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                     
-                    <h3 className="mb-3 text-2xl font-bold text-brand-navy transition-colors group-hover:text-brand-red">
-                      {company.name}
-                    </h3>
                     <p className="mb-6 text-base leading-relaxed text-slate-600">
                       {company.description}
                     </p>
@@ -279,10 +285,10 @@ export default function TradingPage() {
           </div>
           <div className="relative mx-auto max-w-4xl px-6 text-center lg:px-8">
             <h2 className="mb-4 text-3xl font-bold text-white lg:text-4xl">
-              Interested in Our Products?
+              Questions About Our Services?
             </h2>
             <p className="mb-8 text-lg text-white/80">
-              Contact us today to learn more about our trading solutions and product offerings.
+              Contact us to learn more about our trading solutions and product offerings.
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
@@ -295,10 +301,10 @@ export default function TradingPage() {
                 </svg>
               </Link>
               <Link
-                href="/products"
+                href="/services"
                 className="inline-flex items-center gap-2 rounded-lg border-2 border-white/30 px-8 py-4 text-base font-semibold text-white transition hover:bg-white/10"
               >
-                View Products
+                View All Services
               </Link>
             </div>
           </div>

@@ -124,7 +124,7 @@ export default function ServicesPage() {
     <>
       <StickyHeader isVisible={isScrolled} />
 
-      <div className="pb-20">
+      <div>
         {/* Hero Banner Section */}
         <section className="relative min-h-[70vh] overflow-hidden lg:min-h-[80vh]">
           {/* Background Image with Overlay */}
@@ -148,7 +148,7 @@ export default function ServicesPage() {
                 <div className="flex items-center justify-between px-8 py-4">
                   <Link href="/" className="flex-shrink-0">
                     <Image
-                      src="/logo-dhinimex.png"
+                      src="/brands/DHM-WHITE.png"
                       alt="Dhinimex logo"
                       width={160}
                       height={46}
@@ -186,8 +186,8 @@ export default function ServicesPage() {
                       Products
                       <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
-                    <Link href="/blog" className="group relative transition hover:text-white/80">
-                      Blog
+                    <Link href="/news" className="group relative transition hover:text-white/80">
+                      News
                       <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
                     <Link href="/careers" className="group relative transition hover:text-white/80">
@@ -253,7 +253,7 @@ export default function ServicesPage() {
             <div className="flex min-h-[calc(70vh-120px)] items-center py-16 lg:min-h-[calc(80vh-120px)] lg:py-0 lg:pt-4">
               <div className="max-w-2xl space-y-6">
                 <p className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-white/90">
-                  <span className="h-px w-8 bg-brand-red" />
+                  
                   Our Services
                 </p>
                 <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-[64px] xl:leading-[1.1]">
@@ -290,7 +290,7 @@ export default function ServicesPage() {
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
             <div className="space-y-6">
               <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
-                <span className="h-5 w-1 bg-brand-red" />
+                // 
                 What We Do
               </p>
               <h2 className="text-3xl font-bold text-brand-navy lg:text-4xl">
@@ -326,7 +326,7 @@ export default function ServicesPage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="space-y-6">
           <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
-                <span className="h-5 w-1 bg-brand-red" />
+                
                 Our Expertise
               </p>
               <h2 className="mb-2 text-3xl font-bold text-brand-navy lg:text-4xl">
@@ -419,7 +419,7 @@ export default function ServicesPage() {
         <section className="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-6 lg:px-8">
           <div className="mb-12 text-center">
             <p className="mb-4 inline-flex items-center justify-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
-              <span className="h-5 w-1 bg-brand-red" />
+              
               Our Process
             </p>
             <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
@@ -508,7 +508,7 @@ export default function ServicesPage() {
             {/* Header - Centered */}
             <div className="mb-12 text-center">
               <p className="mb-3 inline-flex items-center justify-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
-                <span className="h-5 w-1 bg-brand-red" />
+                
                 FAQ
               </p>
               <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">

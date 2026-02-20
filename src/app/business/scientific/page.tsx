@@ -14,7 +14,7 @@ const companies = [
     description: "CamRad Diagnostic Center in Phnom Penh offers reliable, high-quality imaging and laboratory services, specializing in CT scans and radiology to support accurate and trusted healthcare diagnostics.",
     link: "/business/scientific/camrad",
     image: "/camrad.jpg",
-    established: "2018",
+    logo: "/brands/Camrad Logo-01.png",
     specialty: "Medical Imaging & Diagnostics"
   },
   {
@@ -22,7 +22,7 @@ const companies = [
     description: "Camirrad Diagnostic & Irradiation Center is Cambodia's first state-of-the-art electron beam facility, ensuring food and agricultural products meet international safety and export standards.",
     link: "/business/scientific/camirrad",
     image: "/elect_distribute-1.png",
-    established: "2022",
+    logo: null,
     specialty: "Food Safety & Irradiation"
   },
 ];
@@ -77,7 +77,7 @@ export default function ScientificPage() {
     <>
       <StickyHeader isVisible={isScrolled} />
 
-      <div className="pb-20">
+      <div>
         {/* Hero Banner Section */}
         <section className="relative min-h-[60vh] overflow-hidden lg:min-h-[70vh]">
           <div className="absolute inset-0 z-0">
@@ -91,7 +91,7 @@ export default function ScientificPage() {
               <div className="relative rounded-xl bg-brand-navy/80 shadow-lg backdrop-blur-sm">
                 <div className="flex items-center justify-between px-8 py-4">
                   <Link href="/" className="flex-shrink-0">
-                    <Image src="/logo-dhinimex.png" alt="Dhinimex logo" width={160} height={46} priority className="h-auto w-[160px]" />
+                    <Image src="/brands/DHM-WHITE.png" alt="Dhinimex logo" width={160} height={46} priority className="h-auto w-[160px]" />
                   </Link>
                   <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
                     <Link href="/about" className="group relative transition hover:text-white/80">
@@ -116,7 +116,7 @@ export default function ScientificPage() {
                     </div>
                     <Link href="/services" className="group relative transition hover:text-white/80">Services<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                     <Link href="/products" className="group relative transition hover:text-white/80">Products<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/blog" className="group relative transition hover:text-white/80">Blog<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/news" className="group relative transition hover:text-white/80">News<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                     <Link href="/careers" className="group relative transition hover:text-white/80">Careers<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                   </nav>
                   <div className="flex items-center gap-4">
@@ -237,11 +237,22 @@ export default function ScientificPage() {
                       </span>
                     </div>
 
-                    {/* Year badge */}
-                    <div className="absolute bottom-6 left-6">
-                      <span className="text-4xl font-bold text-white/90">
-                        Est. {company.established}
-                      </span>
+                    {/* Logo and Name */}
+                    <div className="absolute bottom-6 left-6 flex items-center gap-4">
+                      {company.logo && (
+                        <div className="flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-xl bg-white/20 p-2 shadow-lg backdrop-blur-md ring-1 ring-white/30">
+                          <Image
+                            src={company.logo}
+                            alt={`${company.name} logo`}
+                            width={56}
+                            height={56}
+                            className="object-contain drop-shadow-md"
+                          />
+                        </div>
+                      )}
+                      <h3 className="text-xl font-bold text-white drop-shadow-lg">
+                        {company.name}
+                      </h3>
                     </div>
                   </div>
 
@@ -250,9 +261,6 @@ export default function ScientificPage() {
                     {/* Decorative line */}
                     <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-brand-red via-brand-navy to-brand-red opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                     
-                    <h3 className="mb-3 text-2xl font-bold text-brand-navy transition-colors group-hover:text-brand-red">
-                      {company.name}
-                    </h3>
                     <p className="mb-6 text-base leading-relaxed text-slate-600">
                       {company.description}
                     </p>
@@ -319,12 +327,15 @@ export default function ScientificPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="relative overflow-hidden bg-slate-100 py-20">
+        <section className="relative overflow-hidden bg-brand-navy py-20">
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
+          </div>
           <div className="relative mx-auto max-w-4xl px-6 text-center lg:px-8">
-            <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
-              Interested in Our Scientific Services?
+            <h2 className="mb-4 text-3xl font-bold text-white lg:text-4xl">
+              Questions About Our Services?
             </h2>
-            <p className="mb-8 text-lg text-slate-600">
+            <p className="mb-8 text-lg text-white/80">
               Contact us to learn more about our diagnostic and irradiation solutions.
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -339,7 +350,7 @@ export default function ScientificPage() {
               </Link>
               <Link
                 href="/services"
-                className="inline-flex items-center gap-2 rounded-lg border-2 border-brand-navy px-8 py-4 text-base font-semibold text-brand-navy transition hover:bg-brand-navy hover:text-white"
+                className="inline-flex items-center gap-2 rounded-lg border-2 border-white/30 px-8 py-4 text-base font-semibold text-white transition hover:bg-white/10"
               >
                 View All Services
               </Link>

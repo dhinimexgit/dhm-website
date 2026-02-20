@@ -22,6 +22,7 @@ export function BrandCarousel({ brands }: Props) {
               fill
               sizes="144px"
               className="object-contain"
+              unoptimized
             />
           </div>
         ))}

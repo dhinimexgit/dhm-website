@@ -29,7 +29,7 @@ export default async function DashboardLayout({
             <div className="flex items-center gap-12">
                 {/* <Link href="/dhm-myadmin" className="flex-shrink-0">
                     <Image
-                        src="/logo-dhinimex.png"
+                        src="/brands/DHM-WHITE.png"
                         alt="Dhinimex logo"
                         width={170}
                         height={49}

@@ -23,7 +23,7 @@ export default async function ProductDetailPage({ params }: Props) {
   const { product, category } = data;
 
   return (
-    <div className="min-h-screen pb-20 pt-8">
+    <div className="min-h-screen pt-8">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <nav className="mb-8 flex items-center gap-2 text-sm font-medium text-slate-500">

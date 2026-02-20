@@ -181,7 +181,7 @@ export default function BlogDetailPage({ params }: Props) {
                 <div className="flex items-center justify-between">
                   <Link href="/" className="flex-shrink-0">
                     <Image
-                      src="/logo-dhinimex.png"
+                      src="/brands/DHM-WHITE.png"
                       alt="Dhinimex logo"
                       width={160}
                       height={46}
@@ -218,9 +218,9 @@ export default function BlogDetailPage({ params }: Props) {
                       Products
                       <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
-                    {/* Blog - Active */}
-                    <Link href="/blog" className="group relative transition hover:text-white/80">
-                      Blog
+                    {/* News - Active */}
+                    <Link href="/news" className="group relative transition hover:text-white/80">
+                      News
                       <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" />
                     </Link>
                     <Link href="/careers" className="group relative transition hover:text-white/80">
@@ -287,7 +287,7 @@ export default function BlogDetailPage({ params }: Props) {
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
             {/* Breadcrumb */}
             <nav className="mb-6 flex items-center gap-2 text-sm">
-              <Link href="/blog" className="text-slate-500 transition hover:text-brand-navy">Blog</Link>
+              <Link href="/news" className="text-slate-500 transition hover:text-brand-navy">News</Link>
               <span className="text-slate-300">/</span>
               <span className="text-slate-400">{post.tag || "Article"}</span>
             </nav>
@@ -381,15 +381,15 @@ export default function BlogDetailPage({ params }: Props) {
 
             {/* Share & Navigation */}
             <div className="mt-8 flex flex-col items-center justify-between gap-6 rounded-xl bg-slate-50 p-6 sm:flex-row">
-              {/* Back to Blog */}
+              {/* Back to News */}
               <Link 
-                href="/blog" 
+                href="/news" 
                 className="group inline-flex items-center gap-2 text-sm font-semibold text-brand-navy transition hover:text-brand-red"
               >
                 <svg className="h-4 w-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
                 </svg>
-                Back to all stories
+                Back to all news
               </Link>
 
               {/* Share Buttons */}
@@ -453,7 +453,7 @@ export default function BlogDetailPage({ params }: Props) {
                   </h2>
                 </div>
                 <Link 
-                  href="/blog" 
+                  href="/news" 
                   className="group hidden items-center gap-2 rounded-full border border-brand-navy px-5 py-2 text-sm font-semibold text-brand-navy transition hover:bg-brand-navy hover:text-white sm:inline-flex"
                 >
                   View all stories
@@ -465,7 +465,7 @@ export default function BlogDetailPage({ params }: Props) {
               
               <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                 {relatedPosts.map((relatedPost, index) => (
-                  <Link key={relatedPost.slug} href={`/blog/${relatedPost.slug}`} className="group block">
+                  <Link key={relatedPost.slug} href={`/news/${relatedPost.slug}`} className="group block">
                     <article className="h-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
                       <div className="relative aspect-[16/10] overflow-hidden">
                         <Image
@@ -506,7 +506,7 @@ export default function BlogDetailPage({ params }: Props) {
               {/* Mobile View All Button */}
               <div className="mt-8 text-center sm:hidden">
                 <Link 
-                  href="/blog" 
+                  href="/news" 
                   className="inline-flex items-center gap-2 rounded-full border border-brand-navy px-6 py-3 text-sm font-semibold text-brand-navy transition hover:bg-brand-navy hover:text-white"
                 >
                   View all stories

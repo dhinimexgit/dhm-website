@@ -7,7 +7,7 @@ export const translations = {
       business: "Business Portfolio",
       services: "Services",
       products: "Products",
-      blog: "Blog",
+      blog: "News",
       careers: "Careers",
       contact: "Contact Us",
       search: "Search...",

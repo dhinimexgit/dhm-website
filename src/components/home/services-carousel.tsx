@@ -49,31 +49,31 @@ const serviceDescriptions: Record<string, string> = {
 };
 
 export function ServicesCarousel({ services }: Props) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  
   const allServices = services.slice(0, 5);
   const totalServices = allServices.length;
+  
+  const [currentIndex, setCurrentIndex] = useState(0);
   
   // Desktop shows 4 cards at a time
   const visibleCardsDesktop = 4;
 
   const handlePrev = () => {
-    setCurrentIndex((prev) => Math.max(0, prev - 1));
+    setCurrentIndex((prev) => (prev === 0 ? totalServices - 1 : prev - 1));
   };
 
   const handleNext = () => {
-    setCurrentIndex((prev) => Math.min(totalServices - 1, prev + 1));
+    setCurrentIndex((prev) => (prev === totalServices - 1 ? 0 : prev + 1));
   };
 
-  // Get visible services for desktop (4 cards starting from currentIndex)
-  const getVisibleServices = () => {
-    const start = currentIndex;
-    const end = Math.min(start + visibleCardsDesktop, totalServices);
-    return allServices.slice(start, end);
+  // Get visible cards for the current view (with wrapping)
+  const getVisibleCards = (count: number) => {
+    const cards = [];
+    for (let i = 0; i < count; i++) {
+      const index = (currentIndex + i) % totalServices;
+      cards.push(allServices[index]);
+    }
+    return cards;
   };
-
-  // Current service for mobile (one at a time)
-  const currentService = allServices[currentIndex];
 
   return (
     <section className="relative bg-white py-16 lg:py-24">
@@ -83,7 +83,7 @@ export function ServicesCarousel({ services }: Props) {
         <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="mb-4 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-brand-red">
-              <span className="h-px w-8 bg-brand-red" />
+              
               Our Services
             </p>
             <h2 className="text-3xl font-bold text-slate-900 sm:text-4xl lg:text-5xl">
@@ -119,40 +119,30 @@ export function ServicesCarousel({ services }: Props) {
 
           {/* Single Card - Below Image */}
           <div className="relative overflow-hidden">
-            <div 
-              className="flex transition-transform duration-500 ease-out"
-              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-            >
-              {allServices.map((service) => (
-                <article
-                  key={service.slug}
-                  className="flex h-[280px] w-full flex-shrink-0 flex-col border border-slate-200 bg-white p-5 shadow-lg"
-                >
-                  <div className="mb-4 text-brand-navy">
-                    {serviceIcons[service.slug] || (
-                      <svg className="h-9 w-9" fill="none" stroke="currentColor" strokeWidth="1.2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12a7.5 7.5 0 0015 0m-15 0a7.5 7.5 0 1115 0m-15 0H3m16.5 0H21" />
-                      </svg>
-                    )}
-                  </div>
-                  <h3 className="mb-2 text-lg font-semibold text-slate-900">
-                    {service.name}
-                  </h3>
-                  <p className="mb-4 flex-grow text-sm leading-relaxed text-slate-500">
-                    {serviceDescriptions[service.slug] || service.description}
-                  </p>
-                  <Link
-                    href={`/services#${service.slug}`}
-                    className="group mt-auto inline-flex items-center gap-2 text-sm font-medium text-brand-navy transition-colors hover:text-brand-red"
-                  >
-                    Learn more
-                    <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                    </svg>
-                  </Link>
-                </article>
-              ))}
-            </div>
+            <article className="flex h-[280px] w-full flex-col border border-slate-200 bg-white p-5 shadow-lg">
+              <div className="mb-4 text-brand-navy">
+                {serviceIcons[allServices[currentIndex].slug] || (
+                  <svg className="h-9 w-9" fill="none" stroke="currentColor" strokeWidth="1.2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12a7.5 7.5 0 0015 0m-15 0a7.5 7.5 0 1115 0m-15 0H3m16.5 0H21" />
+                  </svg>
+                )}
+              </div>
+              <h3 className="mb-2 text-lg font-semibold text-slate-900">
+                {allServices[currentIndex].name}
+              </h3>
+              <p className="mb-4 flex-grow text-sm leading-relaxed text-slate-500">
+                {serviceDescriptions[allServices[currentIndex].slug] || allServices[currentIndex].description}
+              </p>
+              <Link
+                href={`/services#${allServices[currentIndex].slug}`}
+                className="group mt-auto inline-flex items-center gap-2 text-sm font-medium text-brand-navy transition-colors hover:text-brand-red"
+              >
+                Learn more
+                <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+              </Link>
+            </article>
           </div>
         </div>
 
@@ -171,24 +161,14 @@ export function ServicesCarousel({ services }: Props) {
             />
           </div>
 
-          {/* Desktop Cards - Animated smoothly */}
+          {/* Desktop Cards - Show 4 visible cards */}
           <div className="relative z-10">
             <div className="absolute left-[25%] right-0 top-[120px]">
-              <div 
-                className="flex gap-5"
-                style={{
-                  transition: "transform 700ms cubic-bezier(0.4, 0, 0.2, 1)",
-                  transform: `translateX(-${currentIndex * 300}px)`,
-                }}
-              >
-                {allServices.map((service, idx) => (
+              <div className="flex gap-5">
+                {getVisibleCards(visibleCardsDesktop).map((service, idx) => (
                   <article
-                    key={service.slug}
-                    className="flex h-[350px] w-[285px] flex-shrink-0 flex-col border border-slate-200 bg-white p-6 shadow-lg"
-                    style={{
-                      transition: "opacity 70ms ease-in, transform 500ms ease-in",
-                      opacity: idx >= currentIndex && idx < currentIndex + visibleCardsDesktop ? 1 : 0,
-                    }}
+                    key={`${service.slug}-${idx}`}
+                    className="flex h-[350px] w-[285px] flex-shrink-0 flex-col border border-slate-200 bg-white p-6 shadow-lg transition-all duration-700"
                   >
                     <div className="mb-4 text-brand-navy">
                       {serviceIcons[service.slug] || (
@@ -224,8 +204,7 @@ export function ServicesCarousel({ services }: Props) {
           {/* Previous Arrow */}
           <button
             onClick={handlePrev}
-            disabled={currentIndex === 0}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 text-slate-500 transition-colors hover:border-brand-navy hover:text-brand-navy disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-slate-300 disabled:hover:text-slate-500"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 text-slate-500 transition-colors hover:border-brand-navy hover:text-brand-navy"
             aria-label="Previous"
           >
             <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
@@ -240,7 +219,7 @@ export function ServicesCarousel({ services }: Props) {
                 key={i}
                 onClick={() => setCurrentIndex(i)}
                 className={`h-2.5 w-2.5 rounded-full transition-all duration-300 ${
-                  i === currentIndex 
+                  i === currentIndex
                     ? "bg-brand-navy" 
                     : "bg-slate-300 hover:bg-slate-400"
                 }`}
@@ -252,8 +231,7 @@ export function ServicesCarousel({ services }: Props) {
           {/* Next Arrow */}
           <button
             onClick={handleNext}
-            disabled={currentIndex === totalServices - 1}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 text-slate-500 transition-colors hover:border-brand-navy hover:text-brand-navy disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-slate-300 disabled:hover:text-slate-500"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 text-slate-500 transition-colors hover:border-brand-navy hover:text-brand-navy"
             aria-label="Next"
           >
             <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">

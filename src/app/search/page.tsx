@@ -63,7 +63,7 @@ function SearchResults() {
 
 export default function SearchPage() {
   return (
-    <div className="pb-20">
+    <div>
       <section className="full-bleed relative overflow-hidden">
         <div className="relative h-[500px] w-full sm:h-[600px] lg:h-[700px]">
           <Image src={heroImage} alt="Search" fill priority className="object-cover" sizes="100vw" />

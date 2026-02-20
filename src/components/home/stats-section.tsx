@@ -90,25 +90,12 @@ export function StatsSection() {
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         {/* Elegant Slogan Banner */}
         <div className="mb-20 text-center">
-          <div className="relative inline-block">
-            {/* Decorative lines */}
-            <div className="absolute left-0 top-1/2 -translate-x-full -translate-y-1/2 hidden sm:block">
-              <div className="flex items-center gap-2">
-                <span className="h-px w-12 bg-gradient-to-r from-transparent to-brand-red/100" />
-                <span className="h-1.5 w-1.5 rounded-full bg-brand-red" />
-              </div>
-            </div>
-            <div className="absolute right-0 top-1/2 translate-x-full -translate-y-1/2 hidden sm:block">
-              <div className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-brand-red" />
-                <span className="h-px w-12 bg-gradient-to-l from-transparent to-brand-red/100" />
-              </div>
-            </div>
+          <div className="relative inline-block">            
             <h2 className="text-2xl font-semibold text-brand-navy sm:text-3xl lg:text-4xl px-8">
-              Powering Cambodia&apos;s Infrastructure
+              More Than a Company — A Growing Group
             </h2>
           </div>
-          <p className="mt-4 text-lg text-slate-500">Since 2003</p>
+          <p className="mt-4 text-lg text-red-500">Built over two decades, across industries</p>
         </div>
 
         {/* Stats Grid */}

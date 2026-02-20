@@ -11,39 +11,34 @@ const heroImage = "/water-supply.png";
 const licenses = [
   {
     name: "Chhouk Water License (CHHW)",
-    customers: "3,736",
-    description: "Serving 3,736 customers, the Chhouk license is dedicated to expanding clean water access in rural communities. We focus on building sustainable infrastructure to secure long-term water quality and supply.",
+    description: "The Chhouk license is dedicated to expanding clean water access in rural communities. We focus on building sustainable infrastructure to secure long-term water quality and supply.",
     link: "/business/water-supply/chhouk",
     image: "/elect_distribute-1.png",
     province: "Kampot"
   },
   {
     name: "TPhong Water License (TPHW)",
-    customers: "2,888",
-    description: "Supplying 2,888 customers, the TPhong license supports growing demand for safe water in its region. Our investments here strengthen water networks and improve service reliability for households and enterprises alike.",
+    description: "The TPhong license supports growing demand for safe water in its region. Our investments here strengthen water networks and improve service reliability for households and enterprises.",
     link: "/business/water-supply/tphong",
     image: "/elect_distribute-2.png",
     province: "Kampot"
   },
   {
     name: "Pong Traj Water License (PTRW)",
-    customers: "3,082",
-    description: "With 3,082 customers, the Pong Traj license reflects our commitment to rural development through modern water distribution systems, ensuring consistent service and improved community well-being.",
+    description: "The Pong Traj license reflects our commitment to rural development through modern water distribution systems, ensuring consistent service and improved community well-being.",
     link: "/business/water-supply/pong-traj",
     image: "/elect_distribute-1.png",
     province: "Kampot"
   },
   {
     name: "Touk Meas Water License (TMW)",
-    customers: "4,576",
-    description: "Supplying 4,576 customers, this license covers the Touk Meas area. Our investment in pipelines and treatment systems ensures households and businesses receive safe, reliable clean water.",
+    description: "This license covers the Touk Meas area. Our investment in pipelines and treatment systems ensures households and businesses receive safe, reliable clean water.",
     link: "/business/water-supply/touk-meas",
     image: "/elect_distribute-2.png",
     province: "Kampot"
   },
   {
     name: "Damnak Chang Eur Water Supply",
-    customers: "1,200",
     description: "The Damnak Chang Eur water supply project represents our commitment to providing clean, reliable water access to communities in this vital region through strategic infrastructure investments.",
     link: "/business/water-supply/damnak-chang-eur",
     image: "/elect_distribute-1.png",
@@ -51,19 +46,12 @@ const licenses = [
   },
   {
     name: "Teuk Pong Teuk Water License (TPTW)",
-    customers: "649",
-    description: "Providing clean water to 649 customers, this license serves smaller communities with tailored infrastructure solutions, reinforcing our dedication to accessibility and quality even in underserved areas.",
+    description: "This license serves smaller communities with tailored infrastructure solutions, reinforcing our dedication to accessibility and quality even in underserved areas.",
     link: "/business/water-supply/teuk-pong-teuk",
     image: "/elect_distribute-2.png",
     province: "Kampot"
   },
 ];
-
-// Calculate total customers
-const totalCustomers = licenses.reduce((sum, license) => {
-  const num = parseInt(license.customers.replace(/,/g, ''));
-  return sum + num;
-}, 0);
 
 export default function WaterSupplyPage() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -115,7 +103,7 @@ export default function WaterSupplyPage() {
     <>
       <StickyHeader isVisible={isScrolled} />
 
-      <div className="pb-20">
+      <div>
         {/* Hero Banner Section */}
         <section className="relative min-h-[60vh] overflow-hidden lg:min-h-[70vh]">
           <div className="absolute inset-0 z-0">
@@ -129,7 +117,7 @@ export default function WaterSupplyPage() {
               <div className="relative rounded-xl bg-brand-navy/80 shadow-lg backdrop-blur-sm">
                 <div className="flex items-center justify-between px-8 py-4">
                   <Link href="/" className="flex-shrink-0">
-                    <Image src="/logo-dhinimex.png" alt="Dhinimex logo" width={160} height={46} priority className="h-auto w-[160px]" />
+                    <Image src="/brands/DHM-WHITE.png" alt="Dhinimex logo" width={160} height={46} priority className="h-auto w-[160px]" />
                   </Link>
                   <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
                     <Link href="/about" className="group relative transition hover:text-white/80">
@@ -154,7 +142,7 @@ export default function WaterSupplyPage() {
                     </div>
                     <Link href="/services" className="group relative transition hover:text-white/80">Services<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                     <Link href="/products" className="group relative transition hover:text-white/80">Products<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/blog" className="group relative transition hover:text-white/80">Blog<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/news" className="group relative transition hover:text-white/80">News<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                     <Link href="/careers" className="group relative transition hover:text-white/80">Careers<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                   </nav>
                   <div className="flex items-center gap-4">
@@ -220,12 +208,12 @@ export default function WaterSupplyPage() {
                   <div className="flex items-center gap-2">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-red/20">
                       <svg className="h-6 w-6 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                       </svg>
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-white">{totalCustomers.toLocaleString()}+</p>
-                      <p className="text-sm text-white/60">Customers</p>
+                      <p className="text-2xl font-bold text-white">100%</p>
+                      <p className="text-sm text-white/60">Clean Water</p>
                     </div>
                   </div>
                 </div>
@@ -278,14 +266,11 @@ export default function WaterSupplyPage() {
                       </span>
                     </div>
 
-                    {/* Customer count */}
-                    <div className="absolute bottom-4 left-4">
-                      <span className="text-3xl font-bold text-white">
-                        {license.customers}
-                      </span>
-                      <span className="ml-2 text-sm font-medium text-white/80">
-                        Customers
-                      </span>
+                    {/* License Name */}
+                    <div className="absolute bottom-4 left-4 right-4">
+                      <h3 className="text-xl font-bold text-white drop-shadow-lg">
+                        {license.name}
+                      </h3>
                     </div>
                   </div>
 
@@ -294,9 +279,6 @@ export default function WaterSupplyPage() {
                     {/* Decorative line */}
                     <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-brand-red via-brand-navy to-brand-red opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                     
-                    <h3 className="mb-2 text-lg font-bold text-brand-navy transition-colors group-hover:text-brand-red">
-                      {license.name}
-                    </h3>
                     <p className="mb-4 line-clamp-3 text-sm leading-relaxed text-slate-600">
                       {license.description}
                     </p>
@@ -316,30 +298,6 @@ export default function WaterSupplyPage() {
           </div>
         </section>
 
-        {/* Stats Section */}
-        <section className="bg-brand-navy py-16">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="grid gap-8 md:grid-cols-4">
-              <div className="text-center">
-                <div className="mb-2 text-4xl font-bold text-white lg:text-5xl">{licenses.length}</div>
-                <div className="text-sm font-medium text-white/60">Licensed Areas</div>
-              </div>
-              <div className="text-center">
-                <div className="mb-2 text-4xl font-bold text-white lg:text-5xl">{totalCustomers.toLocaleString()}+</div>
-                <div className="text-sm font-medium text-white/60">Total Customers</div>
-              </div>
-              <div className="text-center">
-                <div className="mb-2 text-4xl font-bold text-white lg:text-5xl">100%</div>
-                <div className="text-sm font-medium text-white/60">Clean Water</div>
-              </div>
-              <div className="text-center">
-                <div className="mb-2 text-4xl font-bold text-white lg:text-5xl">24/7</div>
-                <div className="text-sm font-medium text-white/60">Service Support</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* CTA Section */}
         <section className="relative overflow-hidden bg-brand-navy py-20">
           <div className="absolute inset-0 opacity-10">
@@ -347,10 +305,10 @@ export default function WaterSupplyPage() {
           </div>
           <div className="relative mx-auto max-w-4xl px-6 text-center lg:px-8">
             <h2 className="mb-4 text-3xl font-bold text-white lg:text-4xl">
-              Questions About Water Services?
+              Questions About Our Services?
             </h2>
             <p className="mb-8 text-lg text-white/80">
-              Contact us to learn more about water supply in your area.
+              Contact us to learn more about water supply services and solutions.
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link

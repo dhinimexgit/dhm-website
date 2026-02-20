@@ -7,16 +7,15 @@ export const metadata = {
     "Dhinimex represents global brands across electrical, water, and automation technologies. Explore our trusted partnerships.",
 };
 
-// All brand logos with their info
+// All brand logos with their info - matches actual files in /public/brands/
 const brandPartners = [
   { name: "ThiPha Cable", logo: "/brands/ALL-LOGO-01.png" },
   { name: "Mitsubishi Electric", logo: "/brands/ALL-LOGO-02.png" },
   { name: "LS VINA Cable & System", logo: "/brands/ALL-LOGO-03.png" },
+  { name: "Partner Brand", logo: "/brands/ALL-LOGO-04.png" },
   { name: "Black+Decker", logo: "/brands/ALL-LOGO-05.png" },
   { name: "Stanley", logo: "/brands/ALL-LOGO-06.png" },
   { name: "Hi-Min Solar", logo: "/brands/ALL-LOGO-07.png" },
-  { name: "Partner Brand", logo: "/brands/ALL-LOGO-08.png" },
-  { name: "Partner Brand", logo: "/brands/ALL-LOGO-09.png" },
   { name: "Partner Brand", logo: "/brands/ALL-LOGO-10.png" },
   { name: "Partner Brand", logo: "/brands/ALL-LOGO-11.png" },
   { name: "Partner Brand", logo: "/brands/ALL-LOGO-12.png" },
@@ -26,11 +25,12 @@ const brandPartners = [
   { name: "Partner Brand", logo: "/brands/ALL-LOGO-16.png" },
   { name: "Partner Brand", logo: "/brands/ALL-LOGO-17.png" },
   { name: "Partner Brand", logo: "/brands/ALL-LOGO-18.png" },
-  { name: "Partner Brand", logo: "/brands/ALL-LOGO-19.png" },
   { name: "Partner Brand", logo: "/brands/ALL-LOGO-20.png" },
   { name: "Partner Brand", logo: "/brands/ALL-LOGO-21.png" },
   { name: "Partner Brand", logo: "/brands/ALL-LOGO-22.png" },
   { name: "Partner Brand", logo: "/brands/ALL-LOGO-23.png" },
+  { name: "Partner Brand", logo: "/brands/ALL-LOGO-24.png" },
+  { name: "Partner Brand", logo: "/brands/ALL-LOGO-25.png" },
   { name: "Kyoritsu", logo: "/brands/ALL-LOGO-26.png" },
   { name: "Fujitsu", logo: "/brands/ALL-LOGO-27.png" },
 ];
@@ -49,9 +49,9 @@ export default function BrandsPage() {
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <div className="text-center">
             <p className="mb-4 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-brand-red">
-              <span className="h-px w-8 bg-brand-red" />
+              
               Partners & Partnerships
-              <span className="h-px w-8 bg-brand-red" />
+              
             </p>
             <h1 className="mb-6 text-4xl font-bold text-white sm:text-5xl lg:text-6xl">
               Brands We Represent
@@ -85,18 +85,16 @@ export default function BrandsPage() {
                 key={`${brand.name}-${index}`}
                 className="group flex flex-col items-center justify-center rounded-xl bg-slate-50 p-6 transition-all duration-300 hover:bg-white hover:shadow-lg hover:ring-1 hover:ring-slate-200"
               >
-                <div className="relative mb-4 h-16 w-full">
+                <div className="relative h-16 w-full">
                   <Image
                     src={brand.logo}
                     alt={brand.name}
                     fill
                     className="object-contain"
                     sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 16vw"
+                    unoptimized
                   />
                 </div>
-                <p className="text-center text-xs font-medium text-slate-600">
-                  {brand.name}
-                </p>
               </div>
             ))}
           </div>
