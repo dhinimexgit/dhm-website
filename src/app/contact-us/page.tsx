@@ -152,6 +152,7 @@ export default function ContactPage() {
                       height={46}
                       priority
                       className="h-auto w-[160px]"
+                      unoptimized
                     />
                   </Link>
                   <nav className="flex items-center gap-8 text-[15px] font-medium text-white">

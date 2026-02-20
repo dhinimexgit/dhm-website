@@ -75,6 +75,7 @@ export function StickyHeader({ isVisible }: Props) {
                 height={40}
                 priority
                 className="h-auto w-[140px]"
+                unoptimized
               />
             </Link>
             <nav className="flex items-center gap-6 text-sm font-medium text-white">
