@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { StickyHeader } from "@/components/home/sticky-header";
 
-const heroImage = "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1920&q=80";
+const heroImage = "/business-manufacturing-hero.jpg";
 
 const companies = [
   {

@@ -8,9 +8,9 @@ import { StickyHeader } from "@/components/home/sticky-header";
 const heroImage = "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1920&q=80";
 
 const highlights = [
-  { icon: "⚡", title: "First in Cambodia", description: "Established in 2014 as Cambodia's pioneering transformer manufacturer" },
-  { icon: "🏭", title: "Brand: RAJ", description: "High-quality oil-immersed distribution transformers" },
-  { icon: "🔧", title: "Full Service", description: "Comprehensive repair & maintenance for all transformer brands" },
+  { title: "First in Cambodia", description: "Established in 2014 as Cambodia's pioneering transformer manufacturer" },
+  { title: "Brand: RAJ", description: "High-quality oil-immersed distribution transformers" },
+  { title: "Full Service", description: "Comprehensive repair & maintenance for all transformer brands" },
 ];
 
 export default function SaekarajTransfoDetailPage() {
@@ -101,7 +101,7 @@ export default function SaekarajTransfoDetailPage() {
               <div className="relative">
                 <div className="absolute -left-4 -top-4 h-full w-full rounded-2xl bg-brand-navy/10 lg:-left-6 lg:-top-6" />
                 <div className="relative overflow-hidden rounded-2xl shadow-2xl">
-                  <Image src="/saekaraj.jpg" alt="Saekaraj Transfo" width={720} height={480} className="h-auto w-full object-cover" priority />
+                  <Image src="/saekaraj-1.jpg" alt="Saekaraj Transfo" width={720} height={480} className="h-auto w-full object-cover" priority />
                 </div>
               </div>
 
@@ -125,12 +125,14 @@ export default function SaekarajTransfoDetailPage() {
                 </div>
 
                 {/* Highlights */}
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {highlights.map((highlight, index) => (
-                    <div key={index} className="flex items-start gap-4 rounded-xl border-l-4 border-brand-navy bg-white p-4 shadow-md">
-                      <span className="text-2xl">{highlight.icon}</span>
+                    <div key={index} className="flex items-start gap-3 rounded-xl bg-white p-4 shadow-md">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-red/10">
+                        <svg className="h-4 w-4 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
+                      </div>
                       <div>
-                        <h4 className="font-semibold text-brand-navy">{highlight.title}</h4>
+                        <h4 className="font-medium text-brand-navy">{highlight.title}</h4>
                         <p className="text-sm text-slate-600">{highlight.description}</p>
                       </div>
                     </div>

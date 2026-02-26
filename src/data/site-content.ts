@@ -416,13 +416,13 @@ export const leadership: Leader[] = [
     quote: "Passion and discipline make you a better person.",
     portrait: "https://www.dhinimex.com/wp-content/uploads/2025/10/Ms-Nai_2-1.jpg",
   },
-  {
-    name: "Chan Tola",
-    title: "Deputy Managing Director Operations",
-    bio: "Oversees operational excellence and process optimization across manufacturing, utilities, and project delivery.",
-    quote: "---",
-    portrait: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80",
-  },
+  // {
+  //   name: "Chan Tola",
+  //   title: "Deputy Managing Director Operations",
+  //   bio: "Oversees operational excellence and process optimization across manufacturing, utilities, and project delivery.",
+  //   quote: "---",
+  //   portrait: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80",
+  // },
 ];
 
 export const brands: Brand[] = [

@@ -388,8 +388,8 @@ export default function AboutPage() {
             <div className="relative">
               <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-2xl">
                 <Image
-                  src={placeholderImages.teamPhoto}
-                  alt="Dhinimex Team"
+                  src="/kcc-2.jpg"
+                  alt="Dhinimex manufacturing and operations"
                   fill
                   className="object-cover"
                 />
@@ -485,8 +485,8 @@ export default function AboutPage() {
             <div className="relative">
               <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-gradient-to-br from-brand-navy/5 to-brand-red/5 shadow-lg lg:aspect-[1/1]">
                 <Image
-                  src={placeholderImages.coreValues}
-                  alt="Core Values - Team Collaboration"
+                  src="/vcc-2.jpg"
+                  alt="Core Values - Manufacturing and quality"
                   fill
                   className="object-cover"
                 />
@@ -687,9 +687,8 @@ export default function AboutPage() {
         </section>
 
         {/* Work Culture Section - White background */}
-        <section className="full-bleed relative overflow-hidden bg-white py-20">
+        {/* <section className="full-bleed relative overflow-hidden bg-white py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            {/* Header */}
             <div className="mb-12 text-center">
               <div className="relative mx-auto mb-8 h-[200px] max-w-3xl overflow-hidden rounded-2xl lg:h-[280px]">
                 <Image
@@ -710,7 +709,6 @@ export default function AboutPage() {
               </div>
             </div>
 
-            {/* Team Photos Grid */}
             <div className="grid grid-cols-3 gap-4 sm:grid-cols-6 lg:gap-6">
               {placeholderImages.teamMembers.map((image, index) => (
                 <div
@@ -728,7 +726,7 @@ export default function AboutPage() {
               ))}
             </div>
           </div>
-        </section>
+        </section> */}
       </div>
     </>
   );

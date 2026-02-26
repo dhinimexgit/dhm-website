@@ -101,7 +101,7 @@ export default function VongChanCableDetailPage() {
               <div className="relative">
                 <div className="absolute -left-4 -top-4 h-full w-full rounded-2xl bg-brand-navy/10 lg:-left-6 lg:-top-6" />
                 <div className="relative overflow-hidden rounded-2xl shadow-2xl">
-                  <Image src="/vcc.jpg" alt="Vong Chan Cable" width={720} height={480} className="h-auto w-full object-cover" priority />
+                  <Image src="/vcc-1.jpg" alt="Vong Chan Cable" width={720} height={480} className="h-auto w-full object-cover" priority />
                 </div>
               </div>
 
