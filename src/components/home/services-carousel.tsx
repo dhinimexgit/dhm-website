@@ -108,12 +108,13 @@ export function ServicesCarousel({ services }: Props) {
           {/* Image */}
           <div className="relative mb-6 h-[250px] w-full overflow-hidden">
             <Image
-              src="/dhinimex.jpg"
+              src="/saekaraj-3.jpg"
               alt="Dhinimex infrastructure"
               fill
               className="object-cover"
               sizes="100vw"
               priority
+              unoptimized
             />
           </div>
 
@@ -152,12 +153,13 @@ export function ServicesCarousel({ services }: Props) {
           {/* Large Background Image - Left Side */}
           <div className="absolute left-0 top-0 z-0 h-full w-[40%] overflow-hidden">
             <Image
-              src="https://www.dhinimex.com/wp-content/uploads/2025/11/Dhinimex-building_e.jpg"
+              src="/saekaraj-3.jpg"
               alt="Dhinimex infrastructure"
               fill
               className="object-cover"
               sizes="40vw"
               priority
+              unoptimized
             />
           </div>
 

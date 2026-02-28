@@ -89,8 +89,16 @@ export function HomeHero() {
 
   return (
     <>
-      <StickyHeader isVisible={mounted && isScrolled} />
-      <section ref={heroRef} className="relative min-h-screen overflow-hidden" suppressHydrationWarning>
+      {mounted ? (
+        <StickyHeader isVisible={isScrolled} />
+      ) : (
+        <header 
+          suppressHydrationWarning
+          className="fixed inset-x-0 top-0 z-50 hidden lg:block transition-all duration-300 -translate-y-full opacity-0"
+          aria-hidden="true"
+        />
+      )}
+      <section ref={heroRef} className="relative min-h-screen overflow-hidden">
         {/* Background Image with Glassmorphism Dark Overlay - IES Style */}
         <div className="absolute inset-0 z-0">
           <Image
