@@ -29,8 +29,6 @@ const brandPartners = [
   { name: "Partner Brand", logo: "/brands/ALL-LOGO-21.png" },
   { name: "Partner Brand", logo: "/brands/ALL-LOGO-22.png" },
   { name: "Partner Brand", logo: "/brands/ALL-LOGO-23.png" },
-  { name: "Partner Brand", logo: "/brands/ALL-LOGO-24.png" },
-  { name: "Partner Brand", logo: "/brands/ALL-LOGO-25.png" },
   { name: "Kyoritsu", logo: "/brands/ALL-LOGO-26.png" },
   { name: "Fujitsu", logo: "/brands/ALL-LOGO-27.png" },
 ];
