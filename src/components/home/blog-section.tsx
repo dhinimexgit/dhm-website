@@ -65,7 +65,7 @@ export function BlogSection({ posts }: Props) {
               {/* Image */}
               <div className="relative aspect-[16/10] overflow-hidden">
                 <Image
-                  src={post.cover}
+                  src="/energy.jpg"
                   alt=""
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"

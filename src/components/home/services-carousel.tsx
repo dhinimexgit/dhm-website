@@ -108,7 +108,7 @@ export function ServicesCarousel({ services }: Props) {
           {/* Image */}
           <div className="relative mb-6 h-[250px] w-full overflow-hidden">
             <Image
-              src="https://www.dhinimex.com/wp-content/uploads/2025/11/Dhinimex-building_e.jpg"
+              src="/dhinimex.jpg"
               alt="Dhinimex infrastructure"
               fill
               className="object-cover"
