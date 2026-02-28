@@ -53,8 +53,8 @@ export function SiteHeader() {
 
   // Use consistent background logic
   const headerClasses = hasEmbeddedNav 
-    ? 'lg:hidden lg:relative fixed inset-x-0 top-0 z-50 bg-[#2E388C] text-white shadow-lg' 
-    : 'relative z-50 bg-[#2E388C] text-white shadow-md';
+    ? 'lg:hidden lg:relative fixed inset-x-0 top-0 z-50 bg-brand-navy text-white shadow-lg' 
+    : 'relative z-50 bg-brand-navy text-white shadow-md';
 
   const navItems = [
     { label: t.nav.about, href: "/about" },
@@ -260,7 +260,7 @@ export function SiteHeader() {
         </nav>
       </div>
       {isOpen && (
-        <div className="absolute inset-x-0 top-full border-t border-white/20 bg-[#2E388C] md:hidden">
+        <div className="absolute inset-x-0 top-full border-t border-white/20 bg-brand-navy md:hidden">
           <nav className="flex flex-col px-4 pb-6">
             {/* Mobile Search */}
             <form onSubmit={handleSearchSubmit} className="mt-4 mb-2 relative">

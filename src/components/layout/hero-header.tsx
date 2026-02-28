@@ -64,7 +64,7 @@ export function HeroHeader() {
   };
 
   return (
-    <div className="flex w-full items-center justify-between bg-[#2E388C] px-14 py-5 shadow-lg">
+    <div className="flex w-full items-center justify-between bg-brand-navy px-14 py-5 shadow-lg">
       <Link href="/" className="flex-shrink-0">
         <Image
           src="/brands/DHM-WHITE.png"

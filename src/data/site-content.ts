@@ -399,7 +399,7 @@ export const leadership: Leader[] = [
     bio: "Founded Dhinimex in 2003 and continues to guide the company with a focus on ethics, transparency, and service quality.",
     quote:
       "We earn trust by upholding strong ethical standards and delivering excellence in every engagement.",
-    portrait: "https://www.dhinimex.com/wp-content/uploads/2025/10/BOD_2.jpg",
+    portrait: "/bod.jpg",
   },
   {
     name: "Sutharsan Chelladurai",
@@ -407,14 +407,14 @@ export const leadership: Leader[] = [
     bio: "Oversees EPC execution, manufacturing, and utilities operations with a leadership philosophy grounded in responsibility.",
     quote:
       "Leadership is taking responsibility, inspiring with vision, and delivering results that shape a better future.",
-    portrait: "https://www.dhinimex.com/wp-content/uploads/2025/10/MD_2.jpg",
+    portrait: "/md.jpg",
   },
   {
     name: "Gheknai Kong",
     title: "Deputy Managing Director Finance & Audit",
     bio: "Drives financial strategy and governance, ensuring disciplined growth across the group’s portfolio.",
     quote: "Passion and discipline make you a better person.",
-    portrait: "https://www.dhinimex.com/wp-content/uploads/2025/10/Ms-Nai_2-1.jpg",
+    portrait: "/dmdf.jpg",
   },
   // {
   //   name: "Chan Tola",

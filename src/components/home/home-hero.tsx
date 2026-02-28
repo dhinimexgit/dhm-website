@@ -8,16 +8,17 @@ import { StickyHeader } from "./sticky-header";
 
 // 5 placeholder images for the carousel
 const heroImages = [
-  "https://www.dhinimex.com/wp-content/uploads/2025/11/Dhinimex-building_e.jpg",
-  "https://www.dhinimex.com/wp-content/uploads/2025/08/img-post_1.png",
-  "/saekaraj.jpg",
+  "/Dhinimex-building_e.jpg",
+  "/kcc-3.jpg",
   "/camrad.jpg",
   "/kcc.jpg",
+  "/saekaraj-2.jpg",
 ];
 
 export function HomeHero() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const heroRef = useRef<HTMLElement>(null);
@@ -33,6 +34,10 @@ export function HomeHero() {
       setSearchQuery("");
     }
   };
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -84,12 +89,12 @@ export function HomeHero() {
 
   return (
     <>
-      <StickyHeader isVisible={isScrolled} />
-      <section ref={heroRef} className="relative min-h-screen overflow-hidden">
+      <StickyHeader isVisible={mounted && isScrolled} />
+      <section ref={heroRef} className="relative min-h-screen overflow-hidden" suppressHydrationWarning>
         {/* Background Image with Glassmorphism Dark Overlay - IES Style */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://www.dhinimex.com/wp-content/uploads/2025/08/cover-slide.png"
+            src="/cover-slide.png"
             alt=""
             fill
             priority

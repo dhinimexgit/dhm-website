@@ -60,6 +60,7 @@ export function StickyHeader({ isVisible }: Props) {
 
   return (
     <header
+      suppressHydrationWarning
       className={`fixed inset-x-0 top-0 z-50 hidden lg:block transition-all duration-300 ${
         isVisible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
       }`}
