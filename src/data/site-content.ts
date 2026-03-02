@@ -410,7 +410,7 @@ export const leadership: Leader[] = [
     portrait: "/md.jpg",
   },
   {
-    name: "Gheknai Kong",
+    name: "Kong Gheknai",
     title: "Deputy Managing Director Finance & Audit",
     bio: "Drives financial strategy and governance, ensuring disciplined growth across the group’s portfolio.",
     quote: "Passion and discipline make you a better person.",
