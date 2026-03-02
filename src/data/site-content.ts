@@ -416,13 +416,13 @@ export const leadership: Leader[] = [
     quote: "Passion and discipline make you a better person.",
     portrait: "/dmdf.jpg",
   },
-  // {
-  //   name: "Chan Tola",
-  //   title: "Deputy Managing Director Operations",
-  //   bio: "Oversees operational excellence and process optimization across manufacturing, utilities, and project delivery.",
-  //   quote: "---",
-  //   portrait: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80",
-  // },
+  {
+    name: "Chan Tola",
+    title: "Deputy Managing Director Operations",
+    bio: "Oversees operational excellence and process optimization across manufacturing, utilities, and project delivery.",
+    quote: "We go farther together where individual responsibility strengthens collective excellence.",
+    portrait: "/dmdo.svg",
+  },
 ];
 
 export const brands: Brand[] = [
