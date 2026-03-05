@@ -108,27 +108,11 @@ export default function DongTongPage() {
                 
                 <div className="space-y-4 text-base leading-relaxed text-slate-600">
                   <p>
-                    Providing electricity to <strong className="text-brand-navy">10,215 customers</strong>, this license supports smaller but vital communities in Dong Tong.
+                    This license supports smaller but vital communities in Dong Tong with reliable electricity distribution.
                   </p>
                   <p>
                     Our operations here focus on accessibility, reliability, and continuous improvement in service delivery to ensure every household and business has access to stable power.
                   </p>
-                </div>
-
-                {/* Stats */}
-                <div className="grid gap-4 sm:grid-cols-3">
-                  <div className="rounded-xl bg-white p-6 text-center shadow-md">
-                    <p className="text-3xl font-bold text-brand-navy">10,215</p>
-                    <p className="text-sm text-slate-500">Customers</p>
-                  </div>
-                  <div className="rounded-xl bg-white p-6 text-center shadow-md">
-                    <p className="text-3xl font-bold text-brand-navy">24/7</p>
-                    <p className="text-sm text-slate-500">Service</p>
-                  </div>
-                  <div className="rounded-xl bg-white p-6 text-center shadow-md">
-                    <p className="text-3xl font-bold text-brand-navy">99%</p>
-                    <p className="text-sm text-slate-500">Uptime</p>
-                  </div>
                 </div>
 
                 {/* Actions */}

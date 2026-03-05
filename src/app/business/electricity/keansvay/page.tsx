@@ -108,27 +108,11 @@ export default function KeansvayPage() {
                 
                 <div className="space-y-4 text-base leading-relaxed text-slate-600">
                   <p>
-                    Serving <strong className="text-brand-navy">29,052 customers</strong>, this license covers the distribution of electricity across the Keansvay area.
+                    This license covers the distribution of electricity across the Keansvay area with reliable infrastructure.
                   </p>
                   <p>
                     We have invested in infrastructure to deliver stable and affordable energy to households and businesses, ensuring reliable power for the growing community.
                   </p>
-                </div>
-
-                {/* Stats */}
-                <div className="grid gap-4 sm:grid-cols-3">
-                  <div className="rounded-xl bg-white p-6 text-center shadow-md">
-                    <p className="text-3xl font-bold text-brand-navy">29,052</p>
-                    <p className="text-sm text-slate-500">Customers</p>
-                  </div>
-                  <div className="rounded-xl bg-white p-6 text-center shadow-md">
-                    <p className="text-3xl font-bold text-brand-navy">24/7</p>
-                    <p className="text-sm text-slate-500">Service</p>
-                  </div>
-                  <div className="rounded-xl bg-white p-6 text-center shadow-md">
-                    <p className="text-3xl font-bold text-brand-navy">Kandal</p>
-                    <p className="text-sm text-slate-500">Province</p>
-                  </div>
                 </div>
 
                 {/* Actions */}

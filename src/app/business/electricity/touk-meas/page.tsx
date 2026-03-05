@@ -80,7 +80,7 @@ export default function ToukMeasPage() {
                   Akissni Touk Meas (TME)
                 </h1>
                 <p className="max-w-xl text-lg text-white/80">
-                  Our largest licensed area serving over 50,000 customers with reliable electricity.
+                  Our largest licensed area delivering reliable electricity across the region.
                 </p>
               </div>
             </div>
@@ -108,27 +108,11 @@ export default function ToukMeasPage() {
                 
                 <div className="space-y-4 text-base leading-relaxed text-slate-600">
                   <p>
-                    As our <strong className="text-brand-navy">largest licensed area</strong>, <strong>50,733 customers</strong> are connected under the Touk Meas license. This area represents a core part of our electricity distribution portfolio.
+                    As our <strong className="text-brand-navy">largest licensed area</strong>, the Touk Meas license represents a core part of our electricity distribution portfolio.
                   </p>
                   <p>
                     Supported by substantial infrastructure to meet growing demand, we continue to invest in grid reliability and service quality for households and businesses throughout the region.
                   </p>
-                </div>
-
-                {/* Stats */}
-                <div className="grid gap-4 sm:grid-cols-3">
-                  <div className="rounded-xl bg-white p-6 text-center shadow-md">
-                    <p className="text-3xl font-bold text-brand-navy">50,733</p>
-                    <p className="text-sm text-slate-500">Customers</p>
-                  </div>
-                  <div className="rounded-xl bg-white p-6 text-center shadow-md">
-                    <p className="text-3xl font-bold text-brand-navy">24/7</p>
-                    <p className="text-sm text-slate-500">Service</p>
-                  </div>
-                  <div className="rounded-xl bg-white p-6 text-center shadow-md">
-                    <p className="text-3xl font-bold text-brand-navy">#1</p>
-                    <p className="text-sm text-slate-500">Largest Area</p>
-                  </div>
                 </div>
 
                 {/* Actions */}

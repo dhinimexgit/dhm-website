@@ -108,27 +108,11 @@ export default function EposePage() {
                 
                 <div className="space-y-4 text-base leading-relaxed text-slate-600">
                   <p>
-                    With a customer base of <strong className="text-brand-navy">25,455 users</strong>, this license ensures electricity supply to the EPOSE region.
+                    This license ensures electricity supply to the EPOSE region with reliable and modern grid infrastructure.
                   </p>
                   <p>
                     Our investment supports rural development by strengthening grid reliability and expanding access to modern energy for households and businesses throughout the area.
                   </p>
-                </div>
-
-                {/* Stats */}
-                <div className="grid gap-4 sm:grid-cols-3">
-                  <div className="rounded-xl bg-white p-6 text-center shadow-md">
-                    <p className="text-3xl font-bold text-brand-navy">25,455</p>
-                    <p className="text-sm text-slate-500">Customers</p>
-                  </div>
-                  <div className="rounded-xl bg-white p-6 text-center shadow-md">
-                    <p className="text-3xl font-bold text-brand-navy">24/7</p>
-                    <p className="text-sm text-slate-500">Service</p>
-                  </div>
-                  <div className="rounded-xl bg-white p-6 text-center shadow-md">
-                    <p className="text-3xl font-bold text-brand-navy">Rural</p>
-                    <p className="text-sm text-slate-500">Development</p>
-                  </div>
                 </div>
 
                 {/* Actions */}

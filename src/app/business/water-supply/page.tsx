@@ -13,42 +13,42 @@ const licenses = [
     name: "Chhouk Water License (CHHW)",
     description: "The Chhouk license is dedicated to expanding clean water access in rural communities. We focus on building sustainable infrastructure to secure long-term water quality and supply.",
     link: "/business/water-supply/chhouk",
-    image: "/elect_distribute-1.png",
+    image: "/water-supply.png",
     province: "Kampot"
   },
   {
     name: "TPhong Water License (TPHW)",
     description: "The TPhong license supports growing demand for safe water in its region. Our investments here strengthen water networks and improve service reliability for households and enterprises.",
     link: "/business/water-supply/tphong",
-    image: "/elect_distribute-2.png",
+    image: "/water-supply.png",
     province: "Kampot"
   },
   {
     name: "Pong Traj Water License (PTRW)",
     description: "The Pong Traj license reflects our commitment to rural development through modern water distribution systems, ensuring consistent service and improved community well-being.",
     link: "/business/water-supply/pong-traj",
-    image: "/elect_distribute-1.png",
+    image: "/water-supply.png",
     province: "Kampot"
   },
   {
     name: "Touk Meas Water License (TMW)",
     description: "This license covers the Touk Meas area. Our investment in pipelines and treatment systems ensures households and businesses receive safe, reliable clean water.",
     link: "/business/water-supply/touk-meas",
-    image: "/elect_distribute-2.png",
+    image: "/water-supply.png",
     province: "Kampot"
   },
   {
     name: "Damnak Chang Eur Water Supply",
     description: "The Damnak Chang Eur water supply project represents our commitment to providing clean, reliable water access to communities in this vital region through strategic infrastructure investments.",
     link: "/business/water-supply/damnak-chang-eur",
-    image: "/elect_distribute-1.png",
+    image: "/water-supply.png",
     province: "Kampot"
   },
   {
     name: "Teuk Pong Teuk Water License (TPTW)",
     description: "This license serves smaller communities with tailored infrastructure solutions, reinforcing our dedication to accessibility and quality even in underserved areas.",
     link: "/business/water-supply/teuk-pong-teuk",
-    image: "/elect_distribute-2.png",
+    image: "/water-supply.png",
     province: "Kampot"
   },
 ];

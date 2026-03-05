@@ -115,22 +115,6 @@ export default function PongTrajPage() {
                   </p>
                 </div>
 
-                {/* Stats */}
-                <div className="grid gap-4 sm:grid-cols-3">
-                  <div className="rounded-xl bg-white p-6 text-center shadow-md">
-                    <p className="text-3xl font-bold text-brand-navy">2,000+</p>
-                    <p className="text-sm text-slate-500">Customers</p>
-                  </div>
-                  <div className="rounded-xl bg-white p-6 text-center shadow-md">
-                    <p className="text-3xl font-bold text-brand-navy">24/7</p>
-                    <p className="text-sm text-slate-500">Service</p>
-                  </div>
-                  <div className="rounded-xl bg-white p-6 text-center shadow-md">
-                    <p className="text-3xl font-bold text-brand-navy">Safe</p>
-                    <p className="text-sm text-slate-500">Water Quality</p>
-                  </div>
-                </div>
-
                 {/* Actions */}
                 <div className="flex flex-wrap items-center gap-4 pt-4">
                   <Link href="/contact-us" className="inline-flex items-center gap-2 rounded-lg bg-brand-red px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#c91e21]">
