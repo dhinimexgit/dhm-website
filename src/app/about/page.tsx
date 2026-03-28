@@ -686,6 +686,47 @@ export default function AboutPage() {
           </div>
         </section>
 
+        {/* Department Managers Section */}
+        <section className="full-bleed bg-slate-50 py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mb-12 text-center">
+              <p className="mb-2 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
+                Management
+              </p>
+              <h2 className="text-3xl font-bold text-brand-navy lg:text-4xl">
+                Department Managers
+              </h2>
+              <p className="mx-auto mt-4 max-w-3xl text-base text-slate-600">
+                Our department managers lead with expertise and dedication, driving excellence across every function of our business.
+              </p>
+            </div>
+
+            <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3">
+              {[
+                { name: "Hong Thary", title: "Accounting Dhinimex Manager", photo: "/acct-dhm.jpg" },
+                { name: "Som Vateyneardey", title: "Sales & Marketing Manager", photo: "/sm.jpg" },
+                { name: "Nem Phyrun", title: "Admin & HR Manager", photo: "/hr.jpg" },
+                { name: "Phoung Malen", title: "Accounting Branch Manager", photo: "/acct-br.jpg" },
+                { name: "Chan Reaksmey", title: "Logistics & Warehouse Manager", photo: "/lm.jpg" },
+                { name: "Victor Khov", title: "Technical Manager", photo: "/tm.jpg" },
+              ].map((manager) => (
+                <div key={manager.name} className="flex flex-col items-center text-center mb-8">
+                  <div className="relative mb-4 h-[220px] w-[160px] overflow-hidden rounded-2xl shadow-lg sm:h-[240px] sm:w-[180px]">
+                    <Image
+                      src={manager.photo}
+                      alt={manager.name}
+                      fill
+                      className="object-cover object-top"
+                    />
+                  </div>
+                  <h3 className="text-base font-bold text-brand-navy">{manager.name}</h3>
+                  <p className="mt-1 text-sm font-medium text-brand-red">{manager.title}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Work Culture Section - White background */}
         {/* <section className="full-bleed relative overflow-hidden bg-white py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
