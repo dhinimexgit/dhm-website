@@ -703,11 +703,11 @@ export default function AboutPage() {
 
             <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3">
               {[
-                { name: "Hong Thary", title: "Accounting Dhinimex Manager", photo: "/acct-dhm.jpg" },
+                { name: "Hong Thary", title: "Accounting Manager", photo: "/acct-dhm.jpg" },
                 { name: "Som Vateyneardey", title: "Sales & Marketing Manager", photo: "/sm.jpg" },
                 { name: "Nem Phyrun", title: "Admin & HR Manager", photo: "/hr.jpg" },
-                { name: "Phoung Malen", title: "Accounting Branch Manager", photo: "/acct-br.jpg" },
-                { name: "Chan Reaksmey", title: "Logistics & Warehouse Manager", photo: "/lm.jpg" },
+                { name: "Phuong Malen", title: "Accounting Manager (Branch)", photo: "/acct-br.jpg" },
+                { name: "Chan Reaksmey", title: "Purchasing & Logistics Manager", photo: "/lm.jpg" },
                 { name: "Victor Khov", title: "Technical Manager", photo: "/tm.jpg" },
               ].map((manager) => (
                 <div key={manager.name} className="flex flex-col items-center text-center mb-8">
