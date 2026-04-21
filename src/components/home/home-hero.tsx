@@ -19,6 +19,7 @@ export function HomeHero() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [contentVisible, setContentVisible] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const heroRef = useRef<HTMLElement>(null);
@@ -37,6 +38,8 @@ export function HomeHero() {
 
   useEffect(() => {
     setMounted(true);
+    const timer = setTimeout(() => setContentVisible(true), 1500);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -99,20 +102,20 @@ export function HomeHero() {
         />
       )}
       <section ref={heroRef} className="relative min-h-screen overflow-hidden">
-        {/* Background Image with Glassmorphism Dark Overlay - IES Style */}
+        {/* Background Video with Glassmorphism Dark Overlay */}
         <div className="absolute inset-0 z-0">
-          <Image
-            src="/cover-slide.png"
-            alt=""
-            fill
-            priority
-            className="object-cover"
-            sizes="100vw"
+          <video
+            src="/home-hero.mp4"
+            autoPlay
+            muted
+            playsInline
+            preload="auto"
+            className="absolute inset-0 h-full w-full object-cover"
           />
           {/* Dark semi-transparent overlay for glassmorphism effect */}
-          <div className="absolute inset-0 bg-black/20" />
+          <div className="absolute inset-0 bg-black/40" />
           {/* Gradient for depth and text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r bg-gray-500/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/50 via-black/20 to-transparent" />
         </div>
 
         {/* Header - Desktop Only */}
@@ -247,14 +250,18 @@ export function HomeHero() {
 
         {/* Hero Content */}
         <div className="relative z-20 mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="grid min-h-[calc(100vh-120px)] items-center gap-12 py-16 lg:grid-cols-2 lg:gap-16 lg:py-0">
+          <div className="grid min-h-[calc(100vh-160px)] items-start gap-12 py-12 lg:grid-cols-2 lg:gap-16 lg:pb-0 lg:pt-10">
             {/* Left Side - Text Content */}
-            <div className="flex flex-col justify-center space-y-8 pt-20 lg:pt-0">
+            <div
+              className={`flex flex-col justify-center space-y-8 pt-16 transition-all duration-1000 ease-out lg:pt-0 ${
+                contentVisible ? "translate-x-0 opacity-100" : "translate-x-16 opacity-0 lg:translate-x-32"
+              }`}
+            >
               <div className="space-y-6">
-                <p className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-brand-red">
+                {/* <p className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-brand-red">
                   <span className="h-px w-10 bg-brand-red" />
                     <strong className="text-lg text-brand-navy">Since 2003</strong>
-                </p>
+                </p> */}
                 <h1 className="text-3xl font-bold leading-tight text-white sm:text-3xl lg:text-6xl xl:text-[62px] xl:leading-[1.1]">
                   Driven by Quality,
                   <br />
@@ -279,7 +286,11 @@ export function HomeHero() {
             </div>
 
             {/* Right Side - Image/Video Carousel */}
-            <div className="relative hidden lg:block">
+            <div
+              className={`relative block transition-all duration-1000 ease-out ${
+                contentVisible ? "translate-x-0 opacity-100" : "-translate-x-32 opacity-0"
+              }`}
+            >
               <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-white/20 shadow-2xl">
                 {heroImages.map((img, index) => (
                   <div
