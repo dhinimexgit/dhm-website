@@ -8,9 +8,7 @@ import { StickyHeader } from "./sticky-header";
 
 // 5 placeholder images for the carousel
 const heroImages = [
-  "/Dhinimex-building_e.jpg",
   "/kcc-3.jpg",
-  "/camrad.jpg",
   "/kcc.jpg",
   "/saekaraj-2.jpg",
 ];
