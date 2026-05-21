@@ -5,15 +5,17 @@ import { usePathname } from "next/navigation";
 
 type Props = {
   isAdmin: boolean;
+  userEmail: string;
+  permissions: string[];
 };
 
-export function InternalTabs({ isAdmin }: Props) {
+export function InternalTabs({ isAdmin, userEmail, permissions }: Props) {
   const pathname = usePathname();
 
   const tabs = [
-    { href: "/dhm-myadmin/internal/rooms", label: "Room Booking", adminOnly: false },
-    { href: "/dhm-myadmin/internal/cars", label: "Car Booking", adminOnly: false },
-    { href: "/dhm-myadmin/internal/admin", label: "Resource Management", adminOnly: true },
+    { href: "/dhm-myadmin/internal/rooms", label: "Room Booking", adminOnly: false, permission: "internal.rooms" },
+    { href: "/dhm-myadmin/internal/cars", label: "Car Booking", adminOnly: false, permission: "internal.cars" },
+    { href: "/dhm-myadmin/internal/admin", label: "Resource Management", adminOnly: true, permission: "internal.resource_management" },
   ];
 
   const isActive = (href: string) => {
@@ -26,7 +28,8 @@ export function InternalTabs({ isAdmin }: Props) {
   return (
     <div className="flex gap-8 border-b border-slate-200 overflow-x-auto mb-8">
       {tabs.map((tab) => {
-        const accessible = !tab.adminOnly || isAdmin;
+        const hasPermission = permissions.includes(tab.permission);
+        const accessible = (!tab.adminOnly || isAdmin) && hasPermission;
         const active = isActive(tab.href);
 
         if (!accessible) {
@@ -51,7 +54,7 @@ export function InternalTabs({ isAdmin }: Props) {
             className={`pb-4 text-sm font-medium transition relative whitespace-nowrap ${
               active
                 ? "border-b-2 border-brand-red text-brand-navy"
-                : "text-slate-500 hover:text-slate-700"
+               : "text-slate-500 hover:text-slate-700"
             }`}
           >
             {tab.label}

@@ -5,6 +5,12 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useLanguage } from "@/lib/i18n";
+import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
+import {
+  NavUtilityCluster,
+  NavUtilityDivider,
+  NAV_UTILITY_ICON_CLASS,
+} from "@/components/layout/nav-utility-cluster";
 
 export function HeroHeader() {
   const router = useRouter();
@@ -14,7 +20,6 @@ export function HeroHeader() {
   
   // i18n
   const { language, setLanguage, t } = useLanguage();
-  const [langOpen, setLangOpen] = useState(false);
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -142,85 +147,75 @@ export function HeroHeader() {
           </div>
         ))}
       </nav>
-      <div className="flex items-center gap-3 text-white xl:gap-4 relative">
+      <div className="relative flex items-center gap-2 text-white xl:gap-3">
         {searchOpen ? (
-          <form onSubmit={handleSearchSubmit} className="absolute right-full mr-4 z-50 flex items-center bg-white rounded-full px-2 py-1 shadow-md w-[266px] border border-slate-200">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="absolute right-full z-50 mr-2 flex w-[min(266px,calc(100vw-420px))] items-center rounded-full border border-slate-200/90 bg-white px-2 py-1 shadow-lg"
+          >
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t.nav.search}
-              className="flex-grow bg-transparent px-2 text-sm text-brand-navy focus:outline-none placeholder:text-slate-400"
+              className="min-w-0 flex-1 bg-transparent px-2 text-sm text-brand-navy placeholder:text-slate-400 focus:outline-none"
               autoFocus
             />
-            <button type="submit" className="p-1 text-brand-red hover:text-brand-navy">
+            <button type="submit" className="p-1.5 text-brand-red transition hover:text-brand-navy" aria-label={t.nav.search}>
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </button>
-            <button 
-              type="button" 
+            <button
+              type="button"
               onClick={() => setSearchOpen(false)}
-              className="p-1 text-slate-400 hover:text-slate-600"
+              className="p-1.5 text-slate-400 transition hover:text-slate-600"
+              aria-label={t.nav.cancel}
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </form>
-        ) : (
-          <button 
-            type="button" 
-            className="p-1 text-lg transition-opacity hover:opacity-70" 
-            aria-label="Search"
-            onClick={() => setSearchOpen(true)}
+        ) : null}
+
+        <NavUtilityCluster>
+          {!searchOpen ? (
+            <>
+              <button
+                type="button"
+                className={NAV_UTILITY_ICON_CLASS}
+                aria-label="Search"
+                onClick={() => setSearchOpen(true)}
+              >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </button>
+              <NavUtilityDivider />
+            </>
+          ) : null}
+          <button
+            type="button"
+            onClick={() => setLanguage(language === "en" ? "kh" : "en")}
+            className={`${NAV_UTILITY_ICON_CLASS} px-1.5`}
+            aria-label="Toggle Language"
           >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </button>
-        )}
-        <span className="hidden font-light text-white/70 lg:inline">|</span>
-        
-        {/* Language Selector */}
-        <div className="relative">
-          <button 
-            type="button" 
-            onClick={() => setLangOpen(!langOpen)}
-            className="flex items-center gap-1.5 transition-opacity hover:opacity-70"
-          >
-            <Image 
-              src={language === 'en' ? "/en-flag.png" : "/kh-flag.png"} 
-              alt={language === 'en' ? "English" : "Khmer"} 
-              width={30} 
+            <Image
+              src={language === "en" ? "/kh-flag.png" : "/en-flag.png"}
+              alt={language === "en" ? "Khmer" : "English"}
+              width={30}
               height={20}
-              className="h-6 w-auto"
+              className="h-4 w-auto rounded-sm"
             />
-            <span className="text-[11px]">▼</span>
           </button>
-          {langOpen && (
-            <div className="absolute right-0 top-full mt-2 w-32 rounded-lg bg-white py-1 shadow-xl text-brand-navy z-50">
-              <button
-                onClick={() => { setLanguage('en'); setLangOpen(false); }}
-                className="flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-slate-100"
-              >
-                <Image src="/en-flag.png" alt="EN" width={30} height={20} className="h-6 w-auto" />
-                English
-              </button>
-              <button
-                onClick={() => { setLanguage('kh'); setLangOpen(false); }}
-                className="flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-slate-100"
-              >
-                <Image src="/kh-flag.png" alt="KH" width={30} height={20} className="h-6 w-auto" />
-                Khmer
-              </button>
-            </div>
-          )}
-        </div>
+          <NavUtilityDivider />
+          <NavAdminLoginLink />
+        </NavUtilityCluster>
 
         <Link
           href="/contact-us"
-          className="ml-2 whitespace-nowrap bg-brand-red px-6 py-2.5 text-[14px] font-semibold text-white transition-all hover:bg-[#c91e21]"
+          className="ml-1 whitespace-nowrap rounded-full bg-brand-red px-6 py-2.5 text-[14px] font-semibold text-white shadow-sm transition hover:bg-[#c91e21] hover:shadow-md"
         >
           {t.nav.contact}
         </Link>

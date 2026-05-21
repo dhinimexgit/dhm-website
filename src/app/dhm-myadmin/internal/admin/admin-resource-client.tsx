@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import type { Room, Car, CarBooking } from '@/types/booking';
 import { createRoom, updateRoom, createCar, updateCar, approveCarBooking, rejectCarBooking } from '@/app/actions/bookings';
+import { useLanguage } from '@/lib/i18n';
 
 // Consistent date formatting to avoid hydration errors
 const formatDate = (date: Date): string => {
@@ -20,6 +21,7 @@ type Props = {
 };
 
 export function AdminResourceClient({ initialRooms, initialCars, pendingCarBookings, userEmail }: Props) {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'rooms' | 'cars' | 'approvals'>('approvals');
   const [showRoomModal, setShowRoomModal] = useState(false);
   const [showCarModal, setShowCarModal] = useState(false);
@@ -46,12 +48,12 @@ export function AdminResourceClient({ initialRooms, initialCars, pendingCarBooki
 
     const result = editingRoom 
       ? await updateRoom(editingRoom.id, roomData)
-      : await createRoom(roomData);
+     : await createRoom(roomData);
 
     setIsSubmitting(false);
 
     if (result.success) {
-      alert(editingRoom ? 'Room updated successfully!' : 'Room created successfully!');
+      alert(editingRoom ? 'Room updated successfully!': 'Room created successfully!');
       setShowRoomModal(false);
       setEditingRoom(null);
       window.location.reload();
@@ -79,12 +81,12 @@ export function AdminResourceClient({ initialRooms, initialCars, pendingCarBooki
 
     const result = editingCar 
       ? await updateCar(editingCar.id, carData)
-      : await createCar(carData);
+     : await createCar(carData);
 
     setIsSubmitting(false);
 
     if (result.success) {
-      alert(editingCar ? 'Car updated successfully!' : 'Car created successfully!');
+      alert(editingCar ? 'Car updated successfully!': 'Car created successfully!');
       setShowCarModal(false);
       setEditingCar(null);
       window.location.reload();
@@ -169,7 +171,7 @@ export function AdminResourceClient({ initialRooms, initialCars, pendingCarBooki
             className={`px-4 py-3 text-sm font-medium rounded-lg transition-all ${
               activeTab === 'approvals'
                 ? 'bg-gradient-to-r from-[#2E388C] to-[#3d4ba3] text-white shadow-md'
-                : 'text-slate-600 hover:bg-slate-50'
+               : 'text-slate-600 hover:bg-slate-50'
             }`}
           >
             Pending Approvals ({pendingCarBookings.length})
@@ -179,7 +181,7 @@ export function AdminResourceClient({ initialRooms, initialCars, pendingCarBooki
             className={`px-4 py-3 text-sm font-medium rounded-lg transition-all ${
               activeTab === 'rooms'
                 ? 'bg-gradient-to-r from-[#2E388C] to-[#3d4ba3] text-white shadow-md'
-                : 'text-slate-600 hover:bg-slate-50'
+               : 'text-slate-600 hover:bg-slate-50'
             }`}
           >
             Manage Rooms ({initialRooms.length})
@@ -189,7 +191,7 @@ export function AdminResourceClient({ initialRooms, initialCars, pendingCarBooki
             className={`px-4 py-3 text-sm font-medium rounded-lg transition-all ${
               activeTab === 'cars'
                 ? 'bg-gradient-to-r from-[#2E388C] to-[#3d4ba3] text-white shadow-md'
-                : 'text-slate-600 hover:bg-slate-50'
+               : 'text-slate-600 hover:bg-slate-50'
             }`}
           >
             Manage Cars ({initialCars.length})
@@ -233,7 +235,7 @@ export function AdminResourceClient({ initialRooms, initialCars, pendingCarBooki
                             </span>
                           </div>
                           <div>
-                            {booking.driverType === 'self-drive' ? '🚗 Self Drive' : `👤 Driver: ${booking.driverName || 'Any'}`}
+                            {booking.driverType === 'self-drive' ? '🚗 Self Drive': `👤 Driver: ${booking.driverName || 'Any'}`}
                           </div>
                         </div>
                       </div>
@@ -242,7 +244,7 @@ export function AdminResourceClient({ initialRooms, initialCars, pendingCarBooki
                           onClick={() => handleApprove(booking)}
                           className="px-4 py-2 bg-[#2E388C] text-white font-medium rounded-lg hover:bg-[#3d4ba3] transition-colors"
                         >
-                          Assign & Approve
+                          Assign & Approve 
                         </button>
                         <button
                           onClick={() => handleReject(booking.id)}
@@ -255,7 +257,7 @@ export function AdminResourceClient({ initialRooms, initialCars, pendingCarBooki
                   </div>
                 ))}
               </div>
-            ) : (
+            ): (
               <p className="text-center text-slate-500 py-8">No pending approvals</p>
             )}
           </div>
@@ -286,9 +288,9 @@ export function AdminResourceClient({ initialRooms, initialCars, pendingCarBooki
                     <p className="text-sm text-slate-500">{room.location}</p>
                   </div>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    room.isAvailable ? 'bg-[#2E388C]/10 text-[#2E388C]' : 'bg-slate-100 text-slate-600'
+                    room.isAvailable ? 'bg-[#2E388C]/10 text-[#2E388C]': 'bg-slate-100 text-slate-600'
                   }`}>
-                    {room.isAvailable ? 'Available' : 'Unavailable'}
+                    {room.isAvailable ? t.admin.common.available : t.admin.common.unavailable}
                   </span>
                 </div>
                 <p className="text-sm text-slate-600 mb-3">Capacity: {room.capacity} people</p>
@@ -331,9 +333,9 @@ export function AdminResourceClient({ initialRooms, initialCars, pendingCarBooki
                     <p className="text-sm text-slate-500">{car.licensePlate}</p>
                   </div>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    car.isAvailable ? 'bg-[#2E388C]/10 text-[#2E388C]' : 'bg-slate-100 text-slate-600'
+                    car.isAvailable ? 'bg-[#2E388C]/10 text-[#2E388C]': 'bg-slate-100 text-slate-600'
                   }`}>
-                    {car.isAvailable ? 'Available' : 'Unavailable'}
+                    {car.isAvailable ? t.admin.common.available : t.admin.common.unavailable}
                   </span>
                 </div>
                 <div className="space-y-1 text-sm text-slate-600 mb-3">
@@ -361,7 +363,7 @@ export function AdminResourceClient({ initialRooms, initialCars, pendingCarBooki
             <div className="p-6 border-b border-slate-200">
               <div className="flex items-center justify-between">
                 <h3 className="text-xl font-semibold text-slate-900">
-                  {editingRoom ? 'Edit Room' : 'Add New Room'}
+                  {editingRoom ? 'Edit Room': 'Add New Room'}
                 </h3>
                 <button
                   onClick={() => {
@@ -425,7 +427,7 @@ export function AdminResourceClient({ initialRooms, initialCars, pendingCarBooki
                 </label>
                 <select
                   name="isAvailable"
-                  defaultValue={editingRoom?.isAvailable ? 'true' : 'false'}
+                  defaultValue={editingRoom?.isAvailable ? 'true': 'false'}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#2E388C] focus:border-transparent"
                 >
                   <option value="true">Available</option>
@@ -449,7 +451,7 @@ export function AdminResourceClient({ initialRooms, initialCars, pendingCarBooki
                   disabled={isSubmitting}
                   className="flex-1 px-4 py-2 bg-gradient-to-r from-[#2E388C] to-[#3d4ba3] text-white font-semibold rounded-lg hover:from-[#3d4ba3] hover:to-[#4a5ab5] transition-all disabled:opacity-50"
                 >
-                  {isSubmitting ? 'Saving...' : editingRoom ? 'Update' : 'Create'}
+                  {isSubmitting ? 'Saving...': editingRoom ? 'Update': 'Create'}
                 </button>
               </div>
             </form>
@@ -464,7 +466,7 @@ export function AdminResourceClient({ initialRooms, initialCars, pendingCarBooki
             <div className="p-6 border-b border-slate-200">
               <div className="flex items-center justify-between">
                 <h3 className="text-xl font-semibold text-slate-900">
-                  {editingCar ? 'Edit Car' : 'Add New Car'}
+                  {editingCar ? 'Edit Car': 'Add New Car'}
                 </h3>
                 <button
                   onClick={() => {
@@ -518,10 +520,10 @@ export function AdminResourceClient({ initialRooms, initialCars, pendingCarBooki
                   defaultValue={editingCar?.fuelType}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#2E388C] focus:border-transparent"
                 >
-                  <option value="petrol">Petrol</option>
-                  <option value="diesel">Diesel</option>
-                  <option value="electric">Electric</option>
-                  <option value="hybrid">Hybrid</option>
+                  <option value="petrol">{t.admin.common.petrol}</option>
+                  <option value="diesel">{t.admin.common.diesel}</option>
+                  <option value="electric">{t.admin.common.electric}</option>
+                  <option value="hybrid">{t.admin.common.hybrid}</option>
                 </select>
               </div>
 
@@ -531,7 +533,7 @@ export function AdminResourceClient({ initialRooms, initialCars, pendingCarBooki
                 </label>
                 <select
                   name="isAvailable"
-                  defaultValue={editingCar?.isAvailable ? 'true' : 'false'}
+                  defaultValue={editingCar?.isAvailable ? 'true': 'false'}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#2E388C] focus:border-transparent"
                 >
                   <option value="true">Available</option>
@@ -555,7 +557,7 @@ export function AdminResourceClient({ initialRooms, initialCars, pendingCarBooki
                   disabled={isSubmitting}
                   className="flex-1 px-4 py-2 bg-gradient-to-r from-[#2E388C] to-[#3d4ba3] text-white font-semibold rounded-lg hover:from-[#3d4ba3] hover:to-[#4a5ab5] transition-all disabled:opacity-50"
                 >
-                  {isSubmitting ? 'Saving...' : editingCar ? 'Update' : 'Create'}
+                  {isSubmitting ? 'Saving...': editingCar ? 'Update': 'Create'}
                 </button>
               </div>
             </form>
@@ -569,7 +571,7 @@ export function AdminResourceClient({ initialRooms, initialCars, pendingCarBooki
           <div className="bg-white rounded-xl shadow-2xl max-w-md w-full">
             <div className="p-6 border-b border-slate-200">
               <div className="flex items-center justify-between">
-                <h3 className="text-xl font-semibold text-slate-900">Assign Car & Driver</h3>
+                <h3 className="text-xl font-semibold text-slate-900">Assign Car & Driver </h3>
                 <button
                   onClick={() => {
                     setShowAssignModal(false);
@@ -641,7 +643,7 @@ export function AdminResourceClient({ initialRooms, initialCars, pendingCarBooki
                   disabled={isSubmitting}
                   className="flex-1 px-4 py-2 bg-gradient-to-r from-[#2E388C] to-[#3d4ba3] text-white font-semibold rounded-lg hover:from-[#3d4ba3] hover:to-[#4a5ab5] transition-all disabled:opacity-50"
                 >
-                  {isSubmitting ? 'Assigning...' : 'Assign & Approve'}
+                  {isSubmitting ? 'Assigning...': 'Assign & Approve'}
                 </button>
               </div>
             </form>

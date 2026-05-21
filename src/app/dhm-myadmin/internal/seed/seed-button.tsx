@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { createRoom, createCar } from '@/app/actions/bookings';
+import { useLanguage } from '@/lib/i18n';
 
 const sampleRooms = [
   {
@@ -101,6 +102,7 @@ const sampleCars = [
 ];
 
 export function SeedBookingDataButton() {
+  const { t } = useLanguage();
   const [isSeeding, setIsSeeding] = useState(false);
   const [status, setStatus] = useState<string>('');
 
@@ -157,13 +159,13 @@ export function SeedBookingDataButton() {
         disabled={isSeeding}
         className="w-full px-6 py-3 bg-gradient-to-r from-[#2E388C] to-[#3d4ba3] text-white font-semibold rounded-lg hover:from-[#3d4ba3] hover:to-[#4a5ab5] transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {isSeeding ? 'Seeding Database...' : '🌱 Seed Database with Sample Data'}
+        {isSeeding ? t.admin.seed.seedingDatabase : t.admin.seed.seedSampleData}
       </button>
 
       {status && (
         <div className={`p-4 rounded-lg ${
-          status.includes('✅') ? 'bg-green-50 text-green-800 border border-green-200' :
-          status.includes('❌') ? 'bg-red-50 text-red-800 border border-red-200' :
+          status.includes('✅') ? 'bg-green-50 text-green-800 border border-green-200':
+          status.includes('❌') ? 'bg-red-50 text-red-800 border border-red-200':
           'bg-blue-50 text-blue-800 border border-blue-200'
         }`}>
           <p className="text-sm font-medium">{status}</p>

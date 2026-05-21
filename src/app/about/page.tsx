@@ -4,6 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/lib/i18n";
+import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
+import {
+  NavUtilityCluster,
+  NavUtilityDivider,
+  NAV_UTILITY_ICON_CLASS,
+} from "@/components/layout/nav-utility-cluster";
 import { leadership } from "@/data/site-content";
 import { StickyHeader } from "@/components/home/sticky-header";
 
@@ -57,6 +64,7 @@ const coreValues = [
 ];
 
 export default function AboutPage() {
+  const { t, language, setLanguage } = useLanguage();
   const [isScrolled, setIsScrolled] = useState(false);
   const [openAccordion, setOpenAccordion] = useState<number | null>(0);
   const [visionVisible, setVisionVisible] = useState(false);
@@ -234,26 +242,39 @@ export default function AboutPage() {
                       <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
                   </nav>
-                  <div className="flex items-center gap-4">
-                    {/* Search Button */}
-                    <button 
+                  <div className="flex items-center gap-3">
+                    <NavUtilityCluster>
+                    <button
+                      type="button"
                       onClick={() => setSearchOpen(!searchOpen)}
-                      className={`p-2 transition ${searchOpen ? "text-white" : "text-white/80 hover:text-white"}`}
+                      className={`${NAV_UTILITY_ICON_CLASS} ${searchOpen ? "text-white" : ""}`}
                       aria-label="Search"
                     >
                       <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                       </svg>
                     </button>
-                    <span className="text-white/30">|</span>
-                    <Link href="mailto:info@dhinimex.com.kh" className="p-2 text-white/80 transition hover:text-white" aria-label="Email">
-                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                    </Link>
+                    <NavUtilityDivider />
+                    <button
+                      type="button"
+                      onClick={() => setLanguage(language === 'en' ? 'kh' : 'en')}
+                      className={`${NAV_UTILITY_ICON_CLASS} px-1.5`}
+                      aria-label="Toggle Language"
+                    >
+                      <Image
+                        src={language === 'en' ? "/kh-flag.png" : "/en-flag.png"}
+                        alt={language === 'en' ? "Khmer" : "English"}
+                        width={30}
+                        height={20}
+                        className="h-4 w-auto rounded-sm"
+                      />
+                    </button>
+                    <NavUtilityDivider />
+                    <NavAdminLoginLink />
+                  </NavUtilityCluster>
                     <Link
                       href="/contact-us"
-                      className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]"
+                      className="rounded-full bg-brand-red px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#c91e21] hover:shadow-md"
                     >
                       Contact Us
                     </Link>
@@ -316,10 +337,10 @@ export default function AboutPage() {
               <div className="max-w-2xl space-y-6">
                 <p className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-white/90">
                   
-                  About Us
+                  {t.nav.about}
                 </p>
                 <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-[64px] xl:leading-[1.1]">
-                  Building Cambodia&apos;s Future Through Innovation and Excellence
+                  {t.about.hero.title}
                 </h1>
               </div>
             </div>
@@ -334,51 +355,49 @@ export default function AboutPage() {
               <div>
                 <p className="mb-2 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
                   
-                  Who We Are
+                  {t.about.whoWeAre.sectionTitle}
                 </p>
                 <h2 className="text-3xl font-bold text-brand-navy lg:text-4xl">
-                  Creating with Purpose
+                  {t.about.whoWeAre.title}
                 </h2>
               </div>
               <p className="text-lg leading-relaxed text-slate-600">
-                In a fast-moving and increasingly complex global economy, our success depends on
-                how faithfully we adhere to our core principles: delivering exceptional client service,
-                acting with integrity and responsibility, and supporting the growth of our employees.
+                {t.about.whoWeAre.description}
               </p>
               
               {/* Stats Grid */}
               <div className="grid grid-cols-3 gap-6 pt-4">
                 <div className="space-y-2">
                   <h3 className="text-sm font-semibold uppercase tracking-wider text-brand-navy">
-                    Our Business
+                    {t.about.whoWeAre.business.title}
                   </h3>
                   <p className="text-sm leading-relaxed text-slate-600">
-                    We are a leading corporation with assets and operations worldwide.
+                    {t.about.whoWeAre.business.description}
                   </p>
                   <Link href="/services" className="inline-flex items-center gap-1 text-sm font-semibold text-brand-red hover:underline">
-                    Explore Portfolio <span>→</span>
+                    {t.about.whoWeAre.business.explore} <span>→</span>
                   </Link>
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-sm font-semibold uppercase tracking-wider text-brand-navy">
-                    Our Services
+                    {t.about.whoWeAre.services.title}
                   </h3>
                   <p className="text-sm leading-relaxed text-slate-600">
-                    Electrical, water supply, and engineering solutions for Cambodia.
+                    {t.about.whoWeAre.services.description}
                   </p>
                   <Link href="/services" className="inline-flex items-center gap-1 text-sm font-semibold text-brand-red hover:underline">
-                    Explore Services <span>→</span>
+                    {t.about.whoWeAre.services.explore} <span>→</span>
                   </Link>
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-sm font-semibold uppercase tracking-wider text-brand-navy">
-                    Our History
+                    {t.about.whoWeAre.history.title}
                   </h3>
                   <p className="text-sm leading-relaxed text-slate-600">
-                    With a legacy dating back to 2003, we have demonstrated leadership.
+                    {t.about.whoWeAre.history.description}
                   </p>
                   <Link href="/news" className="inline-flex items-center gap-1 text-sm font-semibold text-brand-red hover:underline">
-                    Explore Here <span>→</span>
+                    {t.about.whoWeAre.history.explore} <span>→</span>
                   </Link>
                 </div>
               </div>
@@ -416,13 +435,13 @@ export default function AboutPage() {
                 <div className="lg:col-span-4">
                   <p className="mb-2 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
                     
-                    Our Vision
+                    {t.about.vision.sectionTitle}
                   </p>
                   <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
-                    Innovating Locally, Impacting Globally
+                    {t.about.vision.title}
                   </h2>
                   <p className="text-base leading-relaxed text-slate-600">
-                    Our vision is to become a leading corporation in electrical appliances, water supply, and technological innovation, delivering world-class solutions and service that drive sustainable growth and industry impact, both locally and internationally.
+                    {t.about.vision.description}
                   </p>
                 </div>
                 <div className="lg:col-span-8">
@@ -465,13 +484,14 @@ export default function AboutPage() {
                 <div className="order-1 lg:order-2 lg:col-span-4">
                   <p className="mb-2 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
                     
-                    Our Mission
+                    {t.about.mission.sectionTitle}
                   </p>
                   <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
-                    Empowering Communities
+                    {t.about.mission.title}
                   </h2>
                   <p className="text-base leading-relaxed text-slate-600">
-                  Our mission is to drive leadership in the electrical and technology sectors by delivering high-quality products and expert services, creating job opportunities, and expanding access to modern energy and clean water–especially in rural Cambodia. Through innovation, ethical practices, and professionalism, we aim to enhance our supply capabilities, empower communities, and establish a strong presence in the global market.                  </p>
+                    {t.about.mission.description}
+                  </p>
                 </div>
               </div>
             </div>
@@ -498,16 +518,16 @@ export default function AboutPage() {
               <div>
                 <p className="mb-2 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
                   
-                  What We Stand For
+                  {t.about.coreValues.sectionTitle}
                 </p>
                 <h2 className="text-3xl font-bold text-brand-navy lg:text-4xl">
-                  Core Values
+                  {t.about.coreValues.title}
                 </h2>
               </div>
 
               {/* Accordion Items */}
               <div className="space-y-3">
-                {coreValues.map((value, index) => (
+                {t.about.coreValues.values.map((value, index) => (
                   <div
                     key={index}
                     className="overflow-hidden rounded-xl border border-slate-200 bg-white transition-all duration-300"
@@ -565,13 +585,13 @@ export default function AboutPage() {
             <div className="mb-12 text-center">
               <p className="mb-2 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
                 
-                Our Leadership
+                {t.about.leadership.sectionTitle}
               </p>
               <h2 className="text-3xl font-bold text-brand-navy lg:text-4xl">
-                Meet Our Chairwoman
+                {t.about.leadership.title}
               </h2>
               <p className="mx-auto mt-4 max-w-3xl text-base text-slate-600">
-                Guided by our chairwoman&apos;s vision and leadership, Dhinimex has established itself as a trusted and respected corporation within the industry.
+                {t.about.leadership.description}
               </p>
             </div>
 
@@ -598,16 +618,16 @@ export default function AboutPage() {
                   </div>
                   <div className="space-y-4 text-base leading-relaxed text-slate-600">
                     <p>
-                      Dhinimex Group originated from a small-scale business founded in 2003 and has since grown into a well-recognized company known for its continuous development and meaningful contributions to both society and the nation.
+                      {t.about.leadership.chairwoman.p1}
                     </p>
                     <p>
-                      The company&apos;s strength and longevity are rooted in its firm commitment to a core direction: to earn recognition and trust from customers by upholding strong ethical standards, transparency, and integrity. Dhinimex places high importance on excellent service and product quality, which are key factors behind its current success and sustained growth.
+                      {t.about.leadership.chairwoman.p2}
                     </p>
                     <p>
-                      This progress has been made possible thanks to the dedicated efforts of a collaborative team that works like a family, with persistence, strong commitment, mutual support, and effective communication. The principle of unity as strength has been central to the company&apos;s advancement.
+                      {t.about.leadership.chairwoman.p3}
                     </p>
                     <p>
-                      Today, Dhinimex continues to grow and actively promotes the development of its workforce through training and encouragement of innovative thinking. The company aspires to remain a leading choice at the national level while advancing its mission on the international stage.
+                      {t.about.leadership.chairwoman.p4}
                     </p>
                   </div>
                 </div>
@@ -621,13 +641,13 @@ export default function AboutPage() {
           <div className="mb-12 text-center">
             <p className="mb-2 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
               
-              Directors
+              {t.about.leadership.management.sectionTitle}
             </p>
             <h2 className="text-3xl font-bold text-brand-navy lg:text-4xl">
-              Meet Our Management Team
+              {t.about.leadership.management.title}
             </h2>
             <p className="mx-auto mt-4 max-w-3xl text-base text-slate-600">
-              Dhinimex&apos;s management team brings together a diverse group of experienced professionals with deep expertise in engineering, finance, operations, and strategic development.
+              {t.about.leadership.management.description}
             </p>
           </div>
 
@@ -691,13 +711,13 @@ export default function AboutPage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mb-12 text-center">
               <p className="mb-2 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
-                Management
+                {t.about.leadership.departments.sectionTitle}
               </p>
               <h2 className="text-3xl font-bold text-brand-navy lg:text-4xl">
-                Department Managers
+                {t.about.leadership.departments.title}
               </h2>
               <p className="mx-auto mt-4 max-w-3xl text-base text-slate-600">
-                Our department managers lead with expertise and dedication, driving excellence across every function of our business.
+                {t.about.leadership.departments.description}
               </p>
             </div>
 
@@ -708,7 +728,7 @@ export default function AboutPage() {
                 { name: "Nem Phyrun", title: "Admin & HR Manager", photo: "/hr.jpg" },
                 { name: "Phuong Malen", title: "Accounting Manager (Branch)", photo: "/acct-br.jpg" },
                 { name: "Chan Reaksmey", title: "Purchasing & Logistics Manager", photo: "/lm.jpg" },
-                { name: "Victor Khov", title: "Technical Manager", photo: "/tm.jpg" },
+                { name: "Victor Khov", title: "Technology Manager", photo: "/tm.jpg" },
               ].map((manager) => (
                 <div key={manager.name} className="flex flex-col items-center text-center mb-8">
                   <div className="relative mb-4 h-[220px] w-[160px] overflow-hidden rounded-2xl shadow-lg sm:h-[240px] sm:w-[180px]">

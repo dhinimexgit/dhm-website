@@ -5,6 +5,13 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { StickyHeader } from "./sticky-header";
+import { useLanguage } from "@/lib/i18n";
+import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
+import {
+  NavUtilityCluster,
+  NavUtilityDivider,
+  NAV_UTILITY_ICON_CLASS,
+} from "@/components/layout/nav-utility-cluster";
 
 // 5 placeholder images for the carousel
 const heroImages = [
@@ -24,6 +31,7 @@ export function HomeHero() {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchPanelRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { language, setLanguage, t } = useLanguage();
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -134,64 +142,77 @@ export function HomeHero() {
                 </Link>
                 <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
                   <Link href="/about" className="group relative transition hover:text-white/80">
-                    About Us
+                    {t.nav.about}
                     <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                   </Link>
                   <div className="group relative">
                     <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">
-                      Business Portfolio
+                      {t.nav.business}
                       <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                       </svg>
                     </Link>
                     <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     <div className="invisible absolute left-0 top-full mt-3 w-56 rounded-xl bg-white p-2 opacity-0 shadow-2xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
-                      <Link href="/business/trading" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Trading</Link>
-                      <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Manufacturing</Link>
-                      <Link href="/business/electricity" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Electricity Distribution</Link>
-                      <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Water Supply</Link>
-                      <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Scientific</Link>
+                      <Link href="/business/trading" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.trading}</Link>
+                      <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.manufacturing}</Link>
+                      <Link href="/business/electricity" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.electricity}</Link>
+                      <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.water}</Link>
+                      <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.scientific}</Link>
                     </div>
                   </div>
                   <Link href="/services" className="group relative transition hover:text-white/80">
-                    Services
+                    {t.nav.services}
                     <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                   </Link>
                   <Link href="/products" className="group relative transition hover:text-white/80">
-                    Products
+                    {t.nav.products}
                     <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                   </Link>
                   <Link href="/news" className="group relative transition hover:text-white/80">
-                    News
+                    {t.nav.blog}
                     <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                   </Link>
                   <Link href="/careers" className="group relative transition hover:text-white/80">
-                    Careers
+                    {t.nav.careers}
                     <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                   </Link>
                 </nav>
-                <div className="flex items-center gap-4">
-                  {/* Search Button */}
-                  <button 
-                    onClick={() => setSearchOpen(!searchOpen)}
-                    className={`p-2 transition ${searchOpen ? "text-white" : "text-white/80 hover:text-white"}`}
-                    aria-label="Search"
-                  >
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  </button>
-                  <span className="text-white/30">|</span>
-                  <Link href="mailto:info@dhinimex.com.kh" className="p-2 text-white/80 transition hover:text-white" aria-label="Email">
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  </Link>
+                <div className="flex items-center gap-3">
+                  <NavUtilityCluster>
+                    <button
+                      type="button"
+                      onClick={() => setSearchOpen(!searchOpen)}
+                      className={`${NAV_UTILITY_ICON_CLASS} ${searchOpen ? "text-white" : ""}`}
+                      aria-label="Search"
+                    >
+                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </button>
+                    <NavUtilityDivider />
+                    <button
+                      type="button"
+                      onClick={() => setLanguage(language === "en" ? "kh" : "en")}
+                      className={`${NAV_UTILITY_ICON_CLASS} px-1.5`}
+                      aria-label="Toggle Language"
+                    >
+                      <Image
+                        src={language === "en" ? "/kh-flag.png" : "/en-flag.png"}
+                        alt={language === "en" ? "Khmer" : "English"}
+                        width={30}
+                        height={20}
+                        className="h-4 w-auto rounded-sm"
+                      />
+                    </button>
+                    <NavUtilityDivider />
+                    <NavAdminLoginLink />
+                  </NavUtilityCluster>
                   <Link
                     href="/contact-us"
-                    className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]"
+                    className="rounded-full bg-brand-red px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#c91e21] hover:shadow-md"
                   >
-                    Contact Us
+                    {t.nav.contact}
                   </Link>
                 </div>
               </div>
@@ -218,7 +239,7 @@ export function HomeHero() {
                           type="text"
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
-                          placeholder="Search for services, products, careers..."
+                          placeholder={t.nav.searchPlaceholder}
                           className="w-full rounded-lg bg-slate-100 py-3 pl-12 pr-4 text-slate-900 placeholder-slate-500 outline-none transition focus:bg-white focus:shadow-inner"
                         />
                       </div>
@@ -226,7 +247,7 @@ export function HomeHero() {
                         type="submit"
                         className="rounded-lg bg-brand-navy px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-navy/90"
                       >
-                        Search
+                        {t.nav.searchBtn}
                       </button>
                       <button
                         type="button"
@@ -236,7 +257,7 @@ export function HomeHero() {
                         }}
                         className="rounded-lg px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
                       >
-                        Cancel
+                        {t.nav.cancel}
                       </button>
                     </form>
                   </div>
@@ -261,13 +282,12 @@ export function HomeHero() {
                     <strong className="text-lg text-brand-navy">Since 2003</strong>
                 </p> */}
                 <h1 className="text-3xl font-bold leading-tight text-white sm:text-3xl lg:text-6xl xl:text-[62px] xl:leading-[1.1]">
-                  Driven by Quality,
+                  {t.home.hero.title1}
                   <br />
-                  <span>Guided by Standards</span>
+                  <span>{t.home.hero.title2}</span>
                 </h1>
                 <p className="max-w-xl text-lg leading-relaxed text-white/80 lg:text-xl">
-                  Empowering progress with trusted expertise. Dhinimex delivers comprehensive electrical, water supply, 
-                  and engineering solutions driven by innovation, quality, and a commitment to long-term impact.
+                  {t.home.hero.description}
                 </p>
               </div>
               <div className="flex flex-wrap items-center gap-4">
@@ -275,7 +295,7 @@ export function HomeHero() {
                   href="/about"
                   className="group inline-flex items-center gap-3 rounded-full bg-white px-8 py-4 text-sm font-semibold text-brand-navy shadow-lg transition-all hover:bg-brand-navy hover:text-white"
                 >
-                  Learn more about us
+                  {t.home.hero.learnMore}
                   <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>

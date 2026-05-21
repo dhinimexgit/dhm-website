@@ -1,5 +1,10 @@
+"use client";
+
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useLanguage } from "@/lib/i18n";
 
 type Post = {
   slug: string;
@@ -21,6 +26,7 @@ const tagColors = {
 };
 
 export function BlogSection({ posts }: Props) {
+  const { t } = useLanguage();
   return (
     <section className="relative overflow-hidden bg-slate-50 py-24">
       {/* Background Pattern */}
@@ -37,17 +43,17 @@ export function BlogSection({ posts }: Props) {
           <div>
             <p className="mb-4 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-brand-red">
               
-              Latest Insights
+              {t.home.blogSection.sectionTitle}
             </p>
             <h2 className="text-3xl font-bold text-brand-navy sm:text-4xl lg:text-5xl">
-              From Our News
+              {t.home.blogSection.title}
             </h2>
           </div>
           <Link
             href="/news"
             className="group inline-flex items-center gap-2 rounded-full border border-brand-navy px-6 py-3 text-sm font-semibold text-brand-navy transition-all hover:bg-brand-navy hover:text-white"
           >
-            View all articles
+            {t.home.blogSection.viewAll}
             <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
@@ -85,7 +91,7 @@ export function BlogSection({ posts }: Props) {
               <div className="flex flex-1 flex-col p-6">
                 {/* Tag Label */}
                 <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-brand-red">
-                  {post.tag || "Article"}
+                  {post.tag || t.home.blogSection.defaultTag}
                 </p>
 
                 {/* Title */}
@@ -114,7 +120,7 @@ export function BlogSection({ posts }: Props) {
                   href={`/news/${post.slug}`}
                   className="group/link inline-flex items-center gap-2 text-sm font-semibold text-brand-red transition hover:gap-3"
                 >
-                  Read more
+                  {t.home.blogSection.readMore}
                   <svg className="h-4 w-4 transition-transform group-hover/link:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>

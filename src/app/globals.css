@@ -15,6 +15,7 @@
   --color-page: var(--page-background);
   --font-display: var(--font-dhinimex-sans);
   --font-sans: var(--font-dhinimex-sans);
+  --font-khmer: var(--font-suwannaphum);
 }
 
 body {
@@ -22,6 +23,10 @@ body {
   color: var(--brand-ink);
   font-family: var(--font-dhinimex-sans), "Source Sans 3", Arial, sans-serif;
   overflow-x: hidden;
+}
+
+body.lang-kh {
+  font-family: var(--font-suwannaphum), "Suwannaphum", Arial, sans-serif;
 }
 
 .full-bleed {

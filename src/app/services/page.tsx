@@ -4,6 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/lib/i18n";
+import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
+import {
+  NavUtilityCluster,
+  NavUtilityDivider,
+  NAV_UTILITY_ICON_CLASS,
+} from "@/components/layout/nav-utility-cluster";
 import { services, faqs } from "@/data/site-content";
 import { FAQAccordion } from "@/components/faq";
 import { StickyHeader } from "@/components/home/sticky-header";
@@ -21,6 +28,7 @@ const serviceImages = {
 };
 
 export default function ServicesPage() {
+  const { t, language, setLanguage } = useLanguage();
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -196,22 +204,36 @@ export default function ServicesPage() {
                       <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
                   </nav>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3">
+                    <NavUtilityCluster>
                     <button
+                      type="button"
                       onClick={() => setSearchOpen(!searchOpen)}
-                      className={`p-2 transition ${searchOpen ? "text-white" : "text-white/80 hover:text-white"}`}
+                      className={`${NAV_UTILITY_ICON_CLASS} ${searchOpen ? "text-white" : ""}`}
                       aria-label="Search"
                     >
                       <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                       </svg>
                     </button>
-                    <span className="text-white/30">|</span>
-                    <Link href="mailto:info@dhinimex.com.kh" className="p-2 text-white/80 transition hover:text-white" aria-label="Email">
-                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                    </Link>
+                    <NavUtilityDivider />
+                    <button
+                      type="button"
+                      onClick={() => setLanguage(language === 'en' ? 'kh' : 'en')}
+                      className={`${NAV_UTILITY_ICON_CLASS} px-1.5`}
+                      aria-label="Toggle Language"
+                    >
+                      <Image
+                        src={language === 'en' ? "/kh-flag.png" : "/en-flag.png"}
+                        alt={language === 'en' ? "Khmer" : "English"}
+                        width={30}
+                        height={20}
+                        className="h-4 w-auto rounded-sm"
+                      />
+                    </button>
+                    <NavUtilityDivider />
+                    <NavAdminLoginLink />
+                  </NavUtilityCluster>
                     <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">
                       Contact Us
                     </Link>
@@ -255,21 +277,20 @@ export default function ServicesPage() {
               <div className="max-w-2xl space-y-6">
                 <p className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-white/90">
                   
-                  Our Services
+                  {t.nav.services}
                 </p>
                 <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-[64px] xl:leading-[1.1]">
-                  Comprehensive Solutions for Infrastructure
+                  {t.servicesPage.hero.title}
                 </h1>
                 <p className="max-w-xl text-lg text-white/80">
-                  From manufacturing and installation to testing and utilities provision, 
-                  Dhinimex delivers end-to-end EPC services backed by 21+ years of expertise.
+                  {t.servicesPage.hero.description}
                 </p>
                 <div className="flex flex-wrap gap-4 pt-4 mb-6">
                   <button
                     onClick={() => setQuoteModalOpen(true)}
                     className="inline-flex items-center gap-2 rounded-lg bg-brand-red px-8 py-4 text-sm font-semibold text-white shadow-lg transition hover:bg-[#c91e21]"
                   >
-                    Request a Quote
+                    {t.servicesPage.hero.requestQuote}
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
@@ -278,7 +299,7 @@ export default function ServicesPage() {
                     href="#services"
                     className="inline-flex items-center gap-2 rounded-lg border-2 border-white/30 bg-white/10 px-8 py-4 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
                   >
-                    Explore Services
+                    {t.servicesPage.hero.exploreServices}
                   </Link>
                 </div>
               </div>
@@ -328,14 +349,13 @@ export default function ServicesPage() {
           <div className="space-y-6">
           <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
                 
-                Our Expertise
+                {t.servicesPage.expertise.sectionTitle}
               </p>
               <h2 className="mb-2 text-3xl font-bold text-brand-navy lg:text-4xl">
-                Explore Our Services
+                {t.servicesPage.expertise.title}
               </h2>
               <p className="mb-6 text-lg leading-relaxed text-slate-600">
-                From design and manufacturing to installation and maintenance, we offer 
-                comprehensive solutions tailored to meet your infrastructure needs.
+                {t.servicesPage.expertise.description}
               </p>
             </div>
 
@@ -403,7 +423,7 @@ export default function ServicesPage() {
 
                       {/* CTA */}
                       <div className="flex items-center gap-2 text-sm font-medium text-brand-navy transition-colors duration-300 group-hover:text-brand-red">
-                        <span>Learn more</span>
+                        <span>{t.servicesPage.expertise.learnMore}</span>
                         <svg className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>
@@ -421,14 +441,13 @@ export default function ServicesPage() {
           <div className="mb-12 text-center">
             <p className="mb-4 inline-flex items-center justify-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
               
-              Our Process
+              {t.servicesPage.process.sectionTitle}
             </p>
             <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
-              How We Work
+              {t.servicesPage.process.title}
             </h2>
             <p className="mx-auto max-w-3xl text-lg text-slate-600">
-              Our structured approach ensures transparent communication, quality delivery, 
-              and customer satisfaction at every stage.
+              {t.servicesPage.process.description}
             </p>
           </div>
 
@@ -440,9 +459,9 @@ export default function ServicesPage() {
             <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
               {[
                 {
-                  step: "01",
-                  title: "Consultation",
-                  description: "Site visit and consultation with the project owner to understand requirements.",
+                  step: t.servicesPage.process.steps[0].step,
+                  title: t.servicesPage.process.steps[0].title,
+                  description: t.servicesPage.process.steps[0].description,
                   icon: (
                     <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -450,9 +469,9 @@ export default function ServicesPage() {
                   ),
                 },
                 {
-                  step: "02",
-                  title: "Planning",
-                  description: "Preparation of BOQ and detailed drawings for review and approval.",
+                  step: t.servicesPage.process.steps[1].step,
+                  title: t.servicesPage.process.steps[1].title,
+                  description: t.servicesPage.process.steps[1].description,
                   icon: (
                     <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -460,9 +479,9 @@ export default function ServicesPage() {
                   ),
                 },
                 {
-                  step: "03",
-                  title: "Execution",
-                  description: "Procurement, construction, testing, and commissioning of the project.",
+                  step: t.servicesPage.process.steps[2].step,
+                  title: t.servicesPage.process.steps[2].title,
+                  description: t.servicesPage.process.steps[2].description,
                   icon: (
                     <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
@@ -470,9 +489,9 @@ export default function ServicesPage() {
                   ),
                 },
                 {
-                  step: "04",
-                  title: "Handover",
-                  description: "Project handover with comprehensive documentation and after-sales support.",
+                  step: t.servicesPage.process.steps[3].step,
+                  title: t.servicesPage.process.steps[3].title,
+                  description: t.servicesPage.process.steps[3].description,
                   icon: (
                     <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -490,7 +509,7 @@ export default function ServicesPage() {
                   </div>
                   
                   {/* Step Number */}
-                  <span className="mb-1 text-xs font-semibold uppercase tracking-wider text-brand-red">Step {item.step}</span>
+                  <span className="mb-1 text-xs font-semibold uppercase tracking-wider text-brand-red">{item.step}</span>
                   
                   {/* Title */}
                   <h3 className="mb-2 text-base font-bold text-brand-navy">{item.title}</h3>
@@ -510,13 +529,13 @@ export default function ServicesPage() {
             <div className="mb-12 text-center">
               <p className="mb-3 inline-flex items-center justify-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
                 
-                FAQ
+                {t.servicesPage.faq.sectionTitle}
               </p>
               <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
-                Frequently Asked Questions
+                {t.servicesPage.faq.title}
               </h2>
               <p className="mx-auto max-w-2xl text-base text-slate-500">
-                Get clear answers to common questions about our services, processes, and capabilities.
+                {t.servicesPage.faq.description}
               </p>
             </div>
 
@@ -531,7 +550,7 @@ export default function ServicesPage() {
                 href="/contact-us"
                 className="group inline-flex items-center gap-2 text-sm font-semibold text-brand-navy transition hover:text-brand-navy/70"
               >
-                Have more questions? Contact us
+                {t.servicesPage.faq.contactMore}
                 <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
@@ -551,18 +570,17 @@ export default function ServicesPage() {
 
           <div className="relative mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
             <h2 className="mb-5 text-3xl font-bold text-white lg:text-4xl">
-              Ready to Start Your Project?
+              {t.servicesPage.cta.title}
             </h2>
             <p className="mb-10 text-lg leading-relaxed text-white/70">
-              Contact us today for a consultation. Our team is ready to help you plan, 
-              design, and execute your infrastructure project with excellence.
+              {t.servicesPage.cta.description}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <button
                 onClick={() => setQuoteModalOpen(true)}
                 className="inline-flex items-center gap-2 rounded-lg bg-white px-8 py-4 text-sm font-semibold text-brand-navy shadow-lg transition hover:bg-slate-100"
               >
-                Get a Free Quote
+                {t.servicesPage.cta.getQuote}
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
@@ -574,7 +592,7 @@ export default function ServicesPage() {
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
-                Call: 011 753 940
+                {t.servicesPage.cta.call}
               </Link>
             </div>
           </div>
@@ -607,15 +625,15 @@ export default function ServicesPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <h3 className="mb-2 text-xl font-bold text-brand-navy">Thank You!</h3>
-                  <p className="text-slate-600">We&apos;ll get back to you within one business day.</p>
+                  <h3 className="mb-2 text-xl font-bold text-brand-navy">{t.servicesPage.modal.successTitle}</h3>
+                  <p className="text-slate-600">{t.servicesPage.modal.successDesc}</p>
                 </div>
               ) : (
                 <>
                   <div className="mb-6">
-                    <h3 className="text-2xl font-bold text-brand-navy">How can we help?</h3>
+                    <h3 className="text-2xl font-bold text-brand-navy">{t.servicesPage.modal.title}</h3>
                     <p className="mt-1 text-sm text-slate-500">
-                      Fill out the form below and we&apos;ll get back to you shortly.
+                      {t.servicesPage.modal.subtitle}
                     </p>
                   </div>
 
@@ -623,14 +641,14 @@ export default function ServicesPage() {
                     {/* Name */}
                     <div>
                       <label className="mb-1.5 block text-sm font-medium text-brand-navy">
-                        Full Name
+                        {t.servicesPage.modal.nameLabel}
                       </label>
                       <input
                         type="text"
                         required
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        placeholder="Your name"
+                        placeholder={t.servicesPage.modal.namePlaceholder}
                         className="w-full rounded-lg border border-slate-200 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-brand-navy focus:ring-1 focus:ring-brand-navy"
                       />
                     </div>
@@ -638,7 +656,7 @@ export default function ServicesPage() {
                     {/* Phone */}
                     <div>
                       <label className="mb-1.5 block text-sm font-medium text-brand-navy">
-                        Phone
+                        {t.servicesPage.modal.phoneLabel}
                       </label>
                       <div className="flex">
                         <span className="inline-flex items-center rounded-l-lg border border-r-0 border-slate-200 bg-slate-50 px-3 text-sm text-slate-600">
@@ -668,7 +686,7 @@ export default function ServicesPage() {
                             }
                             setFormData({ ...formData, phone: formatted });
                           }}
-                          placeholder="12 345 6789"
+                          placeholder={t.servicesPage.modal.phonePlaceholder}
                           className="w-full rounded-r-lg border border-slate-200 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-brand-navy focus:ring-1 focus:ring-brand-navy"
                         />
                       </div>
@@ -677,7 +695,7 @@ export default function ServicesPage() {
                     {/* Service Category */}
                     <div>
                       <label className="mb-1.5 block text-sm font-medium text-brand-navy">
-                        Service Category
+                        {t.servicesPage.modal.serviceLabel}
                       </label>
                       <div className="relative">
                         <select
@@ -686,13 +704,13 @@ export default function ServicesPage() {
                           onChange={(e) => setFormData({ ...formData, service: e.target.value })}
                           className="w-full cursor-pointer appearance-none rounded-lg border border-slate-200 bg-white py-3 pl-4 pr-10 text-sm text-slate-900 outline-none transition focus:border-brand-navy focus:ring-1 focus:ring-brand-navy"
                         >
-                          <option value="" disabled>Select a service</option>
+                          <option value="" disabled>{t.servicesPage.modal.serviceSelect}</option>
                           {services.map((service) => (
                             <option key={service.slug} value={service.slug}>
                               {service.name}
                             </option>
                           ))}
-                          <option value="other">Other / General Inquiry</option>
+                          <option value="other">{t.servicesPage.modal.serviceOther}</option>
                         </select>
                         {/* Dropdown Arrow */}
                         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
@@ -706,14 +724,14 @@ export default function ServicesPage() {
                     {/* Message */}
                     <div>
                       <label className="mb-1.5 block text-sm font-medium text-brand-navy">
-                        How can we help?
+                        {t.servicesPage.modal.messageLabel}
                       </label>
                       <textarea
                         required
                         rows={4}
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        placeholder="Tell us about your project or inquiry..."
+                        placeholder={t.servicesPage.modal.messagePlaceholder}
                         className="w-full resize-none rounded-lg border border-slate-200 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-brand-navy focus:ring-1 focus:ring-brand-navy"
                       />
                     </div>
@@ -730,10 +748,10 @@ export default function ServicesPage() {
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                           </svg>
-                          Sending...
+                          {t.servicesPage.modal.sending}
                         </span>
                       ) : (
-                        "Send Message"
+                        t.servicesPage.modal.send
                       )}
                     </button>
                   </form>

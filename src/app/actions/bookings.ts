@@ -23,7 +23,7 @@ import type {
   CarBooking, 
   BookingNotification 
 } from '@/types/booking';
-import { getCurrentUser } from './auth';
+import { canAccessFunction, getCurrentUser } from './auth';
 
 // Helper function to convert Firestore timestamps
 function convertTimestamp(data: any): any {
@@ -530,7 +530,11 @@ export async function updateCarBooking(bookingId: string, updates: Partial<CarBo
 export async function approveCarBooking(bookingId: string, approverEmail: string): Promise<{ success: boolean; error?: string }> {
   try {
     const user = await getCurrentUser();
-    if (!user || user.role === 'employee') {
+    if (!user) {
+      return { success: false, error: 'Unauthorized' };
+    }
+    const canApprove = await canAccessFunction('internal.resource_management');
+    if (!canApprove) {
       return { success: false, error: 'Unauthorized' };
     }
 
@@ -571,7 +575,11 @@ export async function approveCarBooking(bookingId: string, approverEmail: string
 export async function rejectCarBooking(bookingId: string, reason: string): Promise<{ success: boolean; error?: string }> {
   try {
     const user = await getCurrentUser();
-    if (!user || user.role === 'employee') {
+    if (!user) {
+      return { success: false, error: 'Unauthorized' };
+    }
+    const canReject = await canAccessFunction('internal.resource_management');
+    if (!canReject) {
       return { success: false, error: 'Unauthorized' };
     }
 

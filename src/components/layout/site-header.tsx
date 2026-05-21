@@ -5,6 +5,12 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useLanguage } from "@/lib/i18n";
+import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
+import {
+  NavUtilityCluster,
+  NavUtilityDivider,
+  NAV_UTILITY_ICON_CLASS,
+} from "@/components/layout/nav-utility-cluster";
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -14,7 +20,6 @@ export function SiteHeader() {
   
   // i18n
   const { language, setLanguage, t } = useLanguage();
-  const [langOpen, setLangOpen] = useState(false);
 
   // Search state
   const [searchOpen, setSearchOpen] = useState(false);
@@ -181,81 +186,71 @@ export function SiteHeader() {
               </Link>
             );
           })}
-          <div className="ml-2 flex items-center gap-3 text-white/80 relative">
+          <div className="relative ml-2 flex flex-nowrap items-center gap-2 text-white/80">
             {searchOpen ? (
-              <form onSubmit={handleSearchSubmit} className="absolute right-0 z-50 flex items-center bg-white rounded-full px-2 py-1 shadow-md w-64 border border-slate-200">
+              <form
+                onSubmit={handleSearchSubmit}
+                className="absolute right-full z-50 mr-2 flex w-64 max-w-[min(16rem,calc(100vw-8rem))] items-center rounded-full border border-slate-200 bg-white px-2 py-1 shadow-md"
+              >
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={t.nav.search}
-                  className="flex-grow bg-transparent px-2 text-sm text-brand-navy focus:outline-none placeholder:text-slate-400"
+                  className="min-w-0 flex-1 bg-transparent px-2 text-sm text-brand-navy placeholder:text-slate-400 focus:outline-none"
                   autoFocus
                 />
-                <button type="submit" className="p-1 text-brand-red hover:text-brand-navy">
+                <button type="submit" className="p-1 text-brand-red transition hover:text-brand-navy" aria-label={t.nav.search}>
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={() => setSearchOpen(false)}
-                  className="p-1 text-slate-400 hover:text-slate-600"
+                  className="p-1 text-slate-400 transition hover:text-slate-600"
+                  aria-label={t.nav.cancel}
                 >
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </form>
-            ) : (
+            ) : null}
+
+            <NavUtilityCluster>
+              {!searchOpen ? (
+                <>
+                  <button
+                    type="button"
+                    className={NAV_UTILITY_ICON_CLASS}
+                    aria-label="Search"
+                    onClick={() => setSearchOpen(true)}
+                  >
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </button>
+                  <NavUtilityDivider />
+                </>
+              ) : null}
               <button
                 type="button"
-                className="p-2 text-base text-white transition hover:text-brand-red"
-                aria-label="Search"
-                onClick={() => setSearchOpen(true)}
+                onClick={() => setLanguage(language === "en" ? "kh" : "en")}
+                className={`${NAV_UTILITY_ICON_CLASS} px-1.5`}
+                aria-label="Toggle Language"
               >
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </button>
-            )}
-            
-            {/* Language Selector Desktop */}
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setLangOpen(!langOpen)}
-                className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-white transition hover:text-brand-red"
-              >
-                <Image 
-                  src={language === 'en' ? "/en-flag.png" : "/kh-flag.png"} 
-                  alt={language === 'en' ? "English" : "Khmer"} 
-                  width={30} 
+                <Image
+                  src={language === "en" ? "/kh-flag.png" : "/en-flag.png"}
+                  alt={language === "en" ? "Khmer" : "English"}
+                  width={30}
                   height={20}
-                  className="h-6 w-auto"
+                  className="h-4 w-auto rounded-sm"
                 />
-                {language === 'en' ? 'EN' : 'KH'}
-                <span className="text-[10px]">▼</span>
               </button>
-              {langOpen && (
-                <div className="absolute right-0 top-full mt-2 w-32 rounded-lg bg-white py-1 shadow-xl text-brand-navy z-50">
-                  <button
-                    onClick={() => { setLanguage('en'); setLangOpen(false); }}
-                    className="flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-slate-100"
-                  >
-                    <Image src="/en-flag.png" alt="EN" width={30} height={20} className="h-6 w-auto" />
-                    English
-                  </button>
-                  <button
-                    onClick={() => { setLanguage('kh'); setLangOpen(false); }}
-                    className="flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-slate-100"
-                  >
-                    <Image src="/kh-flag.png" alt="KH" width={30} height={20} className="h-6 w-auto" />
-                    Khmer
-                  </button>
-                </div>
-              )}
-            </div>
+              <NavUtilityDivider />
+              <NavAdminLoginLink />
+            </NavUtilityCluster>
           </div>
         </nav>
       </div>
@@ -350,37 +345,24 @@ export function SiteHeader() {
               );
             })}
             
-            {/* Language Selector Mobile */}
-            <div className="mt-4 border-t border-white/20 pt-4">
-              <div className="flex gap-4">
+            {/* Language (left) + sign-in (right), full width */}
+            <div className="mt-5 border-t border-white/15 pt-5">
+              <div className="flex w-full items-center justify-between">
                 <button
                   type="button"
-                  onClick={() => setLanguage('en')}
-                  className={`flex items-center gap-3 text-sm font-semibold ${language === 'en' ? 'text-brand-red' : 'text-white/80'}`}
+                  onClick={() => setLanguage(language === "en" ? "kh" : "en")}
+                  className={`${NAV_UTILITY_ICON_CLASS} px-2`}
+                  aria-label={t.nav.toggleLanguage}
                 >
-                  <Image 
-                    src="/en-flag.png" 
-                    alt="EN" 
-                    width={30} 
-                    height={20}
-                    className="h-6 w-auto"
+                  <Image
+                    src={language === "en" ? "/kh-flag.png" : "/en-flag.png"}
+                    alt=""
+                    width={28}
+                    height={19}
+                    className="h-5 w-auto rounded-sm"
                   />
-                  <span>English</span>
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setLanguage('kh')}
-                  className={`flex items-center gap-3 text-sm font-semibold ${language === 'kh' ? 'text-brand-red' : 'text-white/80'}`}
-                >
-                  <Image 
-                    src="/kh-flag.png" 
-                    alt="KH" 
-                    width={30} 
-                    height={20}
-                    className="h-6 w-auto"
-                  />
-                  <span>Khmer</span>
-                </button>
+                <NavAdminLoginLink />
               </div>
             </div>
           </nav>

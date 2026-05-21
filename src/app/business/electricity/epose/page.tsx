@@ -4,6 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { StickyHeader } from "@/components/home/sticky-header";
+import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
+import {
+  NavUtilityCluster,
+  NavUtilityDivider,
+  NAV_UTILITY_ICON_CLASS,
+} from "@/components/layout/nav-utility-cluster";
 
 const heroImage = "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=1920&q=80";
 
@@ -57,8 +63,11 @@ export default function EposePage() {
                     <Link href="/news" className="group relative transition hover:text-white/80">News<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                     <Link href="/careers" className="group relative transition hover:text-white/80">Careers<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                   </nav>
-                  <div className="flex items-center gap-4">
-                    <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">Contact Us</Link>
+                  <div className="flex items-center gap-3">
+                    <NavUtilityCluster>
+                    <NavAdminLoginLink />
+                  </NavUtilityCluster>
+                  <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">Contact Us</Link>
                   </div>
                 </div>
               </div>

@@ -11,6 +11,12 @@ type LanguageContextType = {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
+const fallbackLanguageContext: LanguageContextType = {
+  language: "en",
+  setLanguage: () => {},
+  t: translations.en,
+};
+
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>("en");
 
@@ -25,7 +31,22 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const handleSetLanguage = (lang: Language) => {
     setLanguage(lang);
     localStorage.setItem("language", lang);
+    document.cookie = `NEXT_LOCALE=${lang}; path=/; max-age=31536000`;
+    if (lang === 'kh') {
+      document.body.classList.add('lang-kh');
+    } else {
+      document.body.classList.remove('lang-kh');
+    }
   };
+
+  // Set initial class on mount
+  useEffect(() => {
+    if (language === 'kh') {
+      document.body.classList.add('lang-kh');
+    } else {
+      document.body.classList.remove('lang-kh');
+    }
+  }, [language]);
 
   const value = {
     language,
@@ -40,10 +61,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useLanguage() {
+export function useLanguage(): LanguageContextType {
   const context = useContext(LanguageContext);
   if (context === undefined) {
-    throw new Error("useLanguage must be used within a LanguageProvider");
+    if (process.env.NODE_ENV === "development") {
+      console.warn("useLanguage: LanguageProvider missing; using English fallback.");
+    }
+    return fallbackLanguageContext;
   }
   return context;
 }

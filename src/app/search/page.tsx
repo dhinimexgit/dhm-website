@@ -8,7 +8,7 @@ import Image from "next/image";
 
 import { HeroHeader } from "@/components/layout/hero-header";
 
-const heroImage = "https://www.dhinimex.com/wp-content/uploads/2025/08/cover-slide.png";
+const heroImage = "/cover-slide.png";
 
 function SearchResults() {
   const searchParams = useSearchParams();
@@ -64,14 +64,23 @@ function SearchResults() {
 export default function SearchPage() {
   return (
     <div>
-      <section className="full-bleed relative overflow-hidden">
-        <div className="relative h-[500px] w-full sm:h-[600px] lg:h-[700px]">
-          <Image src={heroImage} alt="Search" fill priority className="object-cover" sizes="100vw" />
+      <section className="full-bleed relative min-h-[60vh] overflow-hidden lg:min-h-[70vh]">
+        <div className="absolute inset-0 z-0 bg-brand-navy">
+          <Image
+            src={heroImage}
+            alt=""
+            fill
+            priority
+            className="object-cover"
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
         </div>
-        <div className="absolute left-1/2 top-20 z-20 hidden w-[min(95%,1300px)] -translate-x-1/2 lg:flex">
+        <div className="absolute left-1/2 top-20 z-30 hidden w-[min(95%,1300px)] -translate-x-1/2 lg:flex">
           <HeroHeader />
         </div>
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-6 px-6 text-center text-white">
+        <div className="relative z-20 flex min-h-[60vh] flex-col items-center justify-center gap-6 px-6 py-24 text-center text-white lg:min-h-[70vh]">
           <p className="text-sm font-semibold uppercase tracking-[0.35em] text-white/80">Search</p>
           <h1 className="max-w-5xl text-4xl font-semibold leading-tight sm:text-5xl lg:text-[56px] lg:leading-tight">
             Search Results

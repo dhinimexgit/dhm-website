@@ -38,6 +38,12 @@ service cloud.firestore {
       allow write: if true;
     }
 
+    // Allow read/write access to PR & PO records
+    match /purchaseOrders/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+
     // Allow read/write access to QR codes (admin/marketing only)
     match /qr_codes/{document=**} {
       allow read: if true;

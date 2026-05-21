@@ -4,6 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/lib/i18n";
+import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
+import {
+  NavUtilityCluster,
+  NavUtilityDivider,
+  NAV_UTILITY_ICON_CLASS,
+} from "@/components/layout/nav-utility-cluster";
 import { StickyHeader } from "@/components/home/sticky-header";
 
 // Hero background image - Team collaboration in modern workspace
@@ -32,6 +39,7 @@ const categories = [
 ];
 
 export default function CareersPage() {
+  const { t, language, setLanguage } = useLanguage();
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -198,22 +206,36 @@ export default function CareersPage() {
                       <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" />
                     </Link>
                   </nav>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3">
+                    <NavUtilityCluster>
                     <button
+                      type="button"
                       onClick={() => setSearchOpen(!searchOpen)}
-                      className={`p-2 transition ${searchOpen ? "text-white" : "text-white/80 hover:text-white"}`}
+                      className={`${NAV_UTILITY_ICON_CLASS} ${searchOpen ? "text-white" : ""}`}
                       aria-label="Search"
                     >
                       <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                       </svg>
                     </button>
-                    <span className="text-white/30">|</span>
-                    <Link href="mailto:info@dhinimex.com.kh" className="p-2 text-white/80 transition hover:text-white" aria-label="Email">
-                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                    </Link>
+                    <NavUtilityDivider />
+                    <button
+                      type="button"
+                      onClick={() => setLanguage(language === 'en' ? 'kh' : 'en')}
+                      className={`${NAV_UTILITY_ICON_CLASS} px-1.5`}
+                      aria-label="Toggle Language"
+                    >
+                      <Image
+                        src={language === 'en' ? "/kh-flag.png" : "/en-flag.png"}
+                        alt={language === 'en' ? "Khmer" : "English"}
+                        width={30}
+                        height={20}
+                        className="h-4 w-auto rounded-sm"
+                      />
+                    </button>
+                    <NavUtilityDivider />
+                    <NavAdminLoginLink />
+                  </NavUtilityCluster>
                     <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">
                       Contact Us
                     </Link>
@@ -259,32 +281,32 @@ export default function CareersPage() {
                 <div className="mb-6 inline-flex items-center gap-3">
                   <span className="h-px w-12 bg-brand-red" />
                   <span className="text-sm font-semibold uppercase tracking-[0.2em] text-white/80">
-                    Join Our Team
+                    {t.careersPage.hero.sectionTitle}
                   </span>
                 </div>
                 
                 <h1 className="text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
-                  Be part of our mission
+                  {t.careersPage.hero.title}
                 </h1>
                 <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/80">
-                  We&apos;re looking for passionate people to join us on our mission. We value flat hierarchies, clear communication, and full ownership and responsibility.
+                  {t.careersPage.hero.description}
                 </p>
 
                 {/* Stats Row */}
                 <div className="mt-10 flex flex-wrap items-center gap-8 border-t border-white/20 pt-10">
                   <div>
                     <p className="text-3xl font-bold text-white">21+</p>
-                    <p className="mt-1 text-sm text-white/60">Years of Excellence</p>
+                    <p className="mt-1 text-sm text-white/60">{t.careersPage.hero.stats.years}</p>
                   </div>
                   <div className="h-12 w-px bg-white/20" />
                   <div>
                     <p className="text-3xl font-bold text-white">500+</p>
-                    <p className="mt-1 text-sm text-white/60">Team Members</p>
+                    <p className="mt-1 text-sm text-white/60">{t.careersPage.hero.stats.team}</p>
                   </div>
                   <div className="h-12 w-px bg-white/20" />
                   <div>
                     <p className="text-3xl font-bold text-white">5</p>
-                    <p className="mt-1 text-sm text-white/60">Business Sectors</p>
+                    <p className="mt-1 text-sm text-white/60">{t.careersPage.hero.stats.sectors}</p>
                   </div>
                 </div>
 
@@ -294,7 +316,7 @@ export default function CareersPage() {
                     href="#open-positions"
                     className="inline-flex items-center gap-2 rounded-lg bg-brand-red px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#c91e21]"
                   >
-                    View Open Positions
+                    {t.careersPage.hero.viewPositions}
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                     </svg>
@@ -303,7 +325,7 @@ export default function CareersPage() {
                     href="mailto:recruitment@dhinimex.com"
                     className="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
                   >
-                    Send Your CV
+                    {t.careersPage.hero.sendCv}
                   </a>
                 </div>
               </div>
@@ -318,9 +340,9 @@ export default function CareersPage() {
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <h2 className="text-xl font-semibold text-brand-navy">Open Positions</h2>
+                  <h2 className="text-xl font-semibold text-brand-navy">{t.careersPage.positions.title}</h2>
                   <p className="mt-1 text-sm text-slate-500">
-                    {filteredCareers.length} {filteredCareers.length === 1 ? "role" : "roles"} available
+                    {filteredCareers.length} {filteredCareers.length === 1 ? t.careersPage.positions.roleAvailable : t.careersPage.positions.rolesAvailable}
                   </p>
                 </div>
                 
@@ -366,11 +388,11 @@ export default function CareersPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <h3 className="mb-2 text-xl font-semibold text-brand-navy">No positions found</h3>
+                  <h3 className="mb-2 text-xl font-semibold text-brand-navy">{t.careersPage.positions.empty.title}</h3>
                   <p className="mx-auto max-w-md text-slate-500">
                     {activeFilter === "View all" 
-                      ? "There are currently no open positions. Check back soon or send us your CV for future opportunities."
-                      : `No positions found in ${activeFilter}. Try a different category.`
+                      ? t.careersPage.positions.empty.allDesc
+                      : t.careersPage.positions.empty.filterDesc
                     }
                   </p>
                 </div>
@@ -419,7 +441,7 @@ export default function CareersPage() {
                             <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
-                            Deadline: {role.deadline}
+                            {t.careersPage.positions.deadline} {role.deadline}
                           </span>
                         </div>
                       </div>
@@ -429,7 +451,7 @@ export default function CareersPage() {
                         href={`/careers/${role.slug}`}
                         className="inline-flex items-center gap-2 rounded-lg border border-brand-navy/20 bg-white px-5 py-2.5 text-sm font-semibold text-brand-navy transition-all hover:border-brand-red hover:bg-brand-red hover:text-white sm:mt-0"
                       >
-                        Apply
+                        {t.careersPage.positions.apply}
                         <svg className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 17L17 7M17 7H7M17 7v10" />
                         </svg>
@@ -453,10 +475,10 @@ export default function CareersPage() {
 
           <div className="relative mx-auto max-w-4xl px-6 text-center lg:px-8">
             <h2 className="mb-4 text-3xl font-bold text-white lg:text-4xl">
-              Don&apos;t see the right role?
+              {t.careersPage.cta.title}
             </h2>
             <p className="mb-10 text-lg text-white/70">
-              We&apos;re always looking for talented individuals. Send us your CV and we&apos;ll keep you in mind for future opportunities.
+              {t.careersPage.cta.description}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <a
@@ -466,13 +488,13 @@ export default function CareersPage() {
                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                Send your CV
+                {t.careersPage.cta.sendCv}
               </a>
               <Link
                 href="/contact-us"
                 className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-8 py-4 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
               >
-                Contact Us
+                {t.careersPage.cta.contact}
               </Link>
             </div>
           </div>

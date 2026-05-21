@@ -94,7 +94,7 @@ export function MyBookingsClient({ roomBookings, carBookings, userEmail }: Props
             className={`flex-1 px-4 py-3 text-sm font-medium rounded-lg transition-all ${
               activeTab === 'rooms'
                 ? 'bg-gradient-to-r from-[#2E388C] to-[#3d4ba3] text-white shadow-md'
-                : 'text-slate-600 hover:bg-slate-50'
+               : 'text-slate-600 hover:bg-slate-50'
             }`}
           >
             Room Bookings ({roomBookings.length})
@@ -104,7 +104,7 @@ export function MyBookingsClient({ roomBookings, carBookings, userEmail }: Props
             className={`flex-1 px-4 py-3 text-sm font-medium rounded-lg transition-all ${
               activeTab === 'cars'
                 ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-md'
-                : 'text-slate-600 hover:bg-slate-50'
+               : 'text-slate-600 hover:bg-slate-50'
             }`}
           >
             Car Bookings ({carBookings.length})
@@ -164,8 +164,8 @@ export function MyBookingsClient({ roomBookings, carBookings, userEmail }: Props
                           </div>
                           <div className="flex flex-col items-end gap-2 ml-4">
                             <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                              booking.status === 'confirmed' ? 'bg-green-100 text-green-700' :
-                              booking.status === 'checked-in' ? 'bg-blue-100 text-blue-700' :
+                              booking.status === 'confirmed' ? 'bg-green-100 text-green-700':
+                              booking.status === 'checked-in' ? 'bg-blue-100 text-blue-700':
                               'bg-yellow-100 text-yellow-700'
                             }`}>
                               {booking.status}
@@ -194,7 +194,7 @@ export function MyBookingsClient({ roomBookings, carBookings, userEmail }: Props
                     );
                   })}
                 </div>
-              ) : (
+              ): (
                 <p className="text-center text-slate-500 py-8">No upcoming room bookings</p>
               )}
             </div>
@@ -220,8 +220,8 @@ export function MyBookingsClient({ roomBookings, carBookings, userEmail }: Props
                           </p>
                         </div>
                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          booking.status === 'completed' ? 'bg-green-100 text-green-700' :
-                          booking.status === 'cancelled' ? 'bg-red-100 text-red-700' :
+                          booking.status === 'completed' ? 'bg-green-100 text-green-700':
+                          booking.status === 'cancelled' ? 'bg-red-100 text-red-700':
                           'bg-gray-100 text-gray-700'
                         }`}>
                           {booking.status}
@@ -264,7 +264,7 @@ export function MyBookingsClient({ roomBookings, carBookings, userEmail }: Props
                               </span>
                             </div>
                             <div>
-                              {booking.driverType === 'self-drive' ? 'Self Drive' : `Driver: ${booking.driverName}`}
+                              {booking.driverType === 'self-drive' ? 'Self Drive': `Driver: ${booking.driverName}`}
                             </div>
                           </div>
                           {booking.rejectionReason && (
@@ -277,9 +277,9 @@ export function MyBookingsClient({ roomBookings, carBookings, userEmail }: Props
                         </div>
                         <div className="flex flex-col items-end gap-2 ml-4">
                           <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                            booking.status === 'approved' ? 'bg-green-100 text-green-700' :
-                            booking.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                            booking.status === 'in-progress' ? 'bg-blue-100 text-blue-700' :
+                            booking.status === 'approved' ? 'bg-green-100 text-green-700':
+                            booking.status === 'pending' ? 'bg-yellow-100 text-yellow-700':
+                            booking.status === 'in-progress' ? 'bg-blue-100 text-blue-700':
                             'bg-red-100 text-red-700'
                           }`}>
                             {booking.status}
@@ -300,7 +300,7 @@ export function MyBookingsClient({ roomBookings, carBookings, userEmail }: Props
                     </div>
                   ))}
                 </div>
-              ) : (
+              ): (
                 <p className="text-center text-slate-500 py-8">No upcoming car bookings</p>
               )}
             </div>
@@ -325,8 +325,8 @@ export function MyBookingsClient({ roomBookings, carBookings, userEmail }: Props
                           </p>
                         </div>
                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          booking.status === 'completed' ? 'bg-green-100 text-green-700' :
-                          booking.status === 'cancelled' || booking.status === 'rejected' ? 'bg-red-100 text-red-700' :
+                          booking.status === 'completed' ? 'bg-green-100 text-green-700':
+                          booking.status === 'cancelled' || booking.status === 'rejected' ? 'bg-red-100 text-red-700':
                           'bg-gray-100 text-gray-700'
                         }`}>
                           {booking.status}
@@ -362,7 +362,7 @@ export function MyBookingsClient({ roomBookings, carBookings, userEmail }: Props
             <form onSubmit={handleTripLogSubmit} className="p-6 space-y-4">
               <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
                 <p className="text-sm text-blue-800">
-                  Please provide the starting and ending mileage and fuel levels for your trip with {selectedBooking.carModel}.
+                  Please provide the starting and ending mileage and fuel levels for your trip with {selectedBooking.carModel}.   {selectedBooking.carModel}
                 </p>
               </div>
 
@@ -437,7 +437,7 @@ export function MyBookingsClient({ roomBookings, carBookings, userEmail }: Props
                   disabled={isSubmitting}
                   className="flex-1 px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-green-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? 'Submitting...' : 'Submit Log'}
+                  {isSubmitting ? 'Submitting......': 'Submit Log'}
                 </button>
               </div>
             </form>

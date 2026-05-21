@@ -68,7 +68,7 @@ export function RoomBookingClient({ initialRooms, initialBookings }: Props) {
   const calendarEvents = useMemo((): CalendarEvent[] => {
     const filtered = selectedFloor === 'all' 
       ? bookings 
-      : bookings.filter(b => {
+     : bookings.filter(b => {
           const room = rooms.find(r => r.id === b.roomId);
           return room && room.location.toLowerCase().includes(selectedFloor);
         });
@@ -89,7 +89,7 @@ export function RoomBookingClient({ initialRooms, initialBookings }: Props) {
           type: 'room' as const,
           status: booking.status,
           userEmail: booking.userEmail,
-          color: isGroundFloor ? GROUND_FLOOR_COLOR : FIRST_FLOOR_COLOR
+          color: isGroundFloor ? GROUND_FLOOR_COLOR: FIRST_FLOOR_COLOR
         };
       });
   }, [bookings, rooms, selectedFloor]);
@@ -207,7 +207,7 @@ export function RoomBookingClient({ initialRooms, initialBookings }: Props) {
   const timeOptions = Array.from({ length: 13 }, (_, i) => {
     const hour = i + 7;
     const hourStr = hour.toString().padStart(2, '0');
-    const label = hour === 0 ? '12 AM' : hour < 12 ? `${hour} AM` : hour === 12 ? '12 PM' : `${hour - 12} PM`;
+    const label = hour === 0 ? '12 AM': hour < 12 ? `${hour} AM`: hour === 12 ? '12 PM': `${hour - 12} PM`;
     return { value: `${hourStr}:00`, label };
   });
 
@@ -234,7 +234,7 @@ export function RoomBookingClient({ initialRooms, initialBookings }: Props) {
               className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
                 selectedFloor === 'all'
                   ? 'bg-[#2E388C] text-white shadow-sm'
-                  : 'text-slate-600 hover:bg-slate-200'
+                 : 'text-slate-600 hover:bg-slate-200'
               }`}
             >
               All Floors
@@ -244,7 +244,7 @@ export function RoomBookingClient({ initialRooms, initialBookings }: Props) {
               className={`px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${
                 selectedFloor === 'ground'
                   ? 'bg-[#2E388C] text-white shadow-sm'
-                  : 'text-slate-600 hover:bg-slate-200'
+                 : 'text-slate-600 hover:bg-slate-200'
               }`}
             >
               <div className="w-3 h-3 rounded-full" style={{ backgroundColor: GROUND_FLOOR_COLOR }}></div>
@@ -255,7 +255,7 @@ export function RoomBookingClient({ initialRooms, initialBookings }: Props) {
               className={`px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${
                 selectedFloor === 'first'
                   ? 'bg-[#D4A03C] text-white shadow-sm'
-                  : 'text-slate-600 hover:bg-slate-200'
+                 : 'text-slate-600 hover:bg-slate-200'
               }`}
             >
               <div className="w-3 h-3 rounded-full" style={{ backgroundColor: FIRST_FLOOR_COLOR }}></div>
@@ -276,14 +276,14 @@ export function RoomBookingClient({ initialRooms, initialBookings }: Props) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {filteredRooms.map((room) => {
           const isGroundFloor = room.location.toLowerCase().includes('ground');
-          const floorColor = isGroundFloor ? GROUND_FLOOR_COLOR : FIRST_FLOOR_COLOR;
+          const floorColor = isGroundFloor ? GROUND_FLOOR_COLOR: FIRST_FLOOR_COLOR;
           return (
             <div
               key={room.id}
               className={`p-4 rounded-lg border-2 transition-all cursor-pointer hover:shadow-md ${
                 selectedRoom?.id === room.id
                   ? 'border-[#2E388C] bg-[#2E388C]/5'
-                  : 'border-slate-200 hover:border-slate-300'
+                 : 'border-slate-200 hover:border-slate-300'
               }`}
               onClick={() => setSelectedRoom(room)}
             >
@@ -429,7 +429,7 @@ export function RoomBookingClient({ initialRooms, initialBookings }: Props) {
                   <select
                     name="startTime"
                     required
-                    defaultValue={selectedHour !== null ? `${selectedHour.toString().padStart(2, '0')}:00` : '09:00'}
+                    defaultValue={selectedHour !== null ? `${selectedHour.toString().padStart(2, '0')}:00`: '09:00'}
                     className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#2E388C] focus:border-transparent"
                   >
                     {timeOptions.map(opt => (
@@ -445,7 +445,7 @@ export function RoomBookingClient({ initialRooms, initialBookings }: Props) {
                   <select
                     name="endTime"
                     required
-                    defaultValue={selectedHour !== null ? `${(selectedHour + 1).toString().padStart(2, '0')}:00` : '10:00'}
+                    defaultValue={selectedHour !== null ? `${(selectedHour + 1).toString().padStart(2, '0')}:00`: '10:00'}
                     className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#2E388C] focus:border-transparent"
                   >
                     {timeOptions.map(opt => (
@@ -472,7 +472,7 @@ export function RoomBookingClient({ initialRooms, initialBookings }: Props) {
                   disabled={isSubmitting}
                   className="flex-1 px-4 py-2.5 text-sm bg-gradient-to-r from-[#2E388C] to-[#3d4ba3] text-white font-semibold rounded-lg hover:from-[#3d4ba3] hover:to-[#4a5ab5] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? 'Booking...' : 'Confirm Booking'}
+                  {isSubmitting ? 'Booking......': 'Confirm Booking'}
                 </button>
               </div>
             </form>

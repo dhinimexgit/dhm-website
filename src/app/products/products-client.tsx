@@ -10,6 +10,13 @@ import type { ProductCategory, Product } from "@/data/site-content";
 import { productCategories } from "@/data/site-content";
 import { StickyHeader } from "@/components/home/sticky-header";
 import { ContactModal } from "@/components/contact-modal";
+import { useLanguage } from "@/lib/i18n";
+import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
+import {
+  NavUtilityCluster,
+  NavUtilityDivider,
+  NAV_UTILITY_ICON_CLASS,
+} from "@/components/layout/nav-utility-cluster";
 
 const sortOptions = [
   { label: "Newest → Oldest", value: "newest" },
@@ -105,6 +112,7 @@ type Props = {
 };
 
 export function ProductsPageClient({ initialBrand }: Props) {
+  const { t, language, setLanguage } = useLanguage();
   // Real-time products from Firebase (like admin page)
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -375,8 +383,8 @@ export function ProductsPageClient({ initialBrand }: Props) {
       parts.push(`${selectedCategories.length} Categories`);
     }
 
-    return parts.length > 0 ? parts.join(" / ") : "All Products";
-  }, [selectedBrands, selectedCategories, categories]);
+    return parts.length > 0 ? parts.join(" / ") : t.productsPage.listing.allProducts;
+  }, [selectedBrands, selectedCategories, categories, t]);
 
   // Updated categories list to remove redundancy and match the user's request
   const displayCategories = [
@@ -421,7 +429,7 @@ export function ProductsPageClient({ initialBrand }: Props) {
             <div className="flex items-center justify-center py-20">
               <div className="text-center">
                 <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-brand-navy border-r-transparent"></div>
-                <p className="mt-4 text-slate-500">Loading products...</p>
+                <p className="mt-4 text-slate-500">{t.productsPage.loading}</p>
               </div>
             </div>
           </div>
@@ -453,13 +461,13 @@ export function ProductsPageClient({ initialBrand }: Props) {
               <div className="mb-10 text-center">
                 <p className="mb-3 inline-flex items-center justify-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
                   
-                  Browse Collection
+                  {t.productsPage.browse.sectionTitle}
                 </p>
                 <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
-                  Shop by Categories
+                  {t.productsPage.browse.title}
                 </h2>
                 <p className="mx-auto max-w-2xl text-base text-slate-500">
-                  Explore our comprehensive range of professional tools organized by category for easy discovery.
+                  {t.productsPage.browse.description}
                 </p>
               </div>
             
@@ -485,13 +493,13 @@ export function ProductsPageClient({ initialBrand }: Props) {
             <div className="mb-10 text-center">
               <p className="mb-3 inline-flex items-center justify-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
                 
-                Top Picks
+                {t.productsPage.featured.sectionTitle}
               </p>
               <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
-                Featured Products
+                {t.productsPage.featured.title}
               </h2>
               <p className="mx-auto max-w-2xl text-base text-slate-500">
-                Discover our most popular tools and equipment, handpicked for quality and performance.
+                {t.productsPage.featured.description}
               </p>
             </div>
             
@@ -508,13 +516,13 @@ export function ProductsPageClient({ initialBrand }: Props) {
               <div className="mb-10 text-center">
                 <p className="mb-3 inline-flex items-center justify-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
                   
-                  Our Partners
+                  {t.productsPage.brands.sectionTitle}
                 </p>
                 <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
-                  Shop by Brand
+                  {t.productsPage.brands.title}
                 </h2>
                 <p className="mx-auto max-w-2xl text-base text-slate-500">
-                  We proudly partner with industry-leading brands to bring you the best tools and equipment.
+                  {t.productsPage.brands.description}
                 </p>
               </div>
 
@@ -536,7 +544,7 @@ export function ProductsPageClient({ initialBrand }: Props) {
                         href={`/products/${brand.slug}`}
                         className="inline-block rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-brand-navy"
                       >
-                        Shop Brand
+                        {t.productsPage.brands.shopBrand}
                       </Link>
                     </div>
                   </div>
@@ -550,9 +558,9 @@ export function ProductsPageClient({ initialBrand }: Props) {
         <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
           <nav className="mb-8 flex items-center gap-2 text-sm text-slate-600">
-            <Link href="/" className="hover:text-brand-red">Home</Link>
+            <Link href="/" className="hover:text-brand-red">{t.productsPage.listing.home}</Link>
             <span>/</span>
-            <button onClick={() => setViewMode('landing')} className="hover:text-brand-red">Products</button>
+            <button onClick={() => setViewMode('landing')} className="hover:text-brand-red">{t.productsPage.listing.products}</button>
             <span>/</span>
             <span className="font-semibold text-brand-navy">{breadcrumbText}</span>
           </nav>
@@ -562,15 +570,15 @@ export function ProductsPageClient({ initialBrand }: Props) {
             <aside className={`w-full lg:w-1/4 ${mobileFiltersOpen ? 'block' : 'hidden lg:block'}`}>
               <div className="space-y-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-bold text-brand-navy">Filters</h3>
+                  <h3 className="text-lg font-bold text-brand-navy">{t.productsPage.listing.filters}</h3>
                   <button onClick={clearFilters} className="text-xs font-semibold text-brand-red hover:underline">
-                    Clear All
+                    {t.productsPage.listing.clearAll}
                   </button>
                 </div>
 
                 {/* Categories Filter */}
                 <div className="space-y-4">
-                  <h4 className="font-semibold text-slate-700">Categories</h4>
+                  <h4 className="font-semibold text-slate-700">{t.productsPage.listing.categories}</h4>
                   <ul className="space-y-2 text-sm">
                     {categoryTree.map((group) => {
                       const isExpanded = expandedCategories.has(group.id);
@@ -651,7 +659,7 @@ export function ProductsPageClient({ initialBrand }: Props) {
 
                 {/* Brands Filter */}
                 <div className="space-y-4 border-t border-slate-100 pt-6">
-                  <h4 className="font-semibold text-slate-700">Brands</h4>
+                  <h4 className="font-semibold text-slate-700">{t.productsPage.listing.brands}</h4>
                   <div className="space-y-2">
                     {categories.map((b) => (
                       <div key={b.slug} className="flex items-center gap-2">
@@ -670,7 +678,7 @@ export function ProductsPageClient({ initialBrand }: Props) {
 
                 {/* Price Sort Filter (Moved here as requested "Price Sorter" in sidebar) */}
                 <div className="space-y-4 border-t border-slate-100 pt-6">
-                  <h4 className="font-semibold text-slate-700">Sort By</h4>
+                  <h4 className="font-semibold text-slate-700">{t.productsPage.listing.sortBy}</h4>
                   <div className="space-y-2">
                     {sortOptions.map((option) => (
                       <div key={option.value} className="flex items-center gap-2">
@@ -697,7 +705,7 @@ export function ProductsPageClient({ initialBrand }: Props) {
                 className="w-full flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white py-3 text-sm font-semibold text-slate-700"
               >
                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
-                {mobileFiltersOpen ? 'Hide Filters' : 'Show Filters'}
+                {mobileFiltersOpen ? t.productsPage.listing.hideFilters : t.productsPage.listing.showFilters}
               </button>
             </div>
 
@@ -705,7 +713,7 @@ export function ProductsPageClient({ initialBrand }: Props) {
             <main className="flex-1">
               <div className="mb-6 flex items-center justify-between">
                 <h2 ref={productsHeaderRef} className="text-2xl font-bold text-brand-navy">
-                  Products <span className="text-sm font-normal text-slate-500 ml-2">({filteredProducts.length} items)</span>
+                  {t.productsPage.listing.products} <span className="text-sm font-normal text-slate-500 ml-2">({filteredProducts.length} {t.productsPage.listing.items})</span>
                 </h2>
                 {/* Optional: Top bar sort could also be here if preferred over sidebar */}
               </div>
@@ -733,7 +741,7 @@ export function ProductsPageClient({ initialBrand }: Props) {
                         disabled={currentPage === 1}
                         className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-brand-navy hover:text-white disabled:opacity-50 disabled:hover:bg-white disabled:hover:text-slate-600"
                       >
-                        Previous
+                        {t.productsPage.listing.previous}
                       </button>
                       
                       <div className="flex items-center gap-1">
@@ -763,15 +771,15 @@ export function ProductsPageClient({ initialBrand }: Props) {
                         disabled={currentPage === totalPages}
                         className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-brand-navy hover:text-white disabled:opacity-50 disabled:hover:bg-white disabled:hover:text-slate-600"
                       >
-                        Next
+                        {t.productsPage.listing.next}
                       </button>
                     </div>
                   )}
                 </>
               ) : (
                 <div className="flex h-64 flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50 text-center">
-                  <p className="text-lg font-medium text-slate-500">No products found</p>
-                  <button onClick={clearFilters} className="mt-2 text-sm font-semibold text-brand-red hover:underline">Clear all filters</button>
+                  <p className="text-lg font-medium text-slate-500">{t.productsPage.listing.noProducts}</p>
+                  <button onClick={clearFilters} className="mt-2 text-sm font-semibold text-brand-red hover:underline">{t.productsPage.listing.clearFilters}</button>
                 </div>
               )}
             </main>
@@ -790,18 +798,17 @@ export function ProductsPageClient({ initialBrand }: Props) {
 
         <div className="relative mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
           <h2 className="mb-5 text-3xl font-bold text-white lg:text-4xl">
-            Need Help Finding the Right Product?
+            {t.productsPage.cta.title}
           </h2>
           <p className="mb-10 text-lg leading-relaxed text-white/70">
-            Our team of experts is here to help you select the perfect tools and equipment 
-            for your project. Contact us for personalized recommendations and bulk pricing.
+            {t.productsPage.cta.description}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/contact-us"
               className="inline-flex items-center gap-2 rounded-lg bg-white px-8 py-4 text-sm font-semibold text-brand-navy shadow-lg transition hover:bg-slate-100"
             >
-              Contact Our Team
+              {t.productsPage.cta.contact}
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
@@ -813,7 +820,7 @@ export function ProductsPageClient({ initialBrand }: Props) {
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
-              Call: 011 753 940
+              {t.productsPage.cta.call}
             </Link>
           </div>
         </div>
@@ -824,6 +831,7 @@ export function ProductsPageClient({ initialBrand }: Props) {
 }
 
 function ProductImageDisplay({ images, productName }: { images: any, productName: string }) {
+  const { t, language, setLanguage } = useLanguage();
   const [imageError, setImageError] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
   
@@ -868,7 +876,7 @@ function ProductImageDisplay({ images, productName }: { images: any, productName
     return (
       <div className="relative mb-4 h-40 w-full overflow-hidden rounded-lg bg-slate-100">
         <div className="flex h-full w-full items-center justify-center text-slate-400">
-          <span className="text-xs">No Image</span>
+          <span className="text-xs">{t.productsPage.card.noImage}</span>
         </div>
       </div>
     );
@@ -900,6 +908,7 @@ function ProductImageDisplay({ images, productName }: { images: any, productName
 }
 
 function FeaturedProductCard({ product, categorySlug }: { product: any, categorySlug: string }) {
+  const { t, language, setLanguage } = useLanguage();
   return (
     <div className="group relative flex flex-col items-center rounded-xl border border-slate-100 bg-white p-6 text-center shadow-sm transition-all hover:border-slate-200 hover:shadow-lg">
       {/* Sale Badge if needed */}
@@ -923,7 +932,7 @@ function FeaturedProductCard({ product, categorySlug }: { product: any, category
         <div className="mb-4">
           <ContactModal 
             productName={product.name}
-            triggerText="Request Quote"
+            triggerText={t.productsPage.card.requestQuote}
             triggerClassName="inline-block rounded-md bg-slate-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-navy hover:bg-slate-200 transition-colors"
             initialQuestion={`I would like to request a quotation for ${product.name}.`}
           />
@@ -934,7 +943,7 @@ function FeaturedProductCard({ product, categorySlug }: { product: any, category
         href={`/products/${categorySlug}/${product.slug}`}
         className="mt-auto w-full rounded bg-brand-navy py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-brand-red"
       >
-        View Product
+        {t.productsPage.card.viewProduct}
       </Link>
     </div>
   );
@@ -987,6 +996,7 @@ function HeroSection({
   searchPanelRef,
   handleSearchSubmit
 }: HeroSectionProps) {
+  const { t, language, setLanguage } = useLanguage();
   const heroImage = "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=1920&q=80";
 
   return (
@@ -1060,22 +1070,36 @@ function HeroSection({
                   <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                 </Link>
               </nav>
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={() => setSearchOpen(!searchOpen)}
-                  className={`p-2 transition ${searchOpen ? "text-white" : "text-white/80 hover:text-white"}`}
-                  aria-label="Search"
-                >
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </button>
-                <span className="text-white/30">|</span>
-                <Link href="mailto:info@dhinimex.com.kh" className="p-2 text-white/80 transition hover:text-white" aria-label="Email">
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </Link>
+              <div className="flex items-center gap-3">
+                    <NavUtilityCluster>
+                    <button
+                      type="button"
+                      onClick={() => setSearchOpen(!searchOpen)}
+                      className={`${NAV_UTILITY_ICON_CLASS} ${searchOpen ? "text-white" : ""}`}
+                      aria-label="Search"
+                    >
+                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </button>
+                    <NavUtilityDivider />
+                    <button
+                      type="button"
+                      onClick={() => setLanguage(language === 'en' ? 'kh' : 'en')}
+                      className={`${NAV_UTILITY_ICON_CLASS} px-1.5`}
+                      aria-label="Toggle Language"
+                    >
+                      <Image
+                        src={language === 'en' ? "/kh-flag.png" : "/en-flag.png"}
+                        alt={language === 'en' ? "Khmer" : "English"}
+                        width={30}
+                        height={20}
+                        className="h-4 w-auto rounded-sm"
+                      />
+                    </button>
+                    <NavUtilityDivider />
+                    <NavAdminLoginLink />
+                  </NavUtilityCluster>
                 <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">
                   Contact Us
                 </Link>
@@ -1119,21 +1143,20 @@ function HeroSection({
           <div className="max-w-2xl space-y-6">
             <p className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-white/90">
               
-              Our Products
+              {t.nav.products}
             </p>
             <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-[64px] xl:leading-[1.1]">
-              Industrial-Grade Tools for Utilities & Services
+              {t.productsPage.hero.title}
             </h1>
             <p className="max-w-xl text-lg text-white/80">
-              Discover our curated selection of professional tools and equipment from leading brands, 
-              designed for construction, electrical work, and industrial applications.
+              {t.productsPage.hero.description}
             </p>
             <div className="flex flex-wrap gap-4 pt-4 mb-6">
               <button
                 onClick={onViewAll}
                 className="inline-flex items-center gap-2 rounded-lg bg-brand-red px-8 py-4 text-sm font-semibold text-white shadow-lg transition hover:bg-[#c91e21]"
               >
-                View All Products
+                {t.productsPage.hero.viewAll}
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
@@ -1142,7 +1165,7 @@ function HeroSection({
                 href="/contact-us"
                 className="inline-flex items-center gap-2 rounded-lg border-2 border-white/30 bg-white/10 px-8 py-4 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
               >
-                Request Quote
+                {t.productsPage.hero.requestQuote}
               </Link>
             </div>
           </div>

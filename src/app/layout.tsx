@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Source_Sans_3 } from "next/font/google";
+import { Source_Sans_3, Suwannaphum } from "next/font/google";
 import "./globals.css";
 import { ConditionalHeader } from "@/components/layout/conditional-header";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -8,6 +8,12 @@ const sourceSans = Source_Sans_3({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-dhinimex-sans",
+});
+
+const suwannaphum = Suwannaphum({
+  subsets: ["khmer"],
+  weight: ["100", "300", "400", "700", "900"],
+  variable: "--font-suwannaphum",
 });
 
 const siteName = "Dhinimex Co., LTD";
@@ -46,7 +52,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="overflow-x-hidden">
       <body
-        className={`${sourceSans.variable} overflow-x-hidden antialiased`}
+        className={`${sourceSans.variable} ${suwannaphum.variable} overflow-x-hidden antialiased`}
       >
         <LanguageProvider>
           <ConditionalHeader />

@@ -4,6 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/lib/i18n";
+import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
+import {
+  NavUtilityCluster,
+  NavUtilityDivider,
+  NAV_UTILITY_ICON_CLASS,
+} from "@/components/layout/nav-utility-cluster";
 import { StickyHeader } from "@/components/home/sticky-header";
 
 // Hero background image - High resolution corporate/infrastructure themed
@@ -61,6 +68,7 @@ const categories = [
 ];
 
 export default function BlogPage() {
+  const { t, language, setLanguage } = useLanguage();
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -223,22 +231,36 @@ export default function BlogPage() {
                       <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
                   </nav>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3">
+                    <NavUtilityCluster>
                     <button
+                      type="button"
                       onClick={() => setSearchOpen(!searchOpen)}
-                      className={`p-2 transition ${searchOpen ? "text-white" : "text-white/80 hover:text-white"}`}
+                      className={`${NAV_UTILITY_ICON_CLASS} ${searchOpen ? "text-white" : ""}`}
                       aria-label="Search"
                     >
                       <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                       </svg>
                     </button>
-                    <span className="text-white/30">|</span>
-                    <Link href="mailto:info@dhinimex.com.kh" className="p-2 text-white/80 transition hover:text-white" aria-label="Email">
-                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                    </Link>
+                    <NavUtilityDivider />
+                    <button
+                      type="button"
+                      onClick={() => setLanguage(language === 'en' ? 'kh' : 'en')}
+                      className={`${NAV_UTILITY_ICON_CLASS} px-1.5`}
+                      aria-label="Toggle Language"
+                    >
+                      <Image
+                        src={language === 'en' ? "/kh-flag.png" : "/en-flag.png"}
+                        alt={language === 'en' ? "Khmer" : "English"}
+                        width={30}
+                        height={20}
+                        className="h-4 w-auto rounded-sm"
+                      />
+                    </button>
+                    <NavUtilityDivider />
+                    <NavAdminLoginLink />
+                  </NavUtilityCluster>
                     <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">
                       Contact Us
                     </Link>
@@ -282,13 +304,13 @@ export default function BlogPage() {
               <div className="max-w-3xl space-y-6">
                 <p className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-white/90">
                   
-                  News
+                  {t.nav.blog}
                 </p>
                 <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-[64px] xl:leading-[1.1]">
-                  News and Insights From Our Group
+                  {t.newsPage.hero.title}
                 </h1>
                 <p className="max-w-xl text-lg text-white/80">
-                  Discover insights, project highlights, and company culture from across our business units.
+                  {t.newsPage.hero.description}
                 </p>
               </div>
             </div>
@@ -302,7 +324,7 @@ export default function BlogPage() {
             <div className="flex items-center justify-center py-20">
               <div className="flex flex-col items-center gap-4">
                 <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-brand-navy" />
-                <p className="text-sm text-slate-500">Loading stories...</p>
+                <p className="text-sm text-slate-500">{t.newsPage.loading}</p>
               </div>
             </div>
           ) : filteredPosts.length === 0 ? (
@@ -313,8 +335,8 @@ export default function BlogPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                 </svg>
               </div>
-              <h3 className="mb-2 text-xl font-semibold text-brand-navy">No stories found</h3>
-              <p className="text-slate-500">Check back soon for new content in this category.</p>
+              <h3 className="mb-2 text-xl font-semibold text-brand-navy">{t.newsPage.empty.title}</h3>
+              <p className="text-slate-500">{t.newsPage.empty.description}</p>
             </div>
           ) : (
             <div className="space-y-16">
@@ -340,7 +362,7 @@ export default function BlogPage() {
                       <div className="flex flex-col justify-center">
                         <div className="mb-4 flex items-center gap-3">
                           <span className="rounded-full bg-brand-red/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brand-red">
-                            {featuredPost.tag || "Featured"}
+                            {featuredPost.tag || t.newsPage.featured.defaultTag}
                           </span>
                           <span className="text-sm text-slate-400">
                             {new Date(featuredPost.date).toLocaleDateString("en-US", {
@@ -357,7 +379,7 @@ export default function BlogPage() {
                           {featuredPost.excerpt}
                         </p>
                         <div className="flex items-center gap-2 text-sm font-semibold text-brand-navy transition-colors group-hover:text-brand-red">
-                          Read full story
+                          {t.newsPage.featured.readFull}
                           <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                           </svg>
@@ -372,7 +394,7 @@ export default function BlogPage() {
               {secondaryPosts.length > 0 && (
                 <section>
                   <div className="mb-8 flex items-center justify-between">
-                    <h3 className="text-xl font-semibold text-brand-navy">Recent Stories</h3>
+                    <h3 className="text-xl font-semibold text-brand-navy">{t.newsPage.recent.title}</h3>
                   </div>
                   <div className="grid gap-8 md:grid-cols-2">
                     {secondaryPosts.map((post, index) => (
@@ -390,7 +412,7 @@ export default function BlogPage() {
                           <div className="flex flex-1 flex-col p-6">
                             <div className="mb-3 flex items-center gap-3">
                               <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">
-                                {post.tag || "News"}
+                                {post.tag || t.newsPage.recent.defaultTag}
                               </span>
                               <span className="text-xs text-slate-400">
                                 {new Date(post.date).toLocaleDateString("en-US", {
@@ -407,7 +429,7 @@ export default function BlogPage() {
                               {post.excerpt}
                             </p>
                             <div className="flex items-center gap-2 text-sm font-medium text-brand-navy transition-colors group-hover:text-brand-red">
-                              Read more
+                              {t.newsPage.recent.readMore}
                               <svg className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                               </svg>
@@ -424,7 +446,7 @@ export default function BlogPage() {
               {remainingPosts.length > 0 && (
                 <section>
                   <div className="mb-8">
-                    <h3 className="text-xl font-semibold text-brand-navy">More Stories</h3>
+                    <h3 className="text-xl font-semibold text-brand-navy">{t.newsPage.more.title}</h3>
                   </div>
                   <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     {remainingPosts.map((post, index) => (
@@ -442,7 +464,7 @@ export default function BlogPage() {
                           <div className="p-5">
                             <div className="mb-2 flex items-center gap-2">
                               <span className="text-xs font-medium uppercase tracking-wider text-brand-red">
-                                {post.tag || "News"}
+                                {post.tag || t.newsPage.more.defaultTag}
                               </span>
                               <span className="text-slate-300">•</span>
                               <span className="text-xs text-slate-400">

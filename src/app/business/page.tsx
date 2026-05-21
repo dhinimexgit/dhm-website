@@ -4,6 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/lib/i18n";
+import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
+import {
+  NavUtilityCluster,
+  NavUtilityDivider,
+  NAV_UTILITY_ICON_CLASS,
+} from "@/components/layout/nav-utility-cluster";
 import { StickyHeader } from "@/components/home/sticky-header";
 
 // Hero background image
@@ -91,6 +98,7 @@ const investmentLogos = [
 ];
 
 export default function BusinessPortfolioPage() {
+  const { t, language, setLanguage } = useLanguage();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isPastHero, setIsPastHero] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -233,14 +241,34 @@ export default function BusinessPortfolioPage() {
                     <Link href="/news" className="group relative transition hover:text-white/80">News<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                     <Link href="/careers" className="group relative transition hover:text-white/80">Careers<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                   </nav>
-                  <div className="flex items-center gap-4">
-                    <button onClick={() => setSearchOpen(!searchOpen)} className={`p-2 transition ${searchOpen ? "text-white" : "text-white/80 hover:text-white"}`} aria-label="Search">
+                  <div className="flex items-center gap-3">
+                    <NavUtilityCluster>
+                    <button
+                      type="button"
+                      onClick={() => setSearchOpen(!searchOpen)}
+                      className={`${NAV_UTILITY_ICON_CLASS} ${searchOpen ? "text-white" : ""}`}
+                      aria-label="Search"
+                    >
                       <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                     </button>
-                    <span className="text-white/30">|</span>
-                    <Link href="mailto:info@dhinimex.com.kh" className="p-2 text-white/80 transition hover:text-white" aria-label="Email">
-                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-                    </Link>
+                    <NavUtilityDivider />
+                    <button
+                      type="button"
+                      onClick={() => setLanguage(language === 'en' ? 'kh' : 'en')}
+                      className={`${NAV_UTILITY_ICON_CLASS} px-1.5`}
+                      aria-label="Toggle Language"
+                    >
+                      <Image
+                        src={language === 'en' ? "/kh-flag.png" : "/en-flag.png"}
+                        alt={language === 'en' ? "Khmer" : "English"}
+                        width={30}
+                        height={20}
+                        className="h-4 w-auto rounded-sm"
+                      />
+                    </button>
+                    <NavUtilityDivider />
+                    <NavAdminLoginLink />
+                  </NavUtilityCluster>
                     <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">Contact Us</Link>
                   </div>
                 </div>
@@ -268,14 +296,13 @@ export default function BusinessPortfolioPage() {
               <div className="max-w-2xl space-y-6">
                 <p className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-white/90">
                   
-                  Business Portfolio
+                  {t.nav.business}
                 </p>
                 <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-[64px] xl:leading-[1.1]">
-                  DHINIMEX GROUP
+                  {t.businessPage.hero.title}
                 </h1>
                 <p className="max-w-xl text-lg text-white/80">
-                  A journey of growth, innovation, and transformation. From humble beginnings in 2003 
-                  to becoming a diversified group of 18 companies across five sectors.
+                  {t.businessPage.hero.description}
                 </p>
               </div>
             </div>
@@ -320,6 +347,7 @@ export default function BusinessPortfolioPage() {
         {/* Timeline Milestone Sections */}
         {milestones.map((milestone, index) => {
           const isEven = index % 2 === 0;
+          const localizedMilestone = t.businessPage.milestones[index];
           
           return (
             <section
@@ -334,20 +362,20 @@ export default function BusinessPortfolioPage() {
                     {/* Text content */}
                     <div className={`text-white ${isEven ? "" : "lg:order-2"}`}>
                       <p className="mb-2 text-sm font-medium italic text-white/60">
-                        {milestone.subtitle}
+                        {localizedMilestone.subtitle}
                       </p>
                       <h2 className="mb-4 text-3xl font-bold lg:text-4xl xl:text-5xl">
-                        {milestone.title}
+                        {localizedMilestone.title}
                       </h2>
                       <p className="text-base leading-relaxed text-white/80 lg:text-lg">
-                        {milestone.description}
+                        {localizedMilestone.description}
                       </p>
                     </div>
                     
                     {/* Large year + image */}
                     <div className={`relative ${isEven ? "" : "lg:order-1"}`}>
                       <div className="relative aspect-[16/10] overflow-hidden rounded-2xl">
-                        <Image src={milestone.image} alt={milestone.title} fill className="object-cover" />
+                        <Image src={milestone.image} alt={localizedMilestone.title} fill className="object-cover" />
                         <div className="absolute inset-0 bg-black/20" />
                         {/* Large year overlay */}
                         <div className="absolute inset-0 flex items-center justify-center">
@@ -371,6 +399,7 @@ export default function BusinessPortfolioPage() {
                     {milestone.events.map((event, eventIndex) => {
                       const isLeft = eventIndex % 2 === 0;
                       const isLast = eventIndex === milestone.events.length - 1;
+                      const localizedEventDescription = localizedMilestone.events[eventIndex];
                       
                       return (
                         <div key={event.year} className="relative lg:grid lg:grid-cols-2 lg:gap-12">
@@ -412,7 +441,7 @@ export default function BusinessPortfolioPage() {
                               {/* Content */}
                               <div className="p-6">
                                 <p className="text-sm leading-relaxed text-slate-600">
-                                  {event.description}
+                                  {localizedEventDescription}
                                 </p>
                               </div>
                               

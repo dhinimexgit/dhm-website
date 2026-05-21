@@ -1,10 +1,10 @@
+"use client";
+
 import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { contactInfo } from "@/data/site-content";
-
-const aboutCopy =
-  "Dhinimex Co., Ltd has been a registered company since 2003 and is one of the leading providers of electrical equipment supply, installation, and services across Cambodia.";
+import { useLanguage } from "@/lib/i18n";
 
 const ourBusinesses = [
   { label: "Dhinimex", href: "/business/trading" },
@@ -17,15 +17,6 @@ const ourBusinesses = [
   { label: "CamRad Diagnostic Center", href: "/business/scientific" },
   { label: "Camirrad Irradiation Facility", href: "/business/scientific" },
 
-];
-
-const quickLinks = [
-  { label: "About Us", href: "/about" },
-  { label: "Our Services", href: "/services" },
-  { label: "Products", href: "/products" },
-  { label: "Careers", href: "/careers" },
-  { label: "News", href: "/news" },
-  { label: "Contact Us", href: "/contact-us" },
 ];
 
 const socialIconMap: Record<string, ReactNode> = {
@@ -72,6 +63,17 @@ const socialIconMap: Record<string, ReactNode> = {
 };
 
 export function SiteFooter() {
+  const { t } = useLanguage();
+
+  const quickLinks = [
+    { label: t.nav.about, href: "/about" },
+    { label: t.nav.services, href: "/services" },
+    { label: t.nav.products, href: "/products" },
+    { label: t.nav.careers, href: "/careers" },
+    { label: t.nav.blog, href: "/news" },
+    { label: t.nav.contact, href: "/contact-us" },
+  ];
+
   return (
     <footer className="relative overflow-hidden bg-gradient-to-br from-brand-navy via-[#111a73] to-[#090f3c] text-white">
       {/* Decorative elements */}
@@ -93,7 +95,7 @@ export function SiteFooter() {
               />
             </Link>
             <p className="mt-6 max-w-sm text-sm leading-relaxed text-white/70">
-              {aboutCopy}
+              {t.footer.aboutCopy}
             </p>
           </div>
 
@@ -135,7 +137,7 @@ export function SiteFooter() {
           {/* Quick Links */}
           <div className="lg:col-span-3 lg:pl-4">
             <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-white">
-              Quick Links
+              {t.footer.quickLinks}
             </h3>
             <ul className="space-y-2.5">
               {quickLinks.map((item) => (
@@ -155,7 +157,7 @@ export function SiteFooter() {
           {/* Contact Info */}
           <div className="lg:col-span-5 lg:pl-4">
             <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-white">
-              Contact Info
+              {t.footer.contactInfo}
             </h3>
 
             <ul className="space-y-3.5 text-sm text-white/70">
@@ -214,14 +216,14 @@ export function SiteFooter() {
         <div className="mx-auto max-w-7xl px-6 py-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
             <p className="text-xs text-white/50">
-              Copyright © {new Date().getFullYear()} DHINIMEX. All rights reserved.
+              {t.footer.copyright.replace('{year}', new Date().getFullYear().toString())}
             </p>
             <div className="flex gap-6 text-xs text-white/50">
               <Link href="/privacy" className="transition hover:text-white">
-                Privacy Policy
+                {t.footer.privacyPolicy}
               </Link>
               <Link href="/terms" className="transition hover:text-white">
-                Terms of Service
+                {t.footer.termsOfService}
               </Link>
             </div>
           </div>

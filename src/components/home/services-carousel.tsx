@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useLanguage } from "@/lib/i18n";
 import type { Service } from "@/data/site-content";
 import type { ReactNode } from "react";
 
@@ -49,6 +50,7 @@ const serviceDescriptions: Record<string, string> = {
 };
 
 export function ServicesCarousel({ services }: Props) {
+  const { t } = useLanguage();
   const allServices = services.slice(0, 5);
   const totalServices = allServices.length;
   
@@ -84,11 +86,11 @@ export function ServicesCarousel({ services }: Props) {
           <div>
             <p className="mb-4 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-brand-red">
               
-              Our Services
+              {t.home.servicesCarousel.sectionTitle}
             </p>
             <h2 className="text-3xl font-bold text-slate-900 sm:text-4xl lg:text-5xl">
-              What Problem Can We{" "}
-              <span className="text-brand-navy">Solve Together?</span>
+              {t.home.servicesCarousel.title1}
+              <span className="text-brand-navy">{t.home.servicesCarousel.title2}</span>
             </h2>
           </div>
 
@@ -96,7 +98,7 @@ export function ServicesCarousel({ services }: Props) {
             href="/services"
             className="group inline-flex w-fit items-center gap-2 rounded-full border border-brand-navy px-6 py-3 text-sm font-semibold text-brand-navy transition-all hover:bg-brand-navy hover:text-white"
           >
-            View all services
+            {t.home.servicesCarousel.viewAll}
             <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
@@ -138,7 +140,7 @@ export function ServicesCarousel({ services }: Props) {
                 href={`/services#${allServices[currentIndex].slug}`}
                 className="group mt-auto inline-flex items-center gap-2 text-sm font-medium text-brand-navy transition-colors hover:text-brand-red"
               >
-                Learn more
+                {t.home.servicesCarousel.learnMore}
                 <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                 </svg>
@@ -189,7 +191,7 @@ export function ServicesCarousel({ services }: Props) {
                       href={`/services#${service.slug}`}
                       className="group mt-auto inline-flex items-center gap-2 pt-4 text-sm font-medium text-brand-navy transition-colors hover:text-brand-red"
                     >
-                      Learn more
+                      {t.home.servicesCarousel.learnMore}
                       <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                       </svg>

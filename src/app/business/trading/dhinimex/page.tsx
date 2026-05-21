@@ -5,6 +5,12 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { StickyHeader } from "@/components/home/sticky-header";
+import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
+import {
+  NavUtilityCluster,
+  NavUtilityDivider,
+  NAV_UTILITY_ICON_CLASS,
+} from "@/components/layout/nav-utility-cluster";
 
 const heroImage = "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1920&q=80";
 
@@ -95,11 +101,19 @@ export default function DhinimexDetailPage() {
                     <Link href="/news" className="group relative transition hover:text-white/80">News<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                     <Link href="/careers" className="group relative transition hover:text-white/80">Careers<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                   </nav>
-                  <div className="flex items-center gap-4">
-                    <button onClick={() => setSearchOpen(!searchOpen)} className="p-2 text-white/80 transition hover:text-white" aria-label="Search">
+                  <div className="flex items-center gap-3">
+                    <NavUtilityCluster>
+                    <button
+                      type="button"
+                      onClick={() => setSearchOpen(!searchOpen)}
+                      className={`${NAV_UTILITY_ICON_CLASS} hover:text-white`}
+                      aria-label="Search"
+                    >
                       <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                     </button>
-                    <span className="text-white/30">|</span>
+                    <NavUtilityDivider />
+                    <NavAdminLoginLink />
+                  </NavUtilityCluster>
                     <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">Contact Us</Link>
                   </div>
                 </div>

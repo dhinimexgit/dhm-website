@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useLanguage } from "@/lib/i18n";
 
 const companyLogos = [
   { name: "ThiPha Cable", logo: "/brands/ALL-LOGO-01.png", href: "/business/trading" },
@@ -16,6 +17,7 @@ const companyLogos = [
 ];
 
 export function BusinessPortfolio() {
+  const { t } = useLanguage();
   const items = [...companyLogos, ...companyLogos];
 
   return (
@@ -31,16 +33,14 @@ export function BusinessPortfolio() {
         <div className="mb-16 text-center">
           <p className="mb-4 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-brand-red">
             
-            Business Portfolio
+            {t.home.businessPortfolio.sectionTitle}
             
           </p>
           <h2 className="mb-6 text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
-            Our Family of Companies
+            {t.home.businessPortfolio.title}
           </h2>
           <p className="mx-auto max-w-3xl text-lg text-white/70 lg:text-xl">
-            Over the past 20 years, Dhinimex Group has expanded into various industries. 
-            These are the associated brands and companies under the Dhinimex umbrella, 
-            each contributing to our mission of excellence.
+            {t.home.businessPortfolio.description}
           </p>
         </div>
 
@@ -76,7 +76,7 @@ export function BusinessPortfolio() {
             href="/brands"
             className="group inline-flex items-center gap-3 rounded-full border border-white/30 px-8 py-4 text-sm font-semibold text-white transition-all hover:border-white hover:bg-white/10"
           >
-            Explore all our businesses
+            {t.home.businessPortfolio.explore}
             <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>

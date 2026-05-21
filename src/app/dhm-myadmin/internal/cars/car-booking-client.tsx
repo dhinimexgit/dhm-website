@@ -66,12 +66,12 @@ export function CarBookingClient({ initialCars, initialBookings }: Props) {
         start: new Date(booking.startTime),
         end: new Date(booking.endTime),
         resourceId: booking.carId,
-        resourceName: booking.carModel !== 'To be assigned' ? booking.carModel : booking.destination,
+        resourceName: booking.carModel !== 'To be assigned' ? booking.carModel: booking.destination,
         type: 'car' as const,
         status: booking.status,
         userEmail: booking.userEmail,
-        color: booking.status === 'approved' ? '#10b981' : 
-               booking.status === 'in-progress' ? '#3b82f6' : '#D4A03C' // Yellow for pending
+        color: booking.status === 'approved' ? '#10b981': 
+               booking.status === 'in-progress' ? '#3b82f6': '#D4A03C' // Yellow for pending
       }));
   }, [bookings]);
 
@@ -227,8 +227,8 @@ export function CarBookingClient({ initialCars, initialBookings }: Props) {
                     type: 'car',
                     status: booking.status,
                     userEmail: booking.userEmail,
-                    color: booking.status === 'approved' ? '#10b981' : 
-                           booking.status === 'in-progress' ? '#3b82f6' : '#D4A03C',
+                    color: booking.status === 'approved' ? '#10b981': 
+                           booking.status === 'in-progress' ? '#3b82f6': '#D4A03C',
                   })}
                 >
                   <div className="flex items-start justify-between">
@@ -250,9 +250,9 @@ export function CarBookingClient({ initialCars, initialBookings }: Props) {
                       )}
                     </div>
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      booking.status === 'approved' ? 'bg-green-100 text-green-700' :
-                      booking.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                      booking.status === 'in-progress' ? 'bg-blue-100 text-blue-700' :
+                      booking.status === 'approved' ? 'bg-green-100 text-green-700':
+                      booking.status === 'pending' ? 'bg-yellow-100 text-yellow-700':
+                      booking.status === 'in-progress' ? 'bg-blue-100 text-blue-700':
                       'bg-red-100 text-red-700'
                     }`}>
                       {booking.status}
@@ -261,7 +261,7 @@ export function CarBookingClient({ initialCars, initialBookings }: Props) {
                 </div>
               ))}
             </div>
-          ) : (
+          ): (
             <p className="text-center text-slate-500 py-8">No car requests yet</p>
           )}
         </div>
@@ -428,7 +428,7 @@ export function CarBookingClient({ initialCars, initialBookings }: Props) {
 
               <div className="bg-[#D4A03C]/10 rounded-lg p-3 border border-[#D4A03C]/30">
                 <p className="text-sm text-[#8B6914]">
-                  <strong>Note:</strong> Driver manager will assign a driver and car to your request.
+                  <strong>Note:</strong> Driver manager will assign a driver and car to your request. 
                 </p>
               </div>
 
@@ -449,7 +449,7 @@ export function CarBookingClient({ initialCars, initialBookings }: Props) {
                   disabled={isSubmitting}
                   className="flex-1 px-4 py-2.5 text-sm bg-gradient-to-r from-[#2E388C] to-[#3d4ba3] text-white font-semibold rounded-lg hover:from-[#3d4ba3] hover:to-[#4a5ab5] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? 'Submitting...' : 'Submit Request'}
+                  {isSubmitting ? 'Submitting......': 'Submit Request'}
                 </button>
               </div>
             </form>

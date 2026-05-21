@@ -8,6 +8,13 @@ import { contactInfo } from "@/data/site-content";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { StickyHeader } from "@/components/home/sticky-header";
+import { useLanguage } from "@/lib/i18n";
+import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
+import {
+  NavUtilityCluster,
+  NavUtilityDivider,
+  NAV_UTILITY_ICON_CLASS,
+} from "@/components/layout/nav-utility-cluster";
 
 const heroImage = "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&q=80";
 
@@ -22,6 +29,7 @@ const inquiryTypes = [
 ];
 
 export default function ContactPage() {
+  const { t } = useLanguage();
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -193,23 +201,27 @@ export default function ContactPage() {
                       <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
                   </nav>
-                  <div className="flex items-center gap-4">
-                    <button 
+                  <div className="flex items-center gap-3">
+                    <NavUtilityCluster>
+                    <button
+                      type="button"
                       onClick={() => setSearchOpen(!searchOpen)}
-                      className={`p-2 transition ${searchOpen ? "text-white" : "text-white/80 hover:text-white"}`}
+                      className={`${NAV_UTILITY_ICON_CLASS} ${searchOpen ? "text-white" : ""}`}
                       aria-label="Search"
                     >
                       <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                       </svg>
                     </button>
-                    <span className="text-white/30">|</span>
-                    <Link href={`mailto:${contactInfo.email}`} className="p-2 text-white/80 transition hover:text-white" aria-label="Email">
+                    <NavUtilityDivider />
+                    <NavAdminLoginLink />
+                  </NavUtilityCluster>
+                  <Link href={`mailto:${contactInfo.email}`} className={NAV_UTILITY_ICON_CLASS} aria-label="Email">
                       <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
                     </Link>
-                    <span className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white">
+                    <span className="rounded-full bg-brand-red px-6 py-2.5 text-sm font-semibold text-white shadow-sm">
                       Contact Us
                     </span>
                   </div>
@@ -271,13 +283,13 @@ export default function ContactPage() {
               <div className="max-w-2xl space-y-6">
                 <p className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-white/90">
                   
-                  Contact Us
+                  {t.contactPage.hero.sectionTitle}
                 </p>
                 <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-[56px] xl:leading-[1.1]">
-                  Get In Touch
+                  {t.contactPage.hero.title}
                 </h1>
                 <p className="text-lg text-white/90 sm:text-xl">
-                  Have a question or would like to learn more about our group? Get in touch with us and our team will be happy to assist.
+                  {t.contactPage.hero.description}
                 </p>
               </div>
             </div>
@@ -310,15 +322,15 @@ export default function ContactPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <h3 className="mb-2 text-2xl font-bold text-green-800">Message Sent Successfully!</h3>
+                  <h3 className="mb-2 text-2xl font-bold text-green-800">{t.contactPage.form.successTitle}</h3>
                   <p className="mb-6 text-green-700">
-                    Thank you for reaching out. Our team will get back to you within one business day.
+                    {t.contactPage.form.successDesc}
                   </p>
                   <button 
                     onClick={() => setSubmitStatus("idle")}
                     className="rounded-full bg-green-600 px-8 py-3 text-sm font-semibold text-white transition hover:bg-green-700"
                   >
-                    Send another message
+                    {t.contactPage.form.sendAnother}
                   </button>
                 </div>
               ) : (
@@ -327,7 +339,7 @@ export default function ContactPage() {
                     {/* Name and Email Row */}
                     <div className="grid gap-6 md:grid-cols-2">
                       <div>
-                        <label className="mb-2 block text-sm font-semibold text-brand-navy">Your name *</label>
+                        <label className="mb-2 block text-sm font-semibold text-brand-navy">{t.contactPage.form.nameLabel}</label>
                         <input 
                           type="text" 
                           name="fullName"
@@ -335,11 +347,11 @@ export default function ContactPage() {
                           onChange={handleInputChange}
                           required
                           className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-5 py-4 text-slate-700 transition placeholder:text-slate-400 focus:border-brand-navy focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-navy/10" 
-                          placeholder="Sophea Bopha" 
+                          placeholder={t.contactPage.form.namePlaceholder} 
                         />
                       </div>
                       <div>
-                        <label className="mb-2 block text-sm font-semibold text-brand-navy">Email address *</label>
+                        <label className="mb-2 block text-sm font-semibold text-brand-navy">{t.contactPage.form.emailLabel}</label>
                         <input 
                           type="email" 
                           name="email"
@@ -347,7 +359,7 @@ export default function ContactPage() {
                           onChange={handleInputChange}
                           required
                           className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-5 py-4 text-slate-700 transition placeholder:text-slate-400 focus:border-brand-navy focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-navy/10" 
-                          placeholder="you@email.com" 
+                          placeholder={t.contactPage.form.emailPlaceholder} 
                         />
                       </div>
                     </div>
@@ -355,7 +367,7 @@ export default function ContactPage() {
                     {/* Phone and Inquiry Type Row */}
                     <div className="grid gap-6 md:grid-cols-2">
                       <div>
-                        <label className="mb-2 block text-sm font-semibold text-brand-navy">Phone number</label>
+                        <label className="mb-2 block text-sm font-semibold text-brand-navy">{t.contactPage.form.phoneLabel}</label>
                         <div className="flex">
                           <span className="flex items-center gap-2 rounded-l-xl border border-r-0 border-slate-200 bg-slate-100 px-4 text-sm text-slate-600">
                             <span className="text-lg">🇰🇭</span>
@@ -367,12 +379,12 @@ export default function ContactPage() {
                             value={formData.phone}
                             onChange={handleInputChange}
                             className="w-full rounded-r-xl border border-slate-200 bg-slate-50/50 px-5 py-4 text-slate-700 transition placeholder:text-slate-400 focus:border-brand-navy focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-navy/10" 
-                            placeholder="12 345 678" 
+                            placeholder={t.contactPage.form.phonePlaceholder} 
                           />
                         </div>
                       </div>
                       <div>
-                        <label className="mb-2 block text-sm font-semibold text-brand-navy">Interested in</label>
+                        <label className="mb-2 block text-sm font-semibold text-brand-navy">{t.contactPage.form.interestedIn}</label>
                         <div className="relative">
                           <select 
                             name="inquiryType"
@@ -380,7 +392,7 @@ export default function ContactPage() {
                             onChange={handleInputChange}
                             className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/50 px-5 py-4 pr-12 text-slate-700 transition focus:border-brand-navy focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-navy/10"
                           >
-                            <option value="">Select an option</option>
+                            <option value="">{t.contactPage.form.selectOption}</option>
                             {inquiryTypes.map((type) => (
                               <option key={type} value={type}>{type}</option>
                             ))}
@@ -394,7 +406,7 @@ export default function ContactPage() {
 
                     {/* Message */}
                     <div>
-                      <label className="mb-2 block text-sm font-semibold text-brand-navy">How can we help? *</label>
+                      <label className="mb-2 block text-sm font-semibold text-brand-navy">{t.contactPage.form.messageLabel}</label>
                       <textarea 
                         name="message"
                         value={formData.message}
@@ -402,7 +414,7 @@ export default function ContactPage() {
                         required
                         rows={5}
                         className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50/50 px-5 py-4 text-slate-700 transition placeholder:text-slate-400 focus:border-brand-navy focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-navy/10" 
-                        placeholder="Share a few details about your inquiry or project..." 
+                        placeholder={t.contactPage.form.messagePlaceholder} 
                       />
                     </div>
 
@@ -413,7 +425,7 @@ export default function ContactPage() {
                           <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          Something went wrong. Please try again or contact us directly via email.
+                          {t.contactPage.form.error}
                         </p>
                       </div>
                     )}
@@ -430,22 +442,22 @@ export default function ContactPage() {
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                           </svg>
-                          Sending...
+                          {t.contactPage.form.sending}
                         </span>
                       ) : (
-                        "Send your message"
+                        t.contactPage.form.send
                       )}
                     </button>
 
                     {/* Terms Notice */}
                     <p className="text-center text-xs text-slate-500">
-                      By clicking, you agree to our{" "}
+                      {t.contactPage.form.terms1}
                       <Link href="/terms" className="text-brand-navy underline hover:text-brand-red">
-                        Terms & Conditions
+                        {t.contactPage.form.terms2}
                       </Link>
-                      ,{" "}
+                      {t.contactPage.form.terms3}
                       <Link href="/privacy" className="text-brand-navy underline hover:text-brand-red">
-                        Privacy and Data Protection Policy
+                        {t.contactPage.form.terms4}
                       </Link>
                     </p>
                   </form>
@@ -462,11 +474,11 @@ export default function ContactPage() {
             <div className="mb-14 text-center">
               <p className="mb-3 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
                 <span className="h-px w-12 bg-gradient-to-r from-transparent to-brand-red" />
-                Our Location
+                {t.contactPage.location.sectionTitle}
                 <span className="h-px w-12 bg-gradient-to-l from-transparent to-brand-red" />
               </p>
               <h2 className="text-3xl font-bold text-brand-navy lg:text-4xl">
-                Visit Us in Phnom Penh
+                {t.contactPage.location.title}
               </h2>
             </div>
 
@@ -496,7 +508,7 @@ export default function ContactPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
                     </div>
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">Address</h3>
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">{t.contactPage.location.address}</h3>
                   </div>
                   <p className="text-base font-semibold leading-relaxed text-brand-navy">
                     #245, St. Tep Phan (182), Tuk Laak 2, Khan Toul Kork, Phnom Penh
@@ -507,7 +519,7 @@ export default function ContactPage() {
                     rel="noopener noreferrer"
                     className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-red transition hover:gap-2"
                   >
-                    Get directions
+                    {t.contactPage.location.getDirections}
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
@@ -522,7 +534,7 @@ export default function ContactPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                       </svg>
                     </div>
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">Phone</h3>
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">{t.contactPage.location.phone}</h3>
                   </div>
                   <div className="space-y-1">
                     {contactInfo.phones.map((phone, idx) => (
@@ -545,7 +557,7 @@ export default function ContactPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
                     </div>
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">Email</h3>
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">{t.contactPage.location.email}</h3>
                   </div>
                   <Link href={`mailto:${contactInfo.email}`} className="block text-base font-semibold text-brand-navy transition hover:text-brand-red">
                     {contactInfo.email}
@@ -563,10 +575,10 @@ export default function ContactPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </div>
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">Business Hours</h3>
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">{t.contactPage.location.businessHours}</h3>
                   </div>
-                  <p className="text-base font-semibold text-brand-navy">Monday – Saturday</p>
-                  <p className="text-sm text-slate-500">8:00 AM – 5:00 PM</p>
+                  <p className="text-base font-semibold text-brand-navy">{t.contactPage.location.days}</p>
+                  <p className="text-sm text-slate-500">{t.contactPage.location.hours}</p>
                 </div>
 
                 {/* Social Links */}

@@ -1,10 +1,19 @@
 import { getCars, getCarBookings } from "@/app/actions/bookings";
+import { canAccessFunction } from "@/app/actions/auth";
 import { CarBookingClient } from "./car-booking-client";
+import { redirect } from "next/navigation";
+import { getTranslation } from "@/lib/i18n-server";
 
 // Ensure fresh data on each request
 export const dynamic = 'force-dynamic';
 
 export default async function CarsPage() {
+  const { t } = await getTranslation();
+  const allowed = await canAccessFunction("internal.cars");
+  if (!allowed) {
+    redirect("/dhm-myadmin/internal");
+  }
+
   const cars = await getCars();
   const bookings = await getCarBookings();
 
@@ -16,10 +25,10 @@ export default async function CarsPage() {
             Booking
           </p>
           <h1 className="text-4xl font-semibold text-brand-navy">
-            Car Booking
+            {t.admin.internal.cars}
           </h1>
           <p className="max-w-2xl text-lg text-slate-600">
-            Request company vehicles for your trips.
+            {t.admin.internal.requestVehicles}
           </p>
         </div>
       </div>
