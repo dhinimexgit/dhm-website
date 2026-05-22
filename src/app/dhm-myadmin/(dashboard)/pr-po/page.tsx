@@ -6,7 +6,12 @@ import { resolveBranchPoTabAccess } from "@/lib/branch-po-tab-access";
 import { resolveViewPoBranchScope } from "@/lib/branch-po-view-scope";
 import { formatUserDisplayName } from "@/lib/user-display-name";
 
-export default async function PrPoPage() {
+type Props = {
+  searchParams: Promise<{ tab?: string }>;
+};
+
+export default async function PrPoPage({ searchParams }: Props) {
+  const { tab } = await searchParams;
   const user = await getCurrentUser();
   const permissions = user?.permissions ?? [];
 
@@ -32,8 +37,12 @@ export default async function PrPoPage() {
       })
     : "Unknown user";
 
+  const initialTab =
+    tab === "open" || tab === "view" || tab === "submit" || tab === "dashboard" ? tab : undefined;
+
   return (
     <PrPoManager
+      initialTab={initialTab}
       canDashboard={canDashboard}
       canSubmit={canSubmit}
       canOpen={canOpen}

@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as XLSX from "xlsx";
 import type { WorkBook } from "xlsx";
@@ -24,6 +26,7 @@ import {
   remarkPreviewText,
   type PoItemRemarkEntry,
 } from "@/lib/po-item-remarks";
+import { printViewPoDelivery } from "@/lib/print-view-po-delivery";
 
 /** Full-viewport dim layer: avoids a gap at the bottom on mobile (100vh vs dynamic viewport) and covers the home-indicator safe area. */
 const PR_PO_MODAL_OVERLAY =
@@ -86,6 +89,8 @@ type SavedPurchaseOrder = {
   branchName: string;
   prNumber: string;
   poNumber: string;
+  submittedByName?: string | null;
+  submittedByUsername?: string | null;
   prFileName?: string | null;
   poFileName?: string | null;
   prFileUrl?: string | null;
@@ -120,6 +125,8 @@ type SavedPurchaseOrder = {
   poGrandTotal?: number | null;
   createdAt?: Timestamp | null;
 };
+
+type OpeningHistoryPhase = NonNullable<SavedPurchaseOrder["openingHistory"]>[number];
 
 /** PO records per page on the Create SO list. */
 const CREATE_SO_PO_LIST_PAGE_SIZE = 5;
@@ -165,7 +172,24 @@ function phaseInvoiceLink(phase: NonNullable<SavedPurchaseOrder["openingHistory"
   return phase.invoiceLink ?? phase.invoiceFileUrl ?? null;
 }
 
-function phaseDeliveryNoteLinks(phase: NonNullable<SavedPurchaseOrder["openingHistory"]>[number]): string[] {
+function formatPoNumberDisplay(poNumber: string): string {
+  return poNumber.replace(/^W\.H\s*/i, "").trim() || poNumber;
+}
+
+function getOpenedQtyThroughPhase(
+  sortedHistory: OpeningHistoryPhase[],
+  phaseIndex: number,
+  lineNo: number,
+): number {
+  let sum = 0;
+  for (let p = 0; p <= phaseIndex; p++) {
+    const entry = (sortedHistory[p]?.items ?? []).find((e) => e.lineNo === lineNo);
+    sum += Number(entry?.openedQty ?? 0);
+  }
+  return sum;
+}
+
+function phaseDeliveryNoteLinks(phase: OpeningHistoryPhase): string[] {
   if (phase.deliveryNoteLinks?.length) return phase.deliveryNoteLinks;
   if (phase.deliveryNoteFileUrl) return [phase.deliveryNoteFileUrl];
   return [];
@@ -381,6 +405,9 @@ function firstAccessiblePrPoTab(flags: {
 }
 
 type PrPoManagerProps = {
+  pageMode?: "full" | "create-so";
+  initialCreateSoPoId?: string | null;
+  initialTab?: "submit" | "open" | "view" | "dashboard";
   canDashboard?: boolean;
   canSubmit?: boolean;
   canOpen?: boolean;
@@ -423,6 +450,9 @@ function RemarkTimelineList({
 }
 
 export function PrPoManager({
+  pageMode = "full",
+  initialCreateSoPoId = null,
+  initialTab,
   canDashboard = false,
   canSubmit = false,
   canOpen = false,
@@ -433,13 +463,18 @@ export function PrPoManager({
   actorUsername = "",
 }: PrPoManagerProps) {
   const { t } = useLanguage();
+  const router = useRouter();
   const viewPoBranchScope = useMemo(
     () => viewPoScopeFromStaffProps(viewPoStaffLock, viewPoStaffBranchName),
     [viewPoStaffLock, viewPoStaffBranchName]
   );
-  const [activeTab, setActiveTab] = useState<"submit" | "open" | "view" | "dashboard">(() =>
-    firstAccessiblePrPoTab({ canDashboard, canSubmit, canOpen, canViewPo })
-  );
+  const [activeTab, setActiveTab] = useState<"submit" | "open" | "view" | "dashboard">(() => {
+    if (initialTab === "dashboard" && canDashboard) return "dashboard";
+    if (initialTab === "submit" && canSubmit) return "submit";
+    if (initialTab === "open" && canOpen) return "open";
+    if (initialTab === "view" && canViewPo) return "view";
+    return firstAccessiblePrPoTab({ canDashboard, canSubmit, canOpen, canViewPo });
+  });
 
   useEffect(() => {
     const allowed =
@@ -516,6 +551,8 @@ export function PrPoManager({
           branchName: String(data.branchName ?? ""),
           prNumber: String(data.prNumber ?? ""),
           poNumber: String(data.poNumber ?? ""),
+          submittedByName: data.submittedByName ? String(data.submittedByName) : null,
+          submittedByUsername: data.submittedByUsername ? String(data.submittedByUsername) : null,
           urgent: data.urgent === "yes" ? "yes" : data.urgent === "no" ? "no" : undefined,
           prFileName: data.prFileName ? String(data.prFileName) : null,
           poFileName: data.poFileName ? String(data.poFileName) : null,
@@ -683,19 +720,76 @@ export function PrPoManager({
   const getOpenedQty = (po: SavedPurchaseOrder, lineNo: number) =>
     Number(po.openedTotals?.[String(lineNo)] ?? 0);
 
-  const handleOpenPoClick = (po: SavedPurchaseOrder) => {
-    if (isPoOpeningComplete(po)) return;
-    setSelectedPoId(po.id);
+  const initCreateSoForm = (po: SavedPurchaseOrder) => {
     const initialInputs: Record<string, string> = {};
     po.items.forEach((item) => {
       initialInputs[String(item.lineNo)] = "";
     });
+    setSelectedPoId(po.id);
     setOpenQtyInputs(initialInputs);
     setInvoiceNumber(OPEN_PO_INVOICE_DEFAULT);
     setInvoiceLinkInput("");
     setDeliveryNoteLinksText("");
     setRemarkItemLineNo(null);
     setRemarkText("");
+  };
+
+  const handleOpenPoClick = (po: SavedPurchaseOrder) => {
+    router.push(`/dhm-myadmin/pr-po/create-so?id=${encodeURIComponent(po.id)}`);
+  };
+
+  useEffect(() => {
+    if (pageMode !== "create-so" || !initialCreateSoPoId || loadingSaved) return;
+    const po = savedPos.find((p) => p.id === initialCreateSoPoId);
+    if (!po) return;
+    if (selectedPoId !== po.id) {
+      initCreateSoForm(po);
+    }
+  }, [pageMode, initialCreateSoPoId, loadingSaved, savedPos, selectedPoId]);
+
+  const hasActiveListFilters = useMemo(() => {
+    if (viewPoBranchScope.kind === "branch") {
+      return !!(
+        filterPrNumber ||
+        filterPoNumber ||
+        filterInvoiceNumber ||
+        filterUrgent ||
+        filterDateFrom ||
+        filterDateTo
+      );
+    }
+    return !!(
+      filterBranch ||
+      filterPrNumber ||
+      filterPoNumber ||
+      filterInvoiceNumber ||
+      filterUrgent ||
+      filterDateFrom ||
+      filterDateTo
+    );
+  }, [
+    filterBranch,
+    filterPrNumber,
+    filterPoNumber,
+    filterInvoiceNumber,
+    filterUrgent,
+    filterDateFrom,
+    filterDateTo,
+    viewPoBranchScope.kind,
+  ]);
+
+  const clearListFilters = () => {
+    if (viewPoBranchScope.kind !== "branch") {
+      setFilterBranch("");
+    }
+    setFilterPrNumber("");
+    setFilterPoNumber("");
+    setFilterInvoiceNumber("");
+    setFilterUrgent("");
+    setFilterDateFrom("");
+    setFilterDateTo("");
+    setOpenPage(1);
+    setViewPage(1);
   };
 
   const handleOpenQtyChange = (lineNo: number, value: string) => {
@@ -799,6 +893,9 @@ export function PrPoManager({
       setInvoiceNumber(OPEN_PO_INVOICE_DEFAULT);
       setInvoiceLinkInput("");
       setDeliveryNoteLinksText("");
+      if (pageMode === "create-so") {
+        router.push("/dhm-myadmin/pr-po?tab=open");
+      }
     } catch (error) {
       console.error("Failed to save PO opening:", error);
       setStatus("Failed to create SO.");
@@ -1382,7 +1479,7 @@ export function PrPoManager({
       return;
     }
 
-    const formattedPoNumber = `W.H ${poNumber}`;
+    const formattedPoNumber = poNumber.trim();
 
     try {
       setIsSaving(true);
@@ -1440,6 +1537,8 @@ export function PrPoManager({
         branchName: branchName.trim(),
         prNumber: prNumber.trim(),
         poNumber: formattedPoNumber,
+        submittedByName: actorDisplayName,
+        submittedByUsername: actorUsername || null,
         urgent,
         prFileName: prFileName || null,
         poFileName: poFileName || null,
@@ -1580,6 +1679,8 @@ export function PrPoManager({
           </div>
         </div>
       ) : null}
+      {pageMode !== "create-so" ? (
+        <>
       <div className="flex flex-col gap-6 border-b border-slate-200 pb-6 sm:flex-row sm:items-end sm:justify-between sm:pb-8">
         <div className="min-w-0 space-y-2">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-red sm:text-sm">Process</p>
@@ -1644,8 +1745,304 @@ export function PrPoManager({
           </button>
         ) : null}
       </div>
+        </>
+      ) : null}
 
-      {activeTab === "submit" && canSubmit ? (
+      {pageMode === "create-so" && canOpen ? (
+        <div className="space-y-5">
+          <div className="flex flex-wrap items-center gap-3">
+            <Link
+              href="/dhm-myadmin/pr-po?tab=open"
+              className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"
+            >
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+              Back to Create SO list
+            </Link>
+            <h2 className="text-lg font-semibold text-brand-navy">{t.admin.prpo.createSo}</h2>
+          </div>
+          {!selectedPo && !loadingSaved ? (
+            <p className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
+              Purchase order not found or you do not have access.
+            </p>
+          ) : null}
+          {selectedPo && isPoOpeningComplete(selectedPo) ? (
+            <p className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
+              This PO is completed. No further deliveries can be recorded.
+            </p>
+          ) : null}
+          {selectedPo && !isPoOpeningComplete(selectedPo) ? (
+            <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Branch</p>
+                  <p className="mt-1 text-base font-semibold text-brand-navy">{selectedPo.branchName}</p>
+                </div>
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">PR Number</p>
+                  <p className="mt-1 text-base font-semibold text-brand-navy">{selectedPo.prNumber}</p>
+                </div>
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">PO Number</p>
+                  <p className="mt-1 text-base font-semibold text-brand-navy">{formatPoNumberDisplay(selectedPo.poNumber)}</p>
+                </div>
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Submitted by</p>
+                  <p className="mt-1 text-base font-semibold text-brand-navy">
+                    {selectedPo.submittedByName ?? "—"}
+                  </p>
+                  {selectedPo.submittedByUsername ? (
+                    <p className="text-xs text-slate-500">{selectedPo.submittedByUsername}</p>
+                  ) : null}
+                </div>
+              </div>
+              <div className="mb-4 rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <div>
+                  <label className="mb-1 block text-sm font-semibold text-slate-700">Invoice Number</label>
+                  <input
+                    type="text"
+                    value={invoiceNumber}
+                    onChange={(event) => setInvoiceNumber(event.target.value)}
+                    disabled={!!selectedPo && isPoOpeningComplete(selectedPo)}
+                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 disabled:cursor-not-allowed disabled:bg-slate-100"
+                  />
+                  {selectedPo && !isPoOpeningComplete(selectedPo) && isOpenPoInvoicePlaceholderOnly(invoiceNumber) ? (
+                    <p className="mt-1.5 text-xs text-slate-500">
+                      Add your full invoice number after TI (for example TI-001), paste invoice and delivery note links, then enable Create SO.
+                    </p>
+                  ) : null}
+                </div>
+                <div className="mt-4 flex flex-col gap-3">
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div>
+                      <label className="mb-1 block text-sm font-semibold text-slate-700">
+                        {t.admin.prpo.invoiceLink}
+                      </label>
+                      <input
+                        type="url"
+                        value={invoiceLinkInput}
+                        onChange={(event) => setInvoiceLinkInput(event.target.value)}
+                        disabled={!!selectedPo && isPoOpeningComplete(selectedPo)}
+                        placeholder="Paste invoice link (Odoo)"
+                        className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 placeholder:text-slate-400 disabled:cursor-not-allowed disabled:bg-slate-100"
+                      />
+                      {invoiceLinkInput.trim() && !normalizeExternalLink(invoiceLinkInput) ? (
+                        <p className="mt-1 text-xs text-rose-600">Enter a valid http(s) link.</p>
+                      ) : null}
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-sm font-semibold text-slate-700">
+                        {t.admin.prpo.deliveryNoteLinks}
+                      </label>
+                      <textarea
+                        rows={3}
+                        value={deliveryNoteLinksText}
+                        onChange={(event) => setDeliveryNoteLinksText(event.target.value)}
+                        disabled={!!selectedPo && isPoOpeningComplete(selectedPo)}
+                        placeholder="Paste Odoo delivery note links — one per line"
+                        className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 placeholder:text-slate-400 disabled:cursor-not-allowed disabled:bg-slate-100"
+                      />
+                      {deliveryNoteLinksText.trim() ? (
+                        <p className="mt-1 text-xs text-slate-500">
+                          {parsePastedLinks(deliveryNoteLinksText).length} valid link
+                          {parsePastedLinks(deliveryNoteLinksText).length === 1 ? "" : "s"} detected
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {selectedPo.prFileUrl ? (
+                      <a
+                        href={selectedPo.prFileUrl}
+                        download={
+                          selectedPo.prFileName?.replace(/[/\\?%*:|"<>]/g, "-") ||
+                          `PR-${selectedPo.prNumber}.xlsx`
+                        }
+                        rel="noreferrer"
+                        className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                      >
+                        {t.admin.prpo.downloadPr}
+                      </a>
+                    ) : null}
+                    {selectedPo.poFileUrl ? (
+                      <a
+                        href={selectedPo.poFileUrl}
+                        download={
+                          selectedPo.poFileName?.replace(/[/\\?%*:|"<>]/g, "-") ||
+                          `PO-${selectedPo.poNumber}.xlsx`
+                        }
+                        rel="noreferrer"
+                        title={selectedPoSisterDownloadCount > 0 ? "Primary PO (DHM)" : undefined}
+                        className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                      >
+                        {t.admin.prpo.downloadPo}
+                      </a>
+                    ) : null}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        void handleSaveOpenPo();
+                      }}
+                      disabled={
+                        isSavingOpen ||
+                        !isOpenPoFormValid ||
+                        (selectedPo ? isPoOpeningComplete(selectedPo) : false)
+                      }
+                      className="rounded-lg bg-brand-navy px-4 py-2 text-sm font-semibold text-white hover:bg-brand-navy/90 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {isSavingOpen ? "Creating..." : t.admin.prpo.createSo}
+                    </button>
+                  </div>
+                  {selectedPoSisterDownloadCount > 0 ? (
+                    <div className="rounded-lg border border-indigo-100 bg-indigo-50/80 px-3 py-2">
+                      <p className="text-xs font-semibold text-indigo-900">
+                        +{selectedPoSisterDownloadCount} supplier PO
+                        {selectedPoSisterDownloadCount === 1 ? "" : "s"} — download only (same PR, other companies):
+                      </p>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {(selectedPo.sisterSupplierPos ?? []).map((sp, spIdx) =>
+                          sp.poFileUrl ? (
+                            <a
+                              key={sp.entryId ?? `open-sister-dl-${spIdx}`}
+                              href={sp.poFileUrl}
+                              download={
+                                sp.poFileName?.replace(/[/\\?%*:|"<>]/g, "-") ||
+                                `PO-${sp.supplier}-${spIdx + 1}.xlsx`
+                              }
+                              rel="noreferrer"
+                              title={
+                                sp.poFileName
+                                  ? `Download: ${sp.poFileName}`
+                                  : `Download supplier PO (${sp.supplier})`
+                              }
+                              className="rounded-lg border border-indigo-300 bg-white px-3 py-2 text-xs font-semibold text-indigo-900 hover:bg-indigo-50"
+                            >
+                              Download{" "}
+                              {sisterSupplierPoLinkLabel(selectedPo.sisterSupplierPos, spIdx).replace(/^PO /, "")}
+                            </a>
+                          ) : null,
+                        )}
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm text-slate-600">
+                  <thead className="bg-slate-50 text-xs uppercase tracking-wider text-slate-600">
+                    <tr>
+                      <th className="px-4 py-3 font-semibold">No</th>
+                      <th className="px-4 py-3 font-semibold">Item</th>
+                      <th className="px-4 py-3 font-semibold text-right">Ordered Qty</th>
+                      {selectedPoPhases.map((phase, phaseIndex) => (
+                        <th key={`phase-col-${phaseIndex}`} className="px-4 py-3 font-semibold text-right">
+                          OPENED #({phase.invoiceNumber || phaseIndex + 1})
+                        </th>
+                      ))}
+                      <th className="px-4 py-3 font-semibold text-right">Open in This PO</th>
+                      <th className="px-4 py-3 font-semibold text-right">Qty Left</th>
+                      <th className="px-4 py-3 font-semibold text-right">Unit Cost</th>
+                      <th className="px-4 py-3 font-semibold text-right">Total Cost</th>
+                      <th className="min-w-[140px] px-4 py-3 font-semibold">Remarks</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {selectedPo.items.map((item) => {
+                      const opened = getOpenedQty(selectedPo, item.lineNo);
+                      const openNow = Number(openQtyInputs[String(item.lineNo)] || 0);
+                      const left = item.quantity - opened - openNow;
+
+                      return (
+                        <tr key={`${selectedPo.id}-${item.lineNo}`}>
+                          <td className="px-4 py-3">{item.lineNo}</td>
+                          <td className="px-4 py-3">
+                            <span className="font-medium text-brand-navy">{item.item}</span>
+                            {item.itemCode ? (
+                              <div className="text-xs text-slate-400">{item.itemCode}</div>
+                            ) : null}
+                          </td>
+                          <td className="px-4 py-3 text-right">{item.quantity}</td>
+                          {selectedPoPhases.map((_, phaseIndex) => (
+                            <td key={`phase-cell-${item.lineNo}-${phaseIndex}`} className="px-4 py-3 text-right">
+                              {getOpenedQtyByPhase(item.lineNo, phaseIndex)}
+                            </td>
+                          ))}
+                          <td className="px-4 py-3 text-right">
+                            {left + openNow <= 0 ? (
+                              <div className="inline-flex h-9 w-24 items-center justify-center rounded-lg border border-slate-200 bg-slate-100 text-xs font-semibold text-slate-400">
+                                Fulfilled
+                              </div>
+                            ) : (
+                              <input
+                                type="text"
+                                inputMode="numeric"
+                                value={openQtyInputs[String(item.lineNo)] ?? ""}
+                                onChange={(event) =>
+                                  handleOpenQtyChange(item.lineNo, event.target.value)
+                                }
+                                className="w-24 rounded-lg border border-slate-300 px-2 py-1 text-right text-sm text-slate-700"
+                              />
+                            )}
+                          </td>
+                          <td
+                            className={`px-4 py-3 text-right font-semibold ${
+                              left === 0 ? "text-green-600" : "text-red-600"
+                            }`}
+                          >
+                            {left}
+                          </td>
+                          <td className="px-4 py-3 text-right">
+                            {item.unitPrice.toLocaleString(undefined, {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 3,
+                            })}
+                          </td>
+                          <td className="px-4 py-3 text-right font-semibold">
+                            {item.totalPrice.toLocaleString(undefined, {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}
+                          </td>
+                          <td className="px-4 py-3">
+                            {(() => {
+                              const remarkEntries = getItemRemarkEntries(
+                                selectedPo.itemRemarkHistory,
+                                item.lineNo,
+                              );
+                              const preview = remarkPreviewText(remarkEntries);
+                              return (
+                                <button
+                                  type="button"
+                                  onClick={() => openRemarkModal(item.lineNo)}
+                                  className="w-full min-w-[120px] rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-left text-sm text-slate-700 hover:border-brand-navy/40 hover:bg-slate-50"
+                                >
+                                  {remarkEntries.length > 0 ? (
+                                    <>
+                                      <span className="block font-medium text-brand-navy">
+                                        {remarkEntries.length} remark
+                                        {remarkEntries.length === 1 ? "" : "s"}
+                                      </span>
+                                      <span className="block truncate text-xs text-slate-500">{preview}</span>
+                                    </>
+                                  ) : (
+                                    <span className="text-slate-400">Add remark...</span>
+                                  )}
+                                </button>
+                              );
+                            })()}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ) : null}
+        </div>
+      ) : activeTab === "submit" && canSubmit ? (
         <>
       <div className="grid gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 md:grid-cols-2">
         <div>
@@ -1677,17 +2074,14 @@ export function PrPoManager({
         </div>
         <div>
           <label className="mb-2 block text-sm font-semibold text-slate-700">PO Number</label>
-          <div className="flex w-full items-center rounded-lg border border-slate-300 bg-white">
-            <span className="border-r border-slate-300 px-4 py-2.5 text-sm text-slate-500">W.H </span>
-            <input
-              type="text"
-              value={poNumber}
-              onChange={(event) => setPoNumber(event.target.value.replace(/\D/g, ""))}
-              placeholder="260400035"
-              inputMode="numeric"
-              className="w-full rounded-r-lg px-4 py-2.5 text-sm text-slate-700 outline-none"
-            />
-          </div>
+          <input
+            type="text"
+            value={poNumber}
+            onChange={(event) => setPoNumber(event.target.value.replace(/\D/g, ""))}
+            placeholder="260400035"
+            inputMode="numeric"
+            className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-700"
+          />
         </div>
         <div>
           <label className="mb-2 block text-sm font-semibold text-slate-700">Upload PR Excel</label>
@@ -1958,6 +2352,7 @@ export function PrPoManager({
         </>
       ) : activeTab === "open" && canOpen ? (
         <div className="space-y-5">
+          <div className="space-y-3">
           <div className="grid gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm md:grid-cols-7">
             <div>
               <label className="mb-2 block text-sm font-semibold text-slate-700">Branch</label>
@@ -1995,6 +2390,18 @@ export function PrPoManager({
               <input type="date" value={filterDateTo} onChange={(e) => setFilterDateTo(e.target.value)} className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700" />
             </div>
           </div>
+          {hasActiveListFilters ? (
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={clearListFilters}
+                className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+              >
+                Clear filters
+              </button>
+            </div>
+          ) : null}
+          </div>
 
           <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
             <div className="overflow-x-auto">
@@ -2023,7 +2430,11 @@ export function PrPoManager({
                       const sisterCount = (po.sisterSupplierPos ?? []).filter((s) => s.poFileUrl).length;
                       const openingDone = isPoOpeningComplete(po);
                       return (
-                      <tr key={po.id} className="align-middle hover:bg-slate-50/50">
+                      <tr
+                        key={po.id}
+                        className="cursor-pointer align-middle transition hover:bg-slate-50"
+                        onClick={() => handleOpenPoClick(po)}
+                      >
                         <td className="whitespace-nowrap px-4 py-4">
                           <div>{po.createdAt?.toDate ? po.createdAt.toDate().toLocaleDateString() : "-"}</div>
                           {po.urgent === "yes" && (
@@ -2032,7 +2443,7 @@ export function PrPoManager({
                         </td>
                         <td className="px-4 py-4 font-medium text-brand-navy">{po.branchName}</td>
                         <td className="px-4 py-4">{po.prNumber}</td>
-                        <td className="px-3 py-4 font-semibold text-brand-navy">{po.poNumber}</td>
+                        <td className="px-3 py-4 font-semibold text-brand-navy">{formatPoNumberDisplay(po.poNumber)}</td>
                         <td className="px-3 py-4 text-right font-medium">{po.totalQuantity}</td>
                         <td className="px-4 py-4 text-right font-semibold tabular-nums text-brand-navy">
                           {(po.poGrandTotal ?? 0).toLocaleString(undefined, {
@@ -2040,7 +2451,7 @@ export function PrPoManager({
                             maximumFractionDigits: 3,
                           })}
                         </td>
-                        <td className="px-4 py-4 align-middle">
+                        <td className="px-4 py-4 align-middle" onClick={(e) => e.stopPropagation()}>
                           <div className="mx-auto flex max-w-[240px] flex-col items-stretch gap-2">
                             <div className="flex flex-wrap items-center justify-center gap-1.5">
                               {po.prFileUrl ? (
@@ -2111,20 +2522,17 @@ export function PrPoManager({
                             ) : null}
                           </div>
                         </td>
-                        <td className="px-4 py-4">
-                          <div className="flex justify-center">
-                            {openingDone ? (
-                              <span className="text-sm font-semibold text-emerald-700">Completed</span>
-                            ) : (
-                              <button
-                                type="button"
-                                onClick={() => handleOpenPoClick(po)}
-                                className="inline-flex min-w-[76px] items-center justify-center rounded-full border border-brand-navy/20 bg-brand-navy/5 px-3 py-1.5 text-sm font-semibold text-brand-navy transition hover:bg-brand-navy/10"
-                              >
-                                {t.admin.prpo.createSo}
-                              </button>
-                            )}
-                          </div>
+                        <td className="px-4 py-4 text-right">
+                          <span
+                            className={`inline-flex items-center gap-1 text-xs font-semibold ${
+                              openingDone ? "text-emerald-700" : "text-brand-navy"
+                            }`}
+                          >
+                            {openingDone ? "Completed" : t.admin.prpo.createSo}
+                            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                            </svg>
+                          </span>
                         </td>
                       </tr>
                       );
@@ -2164,371 +2572,6 @@ export function PrPoManager({
               </div>
             </div>
           )}
-
-          {selectedPo ? (
-            <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                <h3 className="text-lg font-semibold text-brand-navy">
-                  {t.admin.prpo.createSo}
-                </h3>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedPoId(null);
-                    setOpenQtyInputs({});
-                    setInvoiceLinkInput("");
-                    setDeliveryNoteLinksText("");
-                  }}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-600 transition hover:bg-slate-50 hover:text-slate-800"
-                  aria-label="Close Create SO panel"
-                  title="Close"
-                >
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-              <div className="grid gap-3 md:grid-cols-3">
-                <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Branch</p>
-                  <p className="mt-1 text-base font-semibold text-brand-navy">{selectedPo.branchName}</p>
-                </div>
-                <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">PR Number</p>
-                  <p className="mt-1 text-base font-semibold text-brand-navy">{selectedPo.prNumber}</p>
-                </div>
-                <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">PO Number</p>
-                  <p className="mt-1 text-base font-semibold text-brand-navy">{selectedPo.poNumber}</p>
-                </div>
-              </div>
-              <div className="mb-4 rounded-lg border border-slate-200 bg-slate-50 p-4">
-                {selectedPo && isPoOpeningComplete(selectedPo) ? (
-                  <p className="mb-3 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-800">
-                    This PO is completed (all quantities opened). Further opening is not available.
-                  </p>
-                ) : null}
-                <div>
-                  <label className="mb-1 block text-sm font-semibold text-slate-700">Invoice Number</label>
-                  <input
-                    type="text"
-                    value={invoiceNumber}
-                    onChange={(event) => setInvoiceNumber(event.target.value)}
-                    disabled={!!selectedPo && isPoOpeningComplete(selectedPo)}
-                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 disabled:cursor-not-allowed disabled:bg-slate-100"
-                  />
-                  {selectedPo && !isPoOpeningComplete(selectedPo) && isOpenPoInvoicePlaceholderOnly(invoiceNumber) ? (
-                    <p className="mt-1.5 text-xs text-slate-500">
-                      Add your full invoice number after TI (for example TI-001), paste invoice and delivery note links, then enable Create SO.
-                    </p>
-                  ) : null}
-                </div>
-                <div className="mt-4 flex flex-col gap-3">
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <div>
-                      <label className="mb-1 block text-sm font-semibold text-slate-700">
-                        {t.admin.prpo.invoiceLink}
-                      </label>
-                      <input
-                        type="url"
-                        value={invoiceLinkInput}
-                        onChange={(event) => setInvoiceLinkInput(event.target.value)}
-                        disabled={!!selectedPo && isPoOpeningComplete(selectedPo)}
-                        placeholder="Paste invoice link (Odoo)"
-                        className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 placeholder:text-slate-400 disabled:cursor-not-allowed disabled:bg-slate-100"
-                      />
-                      {invoiceLinkInput.trim() && !normalizeExternalLink(invoiceLinkInput) ? (
-                        <p className="mt-1 text-xs text-rose-600">Enter a valid http(s) link.</p>
-                      ) : null}
-                    </div>
-                    <div>
-                      <label className="mb-1 block text-sm font-semibold text-slate-700">
-                        {t.admin.prpo.deliveryNoteLinks}
-                      </label>
-                      <textarea
-                        rows={3}
-                        value={deliveryNoteLinksText}
-                        onChange={(event) => setDeliveryNoteLinksText(event.target.value)}
-                        disabled={!!selectedPo && isPoOpeningComplete(selectedPo)}
-                        placeholder="Paste Odoo delivery note links — one per line"
-                        className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 placeholder:text-slate-400 disabled:cursor-not-allowed disabled:bg-slate-100"
-                      />
-                      {deliveryNoteLinksText.trim() ? (
-                        <p className="mt-1 text-xs text-slate-500">
-                          {parsePastedLinks(deliveryNoteLinksText).length} valid link
-                          {parsePastedLinks(deliveryNoteLinksText).length === 1 ? "" : "s"} detected
-                        </p>
-                      ) : null}
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    {selectedPo.prFileUrl ? (
-                      <a
-                        href={selectedPo.prFileUrl}
-                        download={
-                          selectedPo.prFileName?.replace(/[/\\?%*:|"<>]/g, "-") ||
-                          `PR-${selectedPo.prNumber}.xlsx`
-                        }
-                        rel="noreferrer"
-                        className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-                      >
-                        {t.admin.prpo.downloadPr}
-                      </a>
-                    ) : null}
-                    {selectedPo.poFileUrl ? (
-                      <a
-                        href={selectedPo.poFileUrl}
-                        download={
-                          selectedPo.poFileName?.replace(/[/\\?%*:|"<>]/g, "-") ||
-                          `PO-${selectedPo.poNumber}.xlsx`
-                        }
-                        rel="noreferrer"
-                        title={selectedPoSisterDownloadCount > 0 ? "Primary PO (DHM)" : undefined}
-                        className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-                      >
-                        {t.admin.prpo.downloadPo}
-                      </a>
-                    ) : null}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        void handleSaveOpenPo();
-                      }}
-                      disabled={
-                        isSavingOpen ||
-                        !isOpenPoFormValid ||
-                        (selectedPo ? isPoOpeningComplete(selectedPo) : false)
-                      }
-                      className="rounded-lg bg-brand-navy px-4 py-2 text-sm font-semibold text-white hover:bg-brand-navy/90 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      {isSavingOpen ? "Creating..." : t.admin.prpo.createSo}
-                    </button>
-                  </div>
-                  {selectedPoSisterDownloadCount > 0 ? (
-                    <div className="rounded-lg border border-indigo-100 bg-indigo-50/80 px-3 py-2">
-                      <p className="text-xs font-semibold text-indigo-900">
-                        +{selectedPoSisterDownloadCount} supplier PO
-                        {selectedPoSisterDownloadCount === 1 ? "" : "s"} — download only (same PR, other companies):
-                      </p>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {(selectedPo.sisterSupplierPos ?? []).map((sp, spIdx) =>
-                          sp.poFileUrl ? (
-                            <a
-                              key={sp.entryId ?? `open-sister-dl-${spIdx}`}
-                              href={sp.poFileUrl}
-                              download={
-                                sp.poFileName?.replace(/[/\\?%*:|"<>]/g, "-") ||
-                                `PO-${sp.supplier}-${spIdx + 1}.xlsx`
-                              }
-                              rel="noreferrer"
-                              title={
-                                sp.poFileName
-                                  ? `Download: ${sp.poFileName}`
-                                  : `Download supplier PO (${sp.supplier})`
-                              }
-                              className="rounded-lg border border-indigo-300 bg-white px-3 py-2 text-xs font-semibold text-indigo-900 hover:bg-indigo-50"
-                            >
-                              Download{" "}
-                              {sisterSupplierPoLinkLabel(selectedPo.sisterSupplierPos, spIdx).replace(/^PO /, "")}
-                            </a>
-                          ) : null,
-                        )}
-                      </div>
-                    </div>
-                  ) : null}
-                </div>
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm text-slate-600">
-                  <thead className="bg-slate-50 text-xs uppercase tracking-wider text-slate-600">
-                    <tr>
-                      <th className="px-4 py-3 font-semibold">No</th>
-                      <th className="px-4 py-3 font-semibold">Item</th>
-                      <th className="px-4 py-3 font-semibold text-right">Ordered Qty</th>
-                      {selectedPoPhases.map((phase, phaseIndex) => (
-                        <th key={`phase-col-${phaseIndex}`} className="px-4 py-3 font-semibold text-right">
-                          OPENED #({phase.invoiceNumber || phaseIndex + 1})
-                        </th>
-                      ))}
-                      <th className="px-4 py-3 font-semibold text-right">Open in This PO</th>
-                      <th className="px-4 py-3 font-semibold text-right">Qty Left</th>
-                      <th className="px-4 py-3 font-semibold text-right">Unit Cost</th>
-                      <th className="px-4 py-3 font-semibold text-right">Total Cost</th>
-                      <th className="min-w-[140px] px-4 py-3 font-semibold">Remarks</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {selectedPo.items.map((item) => {
-                      const opened = getOpenedQty(selectedPo, item.lineNo);
-                      const openNow = Number(openQtyInputs[String(item.lineNo)] || 0);
-                      const left = item.quantity - opened - openNow;
-
-                      return (
-                        <tr key={`${selectedPo.id}-${item.lineNo}`}>
-                          <td className="px-4 py-3">{item.lineNo}</td>
-                          <td className="px-4 py-3">
-                            <span className="font-medium text-brand-navy">{item.item}</span>
-                            {item.itemCode ? (
-                              <div className="text-xs text-slate-400">{item.itemCode}</div>
-                            ) : null}
-                          </td>
-                          <td className="px-4 py-3 text-right">{item.quantity}</td>
-                          {selectedPoPhases.map((_, phaseIndex) => (
-                            <td key={`phase-cell-${item.lineNo}-${phaseIndex}`} className="px-4 py-3 text-right">
-                              {getOpenedQtyByPhase(item.lineNo, phaseIndex)}
-                            </td>
-                          ))}
-                          <td className="px-4 py-3 text-right">
-                            {left + openNow <= 0 ? (
-                              <div className="inline-flex h-9 w-24 items-center justify-center rounded-lg border border-slate-200 bg-slate-100 text-xs font-semibold text-slate-400">
-                                Fulfilled
-                              </div>
-                            ) : (
-                              <input
-                                type="text"
-                                inputMode="numeric"
-                                value={openQtyInputs[String(item.lineNo)] ?? ""}
-                                onChange={(event) =>
-                                  handleOpenQtyChange(item.lineNo, event.target.value)
-                                }
-                                className="w-24 rounded-lg border border-slate-300 px-2 py-1 text-right text-sm text-slate-700"
-                              />
-                            )}
-                          </td>
-                          <td
-                            className={`px-4 py-3 text-right font-semibold ${
-                              left === 0 ? "text-green-600" : "text-red-600"
-                            }`}
-                          >
-                            {left}
-                          </td>
-                          <td className="px-4 py-3 text-right">
-                            {item.unitPrice.toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 3,
-                            })}
-                          </td>
-                          <td className="px-4 py-3 text-right font-semibold">
-                            {item.totalPrice.toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                            })}
-                          </td>
-                          <td className="px-4 py-3">
-                            {(() => {
-                              const remarkEntries = getItemRemarkEntries(
-                                selectedPo.itemRemarkHistory,
-                                item.lineNo,
-                              );
-                              const preview = remarkPreviewText(remarkEntries);
-                              return (
-                                <button
-                                  type="button"
-                                  onClick={() => openRemarkModal(item.lineNo)}
-                                  className="w-full min-w-[120px] rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-left text-sm text-slate-700 hover:border-brand-navy/40 hover:bg-slate-50"
-                                >
-                                  {remarkEntries.length > 0 ? (
-                                    <>
-                                      <span className="block font-medium text-brand-navy">
-                                        {remarkEntries.length} remark
-                                        {remarkEntries.length === 1 ? "" : "s"}
-                                      </span>
-                                      <span className="block truncate text-xs text-slate-500">{preview}</span>
-                                    </>
-                                  ) : (
-                                    <span className="text-slate-400">Add remark...</span>
-                                  )}
-                                </button>
-                              );
-                            })()}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          ) : null}
-          {selectedPo && remarkItemLineNo !== null ? (
-            <div className={`${PR_PO_MODAL_OVERLAY} z-50 bg-slate-900/40`}>
-              <div className="w-full max-w-lg rounded-xl border border-slate-200 bg-white p-6 shadow-xl">
-                {(() => {
-                  const remarkItem = selectedPo.items.find((row) => row.lineNo === remarkItemLineNo);
-                  const remarkEntries = getItemRemarkEntries(selectedPo.itemRemarkHistory, remarkItemLineNo);
-                  return (
-                    <>
-                      <div className="mb-4 flex items-start justify-between gap-3">
-                        <div>
-                          <h4 className="text-lg font-semibold text-brand-navy">Remarks timeline</h4>
-                          <p className="mt-0.5 text-sm text-slate-600">
-                            #{remarkItemLineNo}
-                            {remarkItem ? ` · ${remarkItem.item}` : ""}
-                          </p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setRemarkItemLineNo(null);
-                            setRemarkText("");
-                          }}
-                          className="rounded-full p-1 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
-                          aria-label="Close remark popup"
-                        >
-                          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
-                      </div>
-                      <div className="mb-4">
-                        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">History</p>
-                        {remarkEntries.length ? (
-                          <RemarkTimelineList entries={remarkEntries} />
-                        ) : (
-                          <p className="rounded-lg border border-dashed border-slate-200 bg-slate-50 px-3 py-4 text-sm text-slate-500">
-                            No remarks yet for this item.
-                          </p>
-                        )}
-                      </div>
-                      <div>
-                        <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">
-                          Add remark (as {actorDisplayName})
-                        </label>
-                        <textarea
-                          rows={4}
-                          value={remarkText}
-                          onChange={(event) => setRemarkText(event.target.value)}
-                          placeholder="Enter a new remark for this item..."
-                          className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700"
-                        />
-                      </div>
-                      <div className="mt-4 flex justify-end gap-2">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setRemarkItemLineNo(null);
-                            setRemarkText("");
-                          }}
-                          className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleSaveRemark}
-                          disabled={isSavingRemark || !remarkText.trim()}
-                          className="rounded-lg bg-brand-navy px-4 py-2 text-sm font-semibold text-white hover:bg-brand-navy/90 disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                          {isSavingRemark ? "Saving..." : "Add remark"}
-                        </button>
-                      </div>
-                    </>
-                  );
-                })()}
-              </div>
-            </div>
-          ) : null}
         </div>
 
       ) : activeTab === "view" && canViewPo ? (
@@ -2565,7 +2608,7 @@ export function PrPoManager({
                       Back to list
                     </button>
                     <span className="text-sm text-slate-400">·</span>
-                    <h3 className="text-sm font-bold text-slate-800">W.H {po.poNumber.replace("W.H ", "")}</h3>
+                    <h3 className="text-sm font-bold text-slate-800">{formatPoNumberDisplay(po.poNumber)}</h3>
                     <span className="text-xs text-slate-400">{po.branchName} · PR {po.prNumber}</span>
                   </div>
 
@@ -2576,7 +2619,7 @@ export function PrPoManager({
                       <div className="flex flex-wrap items-center gap-4">
                         <div>
                           <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">PO Number</p>
-                          <p className="text-sm font-bold text-brand-navy">W.H {po.poNumber.replace("W.H ", "")}</p>
+                          <p className="text-sm font-bold text-brand-navy">{formatPoNumberDisplay(po.poNumber)}</p>
                         </div>
                         <div className="h-8 w-px bg-slate-200" />
                         <div>
@@ -2704,8 +2747,17 @@ export function PrPoManager({
                                       </button>
                                     );
                                   })()}
-                                  {(phaseInvoiceLink(phase) ?? phaseDeliveryNoteLinks(phase).length > 0) ? (
-                                    <div className="mb-3 flex flex-wrap gap-2">
+                                  <div className="mb-3 flex flex-wrap gap-2">
+                                      <button
+                                        type="button"
+                                        onClick={() => printViewPoDelivery(po, history, idx)}
+                                        className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                                      >
+                                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                          <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                        </svg>
+                                        Print
+                                      </button>
                                       {phaseInvoiceLink(phase) ? (
                                         <a
                                           href={phaseInvoiceLink(phase)!}
@@ -2733,7 +2785,6 @@ export function PrPoManager({
                                         </a>
                                       ))}
                                     </div>
-                                  ) : null}
                                   {!isCollapsed && <div className="overflow-hidden rounded-lg border border-slate-100">
                                     <table className="w-full text-xs">
                                       <thead>
@@ -2742,7 +2793,7 @@ export function PrPoManager({
                                           <th className="px-3 py-2 text-right font-semibold text-slate-500">Unit</th>
                                           <th className="px-3 py-2 text-right font-semibold text-slate-500">Unit Price ($)</th>
                                           <th className="px-3 py-2 text-right font-semibold text-slate-500">Ordered</th>
-                                          <th className="px-3 py-2 text-right font-semibold text-slate-500">This Opening</th>
+                                          <th className="px-3 py-2 text-right font-semibold text-slate-500">This Delivery</th>
                                           <th className="px-3 py-2 text-right font-semibold text-slate-500">Opening Value ($)</th>
                                           <th className="px-3 py-2 text-right font-semibold text-slate-500">Total Opened</th>
                                           <th className="px-3 py-2 text-right font-semibold text-slate-500">Remaining</th>
@@ -2753,8 +2804,15 @@ export function PrPoManager({
                                         {po.items.map((poItem) => {
                                           const entry = (phase.items ?? []).find((e) => e.lineNo === poItem.lineNo);
                                           const thisOpeningQty = entry?.openedQty ?? 0;
-                                          const totalOpenedForItem = getOpenedQty(po, poItem.lineNo);
-                                          const remainingForItem = Math.max(0, poItem.quantity - totalOpenedForItem);
+                                          const totalOpenedForItem = getOpenedQtyThroughPhase(
+                                            history,
+                                            idx,
+                                            poItem.lineNo,
+                                          );
+                                          const remainingForItem = Math.max(
+                                            0,
+                                            poItem.quantity - totalOpenedForItem,
+                                          );
                                           const wasOpened = thisOpeningQty > 0;
                                           const isFulfilled = remainingForItem === 0;
                                           const openingValue = thisOpeningQty * (poItem.unitPrice ?? 0);
@@ -2793,8 +2851,19 @@ export function PrPoManager({
                                             const item = po.items.find((i) => i.lineNo === e.lineNo);
                                             return s + (e.openedQty ?? 0) * (item?.unitPrice ?? 0);
                                           }, 0);
-                                          const totalAllOpened = po.items.reduce((s, i) => s + getOpenedQty(po, i.lineNo), 0);
-                                          const totalRem = po.items.reduce((s, i) => s + Math.max(0, i.quantity - getOpenedQty(po, i.lineNo)), 0);
+                                          const totalAllOpened = po.items.reduce(
+                                            (s, i) => s + getOpenedQtyThroughPhase(history, idx, i.lineNo),
+                                            0,
+                                          );
+                                          const totalRem = po.items.reduce(
+                                            (s, i) =>
+                                              s +
+                                              Math.max(
+                                                0,
+                                                i.quantity - getOpenedQtyThroughPhase(history, idx, i.lineNo),
+                                              ),
+                                            0,
+                                          );
                                           return (
                                             <tr className="border-t border-slate-200 bg-slate-50 font-semibold text-slate-600">
                                               <td className="px-3 py-2">Total</td>
@@ -2914,6 +2983,17 @@ export function PrPoManager({
                   <input type="date" value={filterDateTo} onChange={(e) => setFilterDateTo(e.target.value)} className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700" />
                 </div>
               </div>
+              {hasActiveListFilters ? (
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    onClick={clearListFilters}
+                    className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+                  >
+                    Clear filters
+                  </button>
+                </div>
+              ) : null}
 
               {loadingSaved ? (
                 <p className="py-10 text-center text-sm text-slate-400">Loading records…</p>
@@ -2955,7 +3035,7 @@ export function PrPoManager({
                               onClick={() => { setSelectedViewPoId(po.id); setCollapsedPhases(new Set()); }}
                             >
                               <td className="px-5 py-3.5 font-semibold text-brand-navy">
-                                {po.poNumber}
+                                {formatPoNumberDisplay(po.poNumber)}
                                 {po.urgent === "yes" && <span className="ml-2 rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-rose-600">Urgent</span>}
                               </td>
                               <td className="px-5 py-3.5 text-slate-700">{po.branchName}</td>
@@ -3320,6 +3400,85 @@ export function PrPoManager({
           <p className="mt-1 text-xs text-slate-400">Contact your administrator to request access.</p>
         </div>
       )}
+
+      {selectedPo && remarkItemLineNo !== null ? (
+        <div className={`${PR_PO_MODAL_OVERLAY} z-50 bg-slate-900/40`}>
+          <div className="w-full max-w-lg rounded-xl border border-slate-200 bg-white p-6 shadow-xl">
+            {(() => {
+              const remarkItem = selectedPo.items.find((row) => row.lineNo === remarkItemLineNo);
+              const remarkEntries = getItemRemarkEntries(selectedPo.itemRemarkHistory, remarkItemLineNo);
+              return (
+                <>
+                  <div className="mb-4 flex items-start justify-between gap-3">
+                    <div>
+                      <h4 className="text-lg font-semibold text-brand-navy">Remarks timeline</h4>
+                      <p className="mt-0.5 text-sm text-slate-600">
+                        #{remarkItemLineNo}
+                        {remarkItem ? ` · ${remarkItem.item}` : ""}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRemarkItemLineNo(null);
+                        setRemarkText("");
+                      }}
+                      className="rounded-full p-1 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+                      aria-label="Close remark popup"
+                    >
+                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                  <div className="mb-4">
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">History</p>
+                    {remarkEntries.length ? (
+                      <RemarkTimelineList entries={remarkEntries} />
+                    ) : (
+                      <p className="rounded-lg border border-dashed border-slate-200 bg-slate-50 px-3 py-4 text-sm text-slate-500">
+                        No remarks yet for this item.
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      Add remark (as {actorDisplayName})
+                    </label>
+                    <textarea
+                      rows={4}
+                      value={remarkText}
+                      onChange={(event) => setRemarkText(event.target.value)}
+                      placeholder="Enter a new remark for this item..."
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700"
+                    />
+                  </div>
+                  <div className="mt-4 flex justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRemarkItemLineNo(null);
+                        setRemarkText("");
+                      }}
+                      className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleSaveRemark}
+                      disabled={isSavingRemark || !remarkText.trim()}
+                      className="rounded-lg bg-brand-navy px-4 py-2 text-sm font-semibold text-white hover:bg-brand-navy/90 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {isSavingRemark ? "Saving..." : "Add remark"}
+                    </button>
+                  </div>
+                </>
+              );
+            })()}
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
