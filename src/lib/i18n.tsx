@@ -29,14 +29,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const handleSetLanguage = (lang: Language) => {
-    setLanguage(lang);
+    const stored = localStorage.getItem("language");
+    if (stored === lang) return;
+
     localStorage.setItem("language", lang);
     document.cookie = `NEXT_LOCALE=${lang}; path=/; max-age=31536000`;
-    if (lang === 'kh') {
-      document.body.classList.add('lang-kh');
-    } else {
-      document.body.classList.remove('lang-kh');
-    }
+    window.location.reload();
   };
 
   // Set initial class on mount

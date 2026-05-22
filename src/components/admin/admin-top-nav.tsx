@@ -2,11 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useLanguage } from "@/lib/i18n";
+
+type NavLinkId = "home" | "dashboard" | "prpo" | "userMgmt";
 
 type NavLink = {
   href: string;
-  label: string;
+  id: NavLinkId;
   /** One or more permission keys — user needs at least one to see this link */
   requiredPerms?: string[];
 };
@@ -14,16 +17,16 @@ type NavLink = {
 const ALL_LINKS: NavLink[] = [
   {
     href: "/dhm-myadmin",
-    label: "Home",
+    id: "home",
   },
   {
     href: "/dhm-myadmin/dashboard",
-    label: "Admin Dashboard",
+    id: "dashboard",
     requiredPerms: ["admin.products", "admin.posts", "admin.careers", "admin.inquiries", "admin.qrcode"],
   },
   {
     href: "/dhm-myadmin/pr-po",
-    label: "Branch Functions",
+    id: "prpo",
     requiredPerms: [
       "admin.prpo",
       "admin.prpo.dashboard",
@@ -35,13 +38,13 @@ const ALL_LINKS: NavLink[] = [
   /* Internal tooling hidden
   {
     href: "/dhm-myadmin/internal",
-    label: "Internal Tooling",
+    id: "internal",
     requiredPerms: ["internal.rooms", "internal.cars", "internal.resource_management"],
   },
   */
   {
     href: "/dhm-myadmin/user-management",
-    label: "User Management",
+    id: "userMgmt",
     requiredPerms: ["internal.user_management"],
   },
 ];
@@ -60,13 +63,21 @@ export function AdminTopNav({
 }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { t } = useLanguage();
+
+  const linkLabels = useMemo(
+    (): Record<NavLinkId, string> => ({
+      home: t.admin.common.navHome,
+      dashboard: t.admin.dashboard.title,
+      prpo: t.admin.prpo.title,
+      userMgmt: t.admin.userMgmt.title,
+    }),
+    [t],
+  );
 
   const visibleLinks = ALL_LINKS.filter((link) => {
-    // Super admin sees everything
     if (isSuperAdmin) return true;
-    // No restriction defined → always show
     if (!link.requiredPerms) return true;
-    // User must have at least one of the required permissions
     return link.requiredPerms.some((p) => permissions.includes(p));
   });
 
@@ -104,7 +115,7 @@ export function AdminTopNav({
           aria-controls="admin-mobile-nav"
           onClick={() => setMobileOpen((o) => !o)}
         >
-          <span className="sr-only">{mobileOpen ? "Close menu" : "Open menu"}</span>
+          <span className="sr-only">{mobileOpen ? t.admin.common.closeMenu : t.admin.common.openMenu}</span>
           {mobileOpen ? (
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -116,12 +127,12 @@ export function AdminTopNav({
           )}
         </button>
 
-        <nav className="hidden min-w-0 items-center gap-6 text-[15px] font-medium lg:flex xl:gap-8" aria-label="Admin primary">
+        <nav className="hidden min-w-0 items-center gap-6 text-[15px] font-medium lg:flex xl:gap-8" aria-label={t.admin.common.adminNavigation}>
           {visibleLinks.map((link) => {
             const active = isActiveLink(pathname, link.href);
             return (
               <Link key={link.href} href={link.href} className={desktopLinkClass(active)}>
-                {link.label}
+                {linkLabels[link.id]}
                 {active ? <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" /> : null}
               </Link>
             );
@@ -134,29 +145,29 @@ export function AdminTopNav({
           <button
             type="button"
             className="absolute inset-0 bg-slate-900/50 backdrop-blur-[1px]"
-            aria-label="Close menu"
+            aria-label={t.admin.common.closeMenu}
             onClick={() => setMobileOpen(false)}
           />
           <div
             className="absolute left-0 top-0 flex h-full min-h-[100dvh] w-[min(20rem,88vw)] flex-col border-r border-white/10 bg-[#2E388C] shadow-2xl"
             role="dialog"
             aria-modal="true"
-            aria-label="Admin navigation"
+            aria-label={t.admin.common.adminNavigation}
           >
             <div className="flex items-center justify-between border-b border-white/15 px-4 py-4">
-              <span className="text-sm font-semibold tracking-wide text-white/95">Navigate</span>
+              <span className="text-sm font-semibold tracking-wide text-white/95">{t.admin.common.navigate}</span>
               <button
                 type="button"
                 className="flex h-9 w-9 items-center justify-center rounded-lg text-white/80 transition hover:bg-white/10 hover:text-white"
                 onClick={() => setMobileOpen(false)}
-                aria-label="Close menu"
+                aria-label={t.admin.common.closeMenu}
               >
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
-            <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto overscroll-contain p-3 pb-[max(1rem,env(safe-area-inset-bottom))]" aria-label="Admin primary mobile">
+            <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto overscroll-contain p-3 pb-[max(1rem,env(safe-area-inset-bottom))]" aria-label={t.admin.common.adminNavigation}>
               {visibleLinks.map((link) => {
                 const active = isActiveLink(pathname, link.href);
                 return (
@@ -166,7 +177,7 @@ export function AdminTopNav({
                     className={mobileLinkClass(active)}
                     onClick={() => setMobileOpen(false)}
                   >
-                    {link.label}
+                    {linkLabels[link.id]}
                   </Link>
                 );
               })}

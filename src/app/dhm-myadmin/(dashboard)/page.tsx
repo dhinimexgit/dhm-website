@@ -77,10 +77,12 @@ export default async function HomePage() {
 
   const canUserMgmt = await canAccessFunction("internal.user_management");
 
-  const welcomeName = (() => {
-    const label = user?.email ?? user?.username;
-    if (!label) return "";
-    return label.includes("@") ? label.split("@")[0]: label;
+  const welcomeHeading = (() => {
+    const firstName = user?.firstName?.trim();
+    if (firstName) {
+      return t.admin.dashboard.welcomeBack.replace("{name}", firstName);
+    }
+    return t.admin.dashboard.welcomeBackPlain;
   })();
 
   const hasAccess = (section: Section) => {
@@ -95,7 +97,7 @@ export default async function HomePage() {
       <div className="space-y-2">
         <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-red sm:text-sm">{t.admin.dashboard.portal}</p>
         <h1 className="text-2xl font-semibold leading-tight text-brand-navy sm:text-3xl md:text-4xl">
-          {t.admin.dashboard.welcomeBack}{welcomeName ? `, ${welcomeName}`: ""}
+          {welcomeHeading}
         </h1>
         <p className="text-base text-slate-500 sm:text-lg">{t.admin.dashboard.selectSection}</p>
       </div>

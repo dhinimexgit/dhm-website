@@ -5,6 +5,7 @@ import { SUPER_ADMIN_LOGIN_ID } from "@/lib/admin-auth-constants";
 import { AdminTopNav } from "@/components/admin/admin-top-nav";
 import { getTranslation } from "@/lib/i18n-server";
 import { LanguageProvider } from "@/lib/i18n";
+import { formatUserHeaderName } from "@/lib/user-display-name";
 
 export default async function DashboardLayout({
   children,
@@ -26,11 +27,17 @@ export default async function DashboardLayout({
   const isSuperAdmin = user?.username.toLowerCase() === SUPER_ADMIN_LOGIN_ID;
 
   const loginUsername = user?.username?.trim() ?? "";
-  /** One line next to Sign Out: login username only. */
-  const headerIdentity = loginUsername;
+  const headerIdentity = user
+    ? formatUserHeaderName({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
+      })
+    : "";
   const mainSessionLabel = loginUsername;
 
   return (
+    <LanguageProvider>
     <div className="min-h-screen min-h-[100dvh] bg-slate-50 pb-20">
        {/* HeroHeader Section matching site style */}
       <div className="relative bg-[#2E388C] text-white shadow-lg">
@@ -93,8 +100,9 @@ export default async function DashboardLayout({
         data-user-role={userRole}
         data-user-permissions={(user?.permissions || []).join(",")}
       >
-        <LanguageProvider>{children}</LanguageProvider>
+        {children}
       </main>
     </div>
+    </LanguageProvider>
   );
 }

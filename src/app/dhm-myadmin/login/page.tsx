@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { LanguageProvider } from "@/lib/i18n";
 import { LoginForm } from "./login-form";
 
 export default async function LoginPage() {
@@ -10,5 +11,9 @@ export default async function LoginPage() {
     redirect("/dhm-myadmin");
   }
 
-  return <LoginForm />;
+  return (
+    <LanguageProvider>
+      <LoginForm />
+    </LanguageProvider>
+  );
 }
