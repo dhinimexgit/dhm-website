@@ -4,6 +4,13 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { SUPER_ADMIN_LOGIN_ID } from '@/lib/admin-auth-constants';
 import { encryptAdminPassword, verifyAdminPassword } from '@/lib/admin-password-crypto';
+import {
+  ADMIN_SESSION_COOKIE_NAMES,
+  getAdminSessionCookieOptions,
+  hasValidAdminSession,
+  isAdminSessionExpired,
+  parseLastActivityMs,
+} from '@/lib/admin-session';
 import { db } from '@/lib/firebase';
 import { collection, deleteField, doc, getDocs, setDoc, serverTimestamp } from 'firebase/firestore';
 
@@ -11,12 +18,8 @@ import { collection, deleteField, doc, getDocs, setDoc, serverTimestamp } from '
 export type UserRole = 'super_admin' | 'admin' | 'user' | 'branch' | 'marketing' | 'management';
 export type LoginMode = 'admin' | 'internal';
 
-export type StaffOffice =
-  | 'Head Office'
-  | 'KienSvay'
-  | 'EPOSE'
-  | 'ToukMeas'
-  | 'DangTong';
+/** Warehouse offices: Kien Svay and Touk Meas (each covers multiple PO branch names). */
+export type StaffOffice = 'Head Office' | 'KienSvay' | 'ToukMeas';
 
 export type StaffTitle = 'Top Management' | 'Manager' | 'Supervisor' | 'Staff';
 
@@ -28,7 +31,15 @@ export type StaffDepartment =
   | 'HR & Admin'
   | 'Accounting';
 
-const STAFF_OFFICES: StaffOffice[] = ['Head Office', 'KienSvay', 'EPOSE', 'ToukMeas', 'DangTong'];
+const STAFF_OFFICES: StaffOffice[] = ['Head Office', 'KienSvay', 'ToukMeas'];
+
+/** Legacy Firestore office values → current warehouse office. */
+const LEGACY_STAFF_OFFICE: Record<string, StaffOffice> = {
+  EPOSE: 'KienSvay',
+  DangTong: 'ToukMeas',
+  'Kien Svay': 'KienSvay',
+  'Touk Meas': 'ToukMeas',
+};
 const STAFF_TITLES: StaffTitle[] = ['Top Management', 'Manager', 'Supervisor', 'Staff'];
 const STAFF_DEPARTMENTS: StaffDepartment[] = [
   'Sales',
@@ -50,6 +61,8 @@ function stripUndefinedForFirestore(input: Record<string, unknown>): Record<stri
 
 function resolveStaffOffice(raw: string): StaffOffice | undefined {
   const t = raw.trim();
+  const legacy = LEGACY_STAFF_OFFICE[t] ?? LEGACY_STAFF_OFFICE[t.toLowerCase()];
+  if (legacy) return legacy;
   return STAFF_OFFICES.find((o) => o === t || o.toLowerCase() === t.toLowerCase());
 }
 
@@ -75,6 +88,7 @@ export type FunctionAccessKey =
   | 'admin.prpo.submit'
   | 'admin.prpo.open'
   | 'admin.prpo.view'
+  | 'admin.prpo.items'
   | 'internal.rooms'
   | 'internal.cars'
   | 'internal.resource_management'
@@ -130,6 +144,35 @@ const ALL_FUNCTIONS: FunctionAccessKey[] = [
 
 const ADMIN_USERS_COLLECTION = 'admin_users';
 const SUPER_ADMIN_EMAIL = SUPER_ADMIN_LOGIN_ID;
+
+function setAdminAuthCookies(
+  cookieStore: Awaited<ReturnType<typeof cookies>>,
+  user: AdminUser
+) {
+  const opts = getAdminSessionCookieOptions();
+  const now = String(Date.now());
+
+  cookieStore.set('dhm_admin_session', 'true', opts);
+  cookieStore.set('dhm_admin_user', user.username, opts);
+  cookieStore.set('dhm_admin_role', user.role, opts);
+  cookieStore.set('dhm_login_mode', 'admin', opts);
+  cookieStore.set('dhm_admin_last_activity', now, opts);
+}
+
+function clearAdminAuthCookies(cookieStore: Awaited<ReturnType<typeof cookies>>) {
+  for (const name of ADMIN_SESSION_COOKIE_NAMES) {
+    cookieStore.delete(name);
+    cookieStore.set(name, '', { maxAge: 0, path: '/' });
+  }
+}
+
+function readAdminSessionFromCookies(cookieStore: Awaited<ReturnType<typeof cookies>>) {
+  return {
+    session: cookieStore.get('dhm_admin_session')?.value,
+    user: cookieStore.get('dhm_admin_user')?.value,
+    lastActivity: cookieStore.get('dhm_admin_last_activity')?.value,
+  };
+}
 
 function getDefaultPermissionsByRole(role: UserRole): FunctionAccessKey[] {
   if (role === 'super_admin' || role === 'admin') return ALL_FUNCTIONS;
@@ -248,39 +291,7 @@ export async function login(formData: FormData) {
 
   if (user) {
     const cookieStore = await cookies();
-
-    cookieStore.set('dhm_admin_session', 'true', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24 * 7,
-      path: '/',
-      sameSite: 'lax',
-    });
-
-    cookieStore.set('dhm_admin_user', user.username, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24 * 7,
-      path: '/',
-      sameSite: 'lax',
-    });
-
-    cookieStore.set('dhm_admin_role', user.role, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24 * 7,
-      path: '/',
-      sameSite: 'lax',
-    });
-
-    cookieStore.set('dhm_login_mode', 'admin', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24 * 7,
-      path: '/',
-      sameSite: 'lax',
-    });
-
+    setAdminAuthCookies(cookieStore, user);
     redirect('/dhm-myadmin');
   } else {
     return { error: 'Invalid credentials' };
@@ -289,20 +300,39 @@ export async function login(formData: FormData) {
 
 export async function logout() {
   const cookieStore = await cookies();
-  
-  // Clear all auth cookies
-  cookieStore.delete('dhm_admin_session');
-  cookieStore.delete('dhm_admin_user');
-  cookieStore.delete('dhm_admin_role');
-  cookieStore.delete('dhm_login_mode');
-  
-  // Also set empty values with maxAge 0 for thorough cleanup
-  cookieStore.set('dhm_admin_session', '', { maxAge: 0, path: '/' });
-  cookieStore.set('dhm_admin_user', '', { maxAge: 0, path: '/' });
-  cookieStore.set('dhm_admin_role', '', { maxAge: 0, path: '/' });
-  cookieStore.set('dhm_login_mode', '', { maxAge: 0, path: '/' });
-  
+  clearAdminAuthCookies(cookieStore);
   redirect('/dhm-myadmin/login');
+}
+
+/** Refresh last-activity timestamp for an active admin session. */
+export async function touchAdminSession(): Promise<{ valid: boolean }> {
+  const cookieStore = await cookies();
+  const { session, user, lastActivity } = readAdminSessionFromCookies(cookieStore);
+
+  if (!hasValidAdminSession(session, user, lastActivity)) {
+    clearAdminAuthCookies(cookieStore);
+    return { valid: false };
+  }
+
+  cookieStore.set(
+    'dhm_admin_last_activity',
+    String(Date.now()),
+    getAdminSessionCookieOptions()
+  );
+  return { valid: true };
+}
+
+/** Verify the current admin session is still within the inactivity window. */
+export async function checkAdminSession(): Promise<{ valid: boolean }> {
+  const cookieStore = await cookies();
+  const { session, user, lastActivity } = readAdminSessionFromCookies(cookieStore);
+  const valid = hasValidAdminSession(session, user, lastActivity);
+
+  if (!valid && (session || user)) {
+    clearAdminAuthCookies(cookieStore);
+  }
+
+  return { valid };
 }
 
 // Get current user info from session
@@ -312,8 +342,14 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
   const loginCookie = cookieStore.get('dhm_admin_user');
   const roleCookie = cookieStore.get('dhm_admin_role');
   const modeCookie = cookieStore.get('dhm_login_mode');
+  const lastActivityCookie = cookieStore.get('dhm_admin_last_activity');
 
   if (!session?.value || !loginCookie?.value) {
+    return null;
+  }
+
+  const lastActivityMs = parseLastActivityMs(lastActivityCookie?.value);
+  if (isAdminSessionExpired(lastActivityMs)) {
     return null;
   }
 

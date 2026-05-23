@@ -19,6 +19,7 @@ import {
   DEPARTMENTS,
   EDIT_ROLES,
   OFFICES,
+  OFFICE_LABELS,
   PermissionTree,
   TITLES,
   displayName,
@@ -294,7 +295,7 @@ export function EditUserClient({ initialUser }: { initialUser: AdminUser }) {
                 </option>
                 {OFFICES.map((o) => (
                   <option key={o} value={o}>
-                    {o}
+                    {OFFICE_LABELS[o]}
                   </option>
                 ))}
               </select>

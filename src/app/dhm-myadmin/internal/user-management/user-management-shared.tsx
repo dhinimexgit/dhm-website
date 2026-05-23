@@ -4,7 +4,19 @@ import { useState } from "react";
 import type { AdminUser, FunctionAccessKey, StaffDepartment, StaffOffice, StaffTitle, UserRole } from "@/app/actions/auth";
 import { formatUserDisplayName } from "@/lib/user-display-name";
 
-export const OFFICES: StaffOffice[] = ["Head Office", "KienSvay", "EPOSE", "ToukMeas", "DangTong"];
+export const OFFICES: StaffOffice[] = ["Head Office", "KienSvay", "ToukMeas"];
+
+/** Display labels for office dropdowns (Firestore still stores `KienSvay` / `ToukMeas`). */
+export const OFFICE_LABELS: Record<StaffOffice, string> = {
+  "Head Office": "Head Office",
+  KienSvay: "Kien Svay",
+  ToukMeas: "Touk Meas",
+};
+
+export function formatStaffOfficeLabel(office: StaffOffice | undefined): string {
+  if (!office) return "—";
+  return OFFICE_LABELS[office] ?? office;
+}
 export const TITLES: StaffTitle[] = ["Top Management", "Manager", "Supervisor", "Staff"];
 export const DEPARTMENTS: StaffDepartment[] = [
   "Sales",
@@ -72,6 +84,12 @@ export const PERMISSION_TREE: PermissionNode[] = [
         key: "admin.prpo.view",
         label: "View PO",
         description: "View PO tab — browse PO history and details.",
+      },
+      {
+        key: "admin.prpo.items",
+        label: "Item Tracker",
+        description:
+          "Item Tracker tab — totals ordered, opened, and remaining per item across POs, with PO breakdown.",
       },
     ],
   },
@@ -163,6 +181,7 @@ export function normalizeLegacyPermissions(
     "admin.prpo.submit",
     "admin.prpo.open",
     "admin.prpo.view",
+    "admin.prpo.items",
   ]);
   return Array.from(upgraded) as FunctionAccessKey[];
 }

@@ -86,3 +86,25 @@ export function remarkPreviewText(entries: PoItemRemarkEntry[]): string {
   const latest = entries[entries.length - 1];
   return latest.text.length > 48 ? `${latest.text.slice(0, 48)}…` : latest.text;
 }
+
+/** Initial remark timeline entries captured on Submit PO (one entry per line with text). */
+export function buildItemRemarkHistoryFromSubmitDraft(
+  remarksByLine: Record<string, string>,
+  actor: { displayName: string; username?: string },
+  createdAt: Timestamp,
+): Record<string, PoItemRemarkEntry[]> | null {
+  const history: Record<string, PoItemRemarkEntry[]> = {};
+  for (const [lineKey, raw] of Object.entries(remarksByLine)) {
+    const text = String(raw ?? "").trim();
+    if (!text) continue;
+    history[lineKey] = [
+      {
+        text,
+        createdBy: actor.displayName.trim() || "Unknown",
+        createdByUsername: actor.username?.trim() || undefined,
+        createdAt,
+      },
+    ];
+  }
+  return Object.keys(history).length > 0 ? history : null;
+}

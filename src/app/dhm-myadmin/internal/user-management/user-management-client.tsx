@@ -17,6 +17,8 @@ import {
   CREATE_ROLES,
   DEPARTMENTS,
   OFFICES,
+  OFFICE_LABELS,
+  formatStaffOfficeLabel,
   PermissionTree,
   RolePill,
   TITLES,
@@ -273,7 +275,7 @@ export function UserManagementClient({
               >
                 {OFFICES.map((o) => (
                   <option key={o} value={o}>
-                    {o}
+                    {OFFICE_LABELS[o]}
                   </option>
                 ))}
               </select>
@@ -406,7 +408,9 @@ export function UserManagementClient({
                           </div>
                         </td>
                         <td className="px-4 py-3 align-middle font-mono text-xs text-slate-600">{user.email ?? "—"}</td>
-                        <td className="px-4 py-3 align-middle text-slate-600">{user.office ?? "—"}</td>
+                        <td className="px-4 py-3 align-middle text-slate-600">
+                          {formatStaffOfficeLabel(user.office)}
+                        </td>
                         <td className="px-4 py-3 align-middle text-slate-600">{user.title ?? "—"}</td>
                         <td className="px-4 py-3 align-middle text-slate-600">{user.department ?? "—"}</td>
                         <td className="px-4 py-3 align-middle">

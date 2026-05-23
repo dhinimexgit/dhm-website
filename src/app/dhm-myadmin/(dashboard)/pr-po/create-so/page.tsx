@@ -3,7 +3,10 @@ import { SUPER_ADMIN_LOGIN_ID } from "@/lib/admin-auth-constants";
 import { PrPoManager } from "@/components/admin/pr-po-manager";
 import { redirect } from "next/navigation";
 import { resolveBranchPoTabAccess } from "@/lib/branch-po-tab-access";
-import { resolveViewPoBranchScope } from "@/lib/branch-po-view-scope";
+import {
+  encodeAllowedBranchesForProps,
+  resolveViewPoBranchScope,
+} from "@/lib/branch-po-view-scope";
 import { formatUserDisplayName } from "@/lib/user-display-name";
 
 type Props = {
@@ -44,7 +47,11 @@ export default async function CreateSoPage({ searchParams }: Props) {
       initialCreateSoPoId={id.trim()}
       canOpen={canOpen}
       viewPoStaffLock={viewPoBranchScope.kind !== "all" ? 1 : 0}
-      viewPoStaffBranchName={viewPoBranchScope.kind === "branch" ? viewPoBranchScope.branchName : ""}
+      viewPoAllowedBranches={
+        viewPoBranchScope.kind === "branches"
+          ? encodeAllowedBranchesForProps(viewPoBranchScope.branchNames)
+          : ""
+      }
       actorDisplayName={actorDisplayName}
       actorUsername={user?.username ?? ""}
     />

@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { logout, getCurrentUser } from "@/app/actions/auth";
+import { AdminSessionGuard } from "@/components/admin/admin-session-guard";
 import { SUPER_ADMIN_LOGIN_ID } from "@/lib/admin-auth-constants";
 import { AdminTopNav } from "@/components/admin/admin-top-nav";
 import { getTranslation } from "@/lib/i18n-server";
@@ -21,9 +22,12 @@ export default async function DashboardLayout({
     redirect("/dhm-myadmin/login");
   }
 
-  // Get current user info
   const user = await getCurrentUser();
-  const userRole = user?.role || "admin";
+  if (!user) {
+    redirect("/dhm-myadmin/login?expired=1");
+  }
+
+  const userRole = user.role;
   const isSuperAdmin = user?.username.toLowerCase() === SUPER_ADMIN_LOGIN_ID;
 
   const loginUsername = user?.username?.trim() ?? "";
@@ -38,6 +42,7 @@ export default async function DashboardLayout({
 
   return (
     <LanguageProvider>
+    <AdminSessionGuard />
     <div className="min-h-screen min-h-[100dvh] bg-slate-50 pb-20">
        {/* HeroHeader Section matching site style */}
       <div className="relative bg-[#2E388C] text-white shadow-lg">

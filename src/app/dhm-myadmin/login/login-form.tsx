@@ -3,6 +3,7 @@
 import { login } from "@/app/actions/auth";
 import { useLanguage } from "@/lib/i18n";
 import { useActionState, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 
 const initialState = { error: "" };
 
@@ -15,6 +16,8 @@ const SERVER_ERROR_TO_KEY: Record<string, keyof typeof import("@/data/translatio
 export function LoginForm() {
   const { t } = useLanguage();
   const l = t.admin.login;
+  const searchParams = useSearchParams();
+  const sessionExpired = searchParams.get("expired") === "1";
 
   const translateError = useMemo(
     () => (message: string) => {
@@ -58,7 +61,6 @@ export function LoginForm() {
                   placeholder={l.usernamePlaceholder}
                   className="block w-full rounded-lg border-0 bg-slate-50 px-4 py-3 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 transition-all duration-200 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-inset focus:ring-brand-navy sm:text-sm sm:leading-6"
                 />
-                <p className="mt-1.5 text-xs text-slate-400">{l.usernameHint}</p>
               </div>
 
               <div>
@@ -76,6 +78,12 @@ export function LoginForm() {
                 />
               </div>
             </div>
+
+            {sessionExpired ? (
+              <div className="rounded-lg bg-amber-50 p-3 text-center text-sm font-medium text-amber-800 ring-1 ring-inset ring-amber-100">
+                {l.sessionExpired}
+              </div>
+            ) : null}
 
             {state?.error ? (
               <div className="animate-pulse rounded-lg bg-red-50 p-3 text-center text-sm font-medium text-red-600 ring-1 ring-inset ring-red-100">

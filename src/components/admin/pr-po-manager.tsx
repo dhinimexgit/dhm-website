@@ -18,15 +18,22 @@ import { db } from "@/lib/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "@/lib/firebase";
 import { useLanguage } from "@/lib/i18n";
-import { isPoInViewPoBranchScope, viewPoScopeFromStaffProps } from "@/lib/branch-po-view-scope";
+import {
+  isPoInViewPoBranchScope,
+  selectablePoBranchesForScope,
+  viewPoScopeFromStaffProps,
+} from "@/lib/branch-po-view-scope";
 import {
   formatRemarkTimestamp,
   getItemRemarkEntries,
   parseItemRemarkHistoryFromPoData,
+  buildItemRemarkHistoryFromSubmitDraft,
   remarkPreviewText,
   type PoItemRemarkEntry,
 } from "@/lib/po-item-remarks";
 import { printViewPoDelivery } from "@/lib/print-view-po-delivery";
+import { PoItemTrackerTab } from "@/components/admin/po-item-tracker-tab";
+import type { PoForItemTracker } from "@/lib/po-item-tracker";
 
 /** Full-viewport dim layer: avoids a gap at the bottom on mobile (100vh vs dynamic viewport) and covers the home-indicator safe area. */
 const PR_PO_MODAL_OVERLAY =
@@ -174,6 +181,15 @@ function phaseInvoiceLink(phase: NonNullable<SavedPurchaseOrder["openingHistory"
 
 function formatPoNumberDisplay(poNumber: string): string {
   return poNumber.replace(/^W\.H\s*/i, "").trim() || poNumber;
+}
+
+/** Latest Create SO / opening timestamp for a PO (null if never opened). */
+function getPoLastOpenedDate(po: SavedPurchaseOrder): Date | null {
+  const times = (po.openingHistory ?? [])
+    .map((ph) => (ph.openedAt?.toDate ? ph.openedAt.toDate().getTime() : null))
+    .filter((ms): ms is number => ms !== null);
+  if (times.length === 0) return null;
+  return new Date(Math.max(...times));
 }
 
 function getOpenedQtyThroughPhase(
@@ -374,7 +390,6 @@ function findSplitTwoRowPurchaseOrderHeader(rows: (string | number)[][]): {
   return null;
 }
 
-const BRANCH_OPTIONS = ["Kien Svay", "Touk Meas", "EPOSE", "Dong Tong"] as const;
 
 /** Sister companies that issue their own PO lines for the same PR (cables, poles, transformers). */
 const SISTER_SUPPLIER_OPTIONS = ["VCC", "KCC", "Saekaraj"] as const;
@@ -396,30 +411,56 @@ function firstAccessiblePrPoTab(flags: {
   canSubmit: boolean;
   canOpen: boolean;
   canViewPo: boolean;
-}): "submit" | "open" | "view" | "dashboard" {
+  canItemTracker: boolean;
+}): "submit" | "open" | "view" | "items" | "dashboard" {
   if (flags.canDashboard) return "dashboard";
   if (flags.canSubmit) return "submit";
   if (flags.canOpen) return "open";
   if (flags.canViewPo) return "view";
+  if (flags.canItemTracker) return "items";
   return "dashboard";
 }
 
 type PrPoManagerProps = {
   pageMode?: "full" | "create-so";
   initialCreateSoPoId?: string | null;
-  initialTab?: "submit" | "open" | "view" | "dashboard";
+  initialTab?: "submit" | "open" | "view" | "items" | "dashboard";
+  initialViewPoId?: string;
   canDashboard?: boolean;
   canSubmit?: boolean;
   canOpen?: boolean;
   canViewPo?: boolean;
-  /** 1 = Staff title: View PO list limited to `viewPoStaffBranchName` (or none if empty). */
+  canItemTracker?: boolean;
+  /** 1 = PO list/tabs limited to branches in `viewPoAllowedBranches` (pipe-separated). */
   viewPoStaffLock?: number;
-  /** PO branch label matching Firestore `branchName` (e.g. "Kien Svay"). Used when `viewPoStaffLock` is 1. */
-  viewPoStaffBranchName?: string;
+  /** Allowed PO `branchName` values when `viewPoStaffLock` is 1 (e.g. `Kien Svay|EPOSE`). */
+  viewPoAllowedBranches?: string;
   /** Signed-in user's full name for audit logs (remarks, Create SO, etc.). */
   actorDisplayName?: string;
   actorUsername?: string;
 };
+
+function UploadBusyInline({ message }: { message: string }) {
+  return (
+    <p className="mt-2 flex items-center gap-2 text-xs font-medium text-brand-navy" role="status" aria-live="polite">
+      <svg
+        className="h-4 w-4 shrink-0 animate-spin text-brand-navy"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        aria-hidden
+      >
+        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        />
+      </svg>
+      <span>{message}</span>
+    </p>
+  );
+}
 
 function RemarkTimelineList({
   entries,
@@ -453,12 +494,14 @@ export function PrPoManager({
   pageMode = "full",
   initialCreateSoPoId = null,
   initialTab,
+  initialViewPoId,
   canDashboard = false,
   canSubmit = false,
   canOpen = false,
   canViewPo = false,
+  canItemTracker = false,
   viewPoStaffLock = 0,
-  viewPoStaffBranchName = "",
+  viewPoAllowedBranches = "",
   actorDisplayName = "Unknown user",
   actorUsername = "",
 }: PrPoManagerProps) {
@@ -468,15 +511,26 @@ export function PrPoManager({
     Object.entries(vars).reduce((acc, [key, val]) => acc.split(`{${key}}`).join(String(val)), template);
   const router = useRouter();
   const viewPoBranchScope = useMemo(
-    () => viewPoScopeFromStaffProps(viewPoStaffLock, viewPoStaffBranchName),
-    [viewPoStaffLock, viewPoStaffBranchName]
+    () => viewPoScopeFromStaffProps(viewPoStaffLock, viewPoAllowedBranches),
+    [viewPoStaffLock, viewPoAllowedBranches]
   );
-  const [activeTab, setActiveTab] = useState<"submit" | "open" | "view" | "dashboard">(() => {
+  const selectablePoBranches = useMemo(
+    () => selectablePoBranchesForScope(viewPoBranchScope),
+    [viewPoBranchScope]
+  );
+  const [activeTab, setActiveTab] = useState<"submit" | "open" | "view" | "items" | "dashboard">(() => {
     if (initialTab === "dashboard" && canDashboard) return "dashboard";
     if (initialTab === "submit" && canSubmit) return "submit";
     if (initialTab === "open" && canOpen) return "open";
     if (initialTab === "view" && canViewPo) return "view";
-    return firstAccessiblePrPoTab({ canDashboard, canSubmit, canOpen, canViewPo });
+    if (initialTab === "items" && canItemTracker) return "items";
+    return firstAccessiblePrPoTab({
+      canDashboard,
+      canSubmit,
+      canOpen,
+      canViewPo,
+      canItemTracker,
+    });
   });
 
   useEffect(() => {
@@ -484,12 +538,16 @@ export function PrPoManager({
       (activeTab === "dashboard" && canDashboard) ||
       (activeTab === "submit" && canSubmit) ||
       (activeTab === "open" && canOpen) ||
-      (activeTab === "view" && canViewPo);
+      (activeTab === "view" && canViewPo) ||
+      (activeTab === "items" && canItemTracker);
     if (!allowed) {
-      setActiveTab(firstAccessiblePrPoTab({ canDashboard, canSubmit, canOpen, canViewPo }));
+      setActiveTab(
+        firstAccessiblePrPoTab({ canDashboard, canSubmit, canOpen, canViewPo, canItemTracker }),
+      );
     }
-  }, [activeTab, canDashboard, canSubmit, canOpen, canViewPo]);
-  const [branchName, setBranchName] = useState<(typeof BRANCH_OPTIONS)[number] | "">("");
+  }, [activeTab, canDashboard, canSubmit, canOpen, canViewPo, canItemTracker]);
+
+  const [branchName, setBranchName] = useState("");
   const [prNumber, setPrNumber] = useState("");
   const [poNumber, setPoNumber] = useState("");
   const [items, setItems] = useState<PurchaseOrderItem[]>([]);
@@ -503,6 +561,8 @@ export function PrPoManager({
   const [status, setStatus] = useState<string>("");
   const [isSaving, setIsSaving] = useState(false);
   const [isParsingPo, setIsParsingPo] = useState(false);
+  const [isReadingPr, setIsReadingPr] = useState(false);
+  const [parsingSisterIds, setParsingSisterIds] = useState<Set<string>>(() => new Set());
   const [poParsingProgress, setPoParsingProgress] = useState(0);
   const [savedPos, setSavedPos] = useState<SavedPurchaseOrder[]>([]);
   const [loadingSaved, setLoadingSaved] = useState(true);
@@ -529,6 +589,8 @@ export function PrPoManager({
   const [confirmAction, setConfirmAction] = useState<"submit" | "open" | null>(null);
   const [remarkItemLineNo, setRemarkItemLineNo] = useState<number | null>(null);
   const [remarkText, setRemarkText] = useState("");
+  /** Draft remarks per line on Submit PO (saved into `itemRemarkHistory` when the PO is submitted). */
+  const [submitItemRemarks, setSubmitItemRemarks] = useState<Record<string, string>>({});
   const [isSavingRemark, setIsSavingRemark] = useState(false);
   const prFileInputRef = useRef<HTMLInputElement | null>(null);
   const poFileInputRef = useRef<HTMLInputElement | null>(null);
@@ -544,6 +606,20 @@ export function PrPoManager({
     () => items.reduce((sum, item) => sum + item.totalPrice, 0),
     [items],
   );
+
+  const isFileProcessing = isReadingPr || isParsingPo || parsingSisterIds.size > 0;
+
+  const fileProcessingOverlayMessage = useMemo(() => {
+    const tasks: string[] = [];
+    if (isReadingPr) tasks.push("pr");
+    if (isParsingPo) tasks.push("po");
+    if (parsingSisterIds.size > 0) tasks.push("sister");
+    if (tasks.length > 1) return p.processingFiles;
+    if (isReadingPr) return p.readingPrFile;
+    if (isParsingPo) return p.extractingPoLines;
+    if (parsingSisterIds.size > 0) return p.parsingSupplierPo;
+    return p.processingFile;
+  }, [isReadingPr, isParsingPo, parsingSisterIds.size, p]);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "purchaseOrders"), (snapshot) => {
@@ -630,51 +706,76 @@ export function PrPoManager({
     return () => unsubscribe();
   }, []);
 
-  const filteredSavedPos = useMemo(() => {
-    return savedPos
-      .filter((po) => {
-        const byBranch = !filterBranch || po.branchName.toLowerCase() === filterBranch.toLowerCase();
-        const byPr = !filterPrNumber || po.prNumber.toLowerCase().includes(filterPrNumber.toLowerCase());
-        const byPo = !filterPoNumber || po.poNumber.toLowerCase().includes(filterPoNumber.toLowerCase());
-        const byInvoice =
-          !filterInvoiceNumber ||
-          (po.openingHistory ?? []).some((phase) =>
-            String(phase.invoiceNumber ?? "")
-              .toLowerCase()
-              .includes(filterInvoiceNumber.toLowerCase()),
-          );
-        const byUrgent = !filterUrgent || (po.urgent ?? "no") === filterUrgent;
+  const officeScopedPos = useMemo(() => {
+    if (viewPoBranchScope.kind === "all") return savedPos;
+    if (viewPoBranchScope.kind === "none") return [];
+    return savedPos.filter((po) => isPoInViewPoBranchScope(po, viewPoBranchScope));
+  }, [savedPos, viewPoBranchScope]);
 
+  useEffect(() => {
+    if (!initialViewPoId || !canViewPo || loadingSaved) return;
+    const po = savedPos.find((row) => row.id === initialViewPoId);
+    if (!po || !isPoInViewPoBranchScope(po, viewPoBranchScope)) return;
+    setActiveTab("view");
+    setSelectedViewPoId(po.id);
+  }, [initialViewPoId, canViewPo, loadingSaved, savedPos, viewPoBranchScope]);
+
+  const listFilteredBase = useMemo(() => {
+    return officeScopedPos.filter((po) => {
+      const byBranch = !filterBranch || po.branchName.toLowerCase() === filterBranch.toLowerCase();
+      const byPr = !filterPrNumber || po.prNumber.toLowerCase().includes(filterPrNumber.toLowerCase());
+      const byPo = !filterPoNumber || po.poNumber.toLowerCase().includes(filterPoNumber.toLowerCase());
+      const byInvoice =
+        !filterInvoiceNumber ||
+        (po.openingHistory ?? []).some((phase) =>
+          String(phase.invoiceNumber ?? "")
+            .toLowerCase()
+            .includes(filterInvoiceNumber.toLowerCase()),
+        );
+      const byUrgent = !filterUrgent || (po.urgent ?? "no") === filterUrgent;
+      return byBranch && byPr && byPo && byInvoice && byUrgent;
+    });
+  }, [officeScopedPos, filterBranch, filterPrNumber, filterPoNumber, filterInvoiceNumber, filterUrgent]);
+
+  /** Create SO list — date range filters by PO submitted (requested) date. */
+  const filteredSavedPos = useMemo(() => {
+    return listFilteredBase
+      .filter((po) => {
         const createdDate = po.createdAt?.toDate ? po.createdAt.toDate() : null;
         const fromOk = !filterDateFrom || (createdDate && createdDate >= new Date(`${filterDateFrom}T00:00:00`));
         const toOk = !filterDateTo || (createdDate && createdDate <= new Date(`${filterDateTo}T23:59:59`));
-
-        return byBranch && byPr && byPo && byInvoice && byUrgent && fromOk && toOk;
+        return fromOk && toOk;
       })
       .sort((a, b) => {
         const aTime = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
         const bTime = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
         return bTime - aTime;
       });
-  }, [savedPos, filterBranch, filterPrNumber, filterPoNumber, filterInvoiceNumber, filterUrgent, filterDateFrom, filterDateTo]);
+  }, [listFilteredBase, filterDateFrom, filterDateTo]);
 
+  /** View PO list — date range filters by last opening date. */
   const viewListSource = useMemo(() => {
-    if (viewPoBranchScope.kind === "all") return filteredSavedPos;
-    return filteredSavedPos.filter((po) => isPoInViewPoBranchScope(po, viewPoBranchScope));
-  }, [filteredSavedPos, viewPoBranchScope]);
+    return listFilteredBase
+      .filter((po) => {
+        const lastOpened = getPoLastOpenedDate(po);
+        const fromOk =
+          !filterDateFrom || (lastOpened && lastOpened >= new Date(`${filterDateFrom}T00:00:00`));
+        const toOk = !filterDateTo || (lastOpened && lastOpened <= new Date(`${filterDateTo}T23:59:59`));
+        return fromOk && toOk;
+      })
+      .sort((a, b) => {
+        const aTime = getPoLastOpenedDate(a)?.getTime() ?? 0;
+        const bTime = getPoLastOpenedDate(b)?.getTime() ?? 0;
+        return bTime - aTime;
+      });
+  }, [listFilteredBase, filterDateFrom, filterDateTo]);
 
   // Reset pagination/selection whenever filters change
   useEffect(() => {
     setViewPage(1);
     setOpenPage(1);
     setSelectedViewPoId(null);
-  }, [filterBranch, filterPrNumber, filterPoNumber, filterInvoiceNumber, filterUrgent, filterDateFrom, filterDateTo, viewPoStaffLock, viewPoStaffBranchName]);
-
-  useEffect(() => {
-    if (activeTab !== "view") return;
-    if (viewPoBranchScope.kind !== "branch") return;
-    setFilterBranch(viewPoBranchScope.branchName);
-  }, [activeTab, viewPoBranchScope]);
+  }, [filterBranch, filterPrNumber, filterPoNumber, filterInvoiceNumber, filterUrgent, filterDateFrom, filterDateTo, viewPoStaffLock, viewPoAllowedBranches]);
 
   useEffect(() => {
     if (!selectedViewPoId) return;
@@ -744,23 +845,13 @@ export function PrPoManager({
   useEffect(() => {
     if (pageMode !== "create-so" || !initialCreateSoPoId || loadingSaved) return;
     const po = savedPos.find((p) => p.id === initialCreateSoPoId);
-    if (!po) return;
+    if (!po || !isPoInViewPoBranchScope(po, viewPoBranchScope)) return;
     if (selectedPoId !== po.id) {
       initCreateSoForm(po);
     }
-  }, [pageMode, initialCreateSoPoId, loadingSaved, savedPos, selectedPoId]);
+  }, [pageMode, initialCreateSoPoId, loadingSaved, savedPos, selectedPoId, viewPoBranchScope]);
 
   const hasActiveListFilters = useMemo(() => {
-    if (viewPoBranchScope.kind === "branch") {
-      return !!(
-        filterPrNumber ||
-        filterPoNumber ||
-        filterInvoiceNumber ||
-        filterUrgent ||
-        filterDateFrom ||
-        filterDateTo
-      );
-    }
     return !!(
       filterBranch ||
       filterPrNumber ||
@@ -778,13 +869,10 @@ export function PrPoManager({
     filterUrgent,
     filterDateFrom,
     filterDateTo,
-    viewPoBranchScope.kind,
   ]);
 
   const clearListFilters = () => {
-    if (viewPoBranchScope.kind !== "branch") {
-      setFilterBranch("");
-    }
+    setFilterBranch("");
     setFilterPrNumber("");
     setFilterPoNumber("");
     setFilterInvoiceNumber("");
@@ -903,6 +991,28 @@ export function PrPoManager({
     } finally {
       setIsSavingOpen(false);
     }
+  };
+
+  const mergeSubmitRemarksForParsedItems = (parsedItems: PurchaseOrderItem[]) => {
+    setSubmitItemRemarks((prev) => {
+      const next: Record<string, string> = {};
+      for (const item of parsedItems) {
+        const key = String(item.lineNo);
+        if (prev[key]) next[key] = prev[key];
+      }
+      return next;
+    });
+  };
+
+  const setSubmitItemRemark = (lineNo: number, value: string) => {
+    const key = String(lineNo);
+    setSubmitItemRemarks((prev) => {
+      if (!value.trim()) {
+        const { [key]: _removed, ...rest } = prev;
+        return rest;
+      }
+      return { ...prev, [key]: value };
+    });
   };
 
   const openRemarkModal = (lineNo: number) => {
@@ -1311,12 +1421,21 @@ export function PrPoManager({
     return result;
   };
 
-  const handlePrUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePrUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-    setPrFile(file);
-    setPrFileName(file.name);
-    setStatus(p.prUploaded);
+    setIsReadingPr(true);
+    setStatus(p.readingPrFile);
+    try {
+      await new Promise<void>((resolve) => {
+        window.setTimeout(resolve, 0);
+      });
+      setPrFile(file);
+      setPrFileName(file.name);
+      setStatus(p.prUploaded);
+    } finally {
+      setIsReadingPr(false);
+    }
   };
 
   const handlePoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -1331,6 +1450,7 @@ export function PrPoManager({
       setPoParsingProgress(4);
       const parsed = await parsePoExcelFile(file);
       setItems(parsed.items);
+      mergeSubmitRemarksForParsedItems(parsed.items);
       setVat10Amount(parsed.vat10Amount);
       setPoGrandTotal(parsed.poGrandTotal);
       setStatus(
@@ -1344,6 +1464,7 @@ export function PrPoManager({
       const message = error instanceof Error ? error.message : p.parseExcelFailed;
       setStatus(message);
       setItems([]);
+      setSubmitItemRemarks({});
       setVat10Amount(null);
       setPoGrandTotal(null);
     } finally {
@@ -1363,6 +1484,7 @@ export function PrPoManager({
           const parsed = await parsePoExcelFile(poFile);
           if (cancelled) return;
           setItems(parsed.items);
+          mergeSubmitRemarksForParsedItems(parsed.items);
           setVat10Amount(parsed.vat10Amount);
           setPoGrandTotal(parsed.poGrandTotal);
           setStatus(
@@ -1377,6 +1499,7 @@ export function PrPoManager({
           const message = error instanceof Error ? error.message : p.parseExcelFailed;
           setStatus(message);
           setItems([]);
+          setSubmitItemRemarks({});
           setVat10Amount(null);
           setPoGrandTotal(null);
         } finally {
@@ -1417,6 +1540,7 @@ export function PrPoManager({
 
   const handleSisterPoFileChosen = async (draftId: string, file: File | undefined) => {
     if (!file) return;
+    setParsingSisterIds((prev) => new Set(prev).add(draftId));
     setSisterSupplierDrafts((rows) =>
       rows.map((r) =>
         r.id === draftId ? { ...r, parseStatus: p.readingParseStatus, fileName: file.name, items: [], file: null } : r,
@@ -1455,6 +1579,12 @@ export function PrPoManager({
             : r,
         ),
       );
+    } finally {
+      setParsingSisterIds((prev) => {
+        const next = new Set(prev);
+        next.delete(draftId);
+        return next;
+      });
     }
   };
 
@@ -1540,6 +1670,13 @@ export function PrPoManager({
         }
       }
 
+      const submittedAt = Timestamp.now();
+      const itemRemarkHistory = buildItemRemarkHistoryFromSubmitDraft(
+        submitItemRemarks,
+        { displayName: actorDisplayName, username: actorUsername || undefined },
+        submittedAt,
+      );
+
       await addDoc(collection(db, "purchaseOrders"), {
         branchName: branchName.trim(),
         prNumber: prNumber.trim(),
@@ -1556,13 +1693,14 @@ export function PrPoManager({
         sourceType: "excel-po-upload",
         status: "draft",
         items: purchaseOrderItemsForFirestore(items),
+        ...(itemRemarkHistory ? { itemRemarkHistory } : {}),
         totalLineItems: items.length,
         totalQuantity: totalItems,
         totalAmount,
         vat10Amount: vat10Amount ?? null,
         poGrandTotal: poGrandTotal ?? null,
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
+        createdAt: submittedAt,
+        updatedAt: submittedAt,
       });
 
       setStatus(p.poSavedSuccess);
@@ -1571,6 +1709,7 @@ export function PrPoManager({
       setPoNumber("");
       setUrgent("no");
       setItems([]);
+      setSubmitItemRemarks({});
       setVat10Amount(null);
       setPoGrandTotal(null);
       setPrFileName("");
@@ -1637,7 +1776,7 @@ export function PrPoManager({
           </div>
         </div>
       ) : null}
-      {(isSaving || isSavingOpen || isParsingPo) ? (
+      {(isSaving || isSavingOpen || isFileProcessing) ? (
         <div className={`${PR_PO_MODAL_OVERLAY} z-[60] bg-slate-900/35 backdrop-blur-[1px]`}>
           <div className="w-full max-w-sm rounded-xl bg-white px-5 py-4 shadow-xl">
             <div className="flex items-center gap-3">
@@ -1656,7 +1795,7 @@ export function PrPoManager({
               </svg>
               <div className="min-w-0 flex-1">
                 <span className="text-sm font-semibold text-slate-700">
-                  {isSaving ? p.submittingPo : isSavingOpen ? p.creatingSo : p.extractingPoLines}
+                  {isSaving ? p.submittingPo : isSavingOpen ? p.creatingSo : fileProcessingOverlayMessage}
                 </span>
                 {isParsingPo && !isSaving && !isSavingOpen ? (
                   <p className="mt-1 text-xs text-slate-500">
@@ -1743,6 +1882,19 @@ export function PrPoManager({
             }`}
           >
             {p.viewPo}
+          </button>
+        ) : null}
+        {canItemTracker ? (
+          <button
+            type="button"
+            onClick={() => setActiveTab("items")}
+            className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+              activeTab === "items"
+                ? "bg-brand-navy text-white"
+                : "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
+            }`}
+          >
+            {p.itemTracker}
           </button>
         ) : null}
       </div>
@@ -2044,13 +2196,11 @@ export function PrPoManager({
           <label className="mb-2 block text-sm font-semibold text-slate-700">{p.branch}</label>
           <select
             value={branchName}
-            onChange={(event) =>
-              setBranchName(event.target.value as (typeof BRANCH_OPTIONS)[number] | "")
-            }
+            onChange={(event) => setBranchName(event.target.value)}
             className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-700"
           >
             <option value="">{p.selectBranch}</option>
-            {BRANCH_OPTIONS.map((branch) => (
+            {selectablePoBranches.map((branch) => (
               <option key={branch} value={branch}>
                 {branch}
               </option>
@@ -2080,26 +2230,50 @@ export function PrPoManager({
         </div>
         <div>
           <label className="mb-2 block text-sm font-semibold text-slate-700">{p.uploadPrExcel}</label>
-          <div className="rounded-lg border border-slate-300 bg-white px-3 py-2">
+          <div
+            className={`rounded-lg border bg-white px-3 py-2 ${
+              isReadingPr ? "border-brand-navy/40 bg-brand-navy/5 ring-1 ring-brand-navy/20" : "border-slate-300"
+            }`}
+          >
             <input
               ref={prFileInputRef}
               type="file"
               accept=".xlsx,.xls,.csv"
-              onChange={handlePrUpload}
-              className="block w-full text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-navy file:px-4 file:py-2 file:font-semibold file:text-white hover:file:bg-brand-navy/90"
+              disabled={isReadingPr || isParsingPo}
+              onChange={(event) => {
+                void handlePrUpload(event);
+              }}
+              className="block w-full text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-navy file:px-4 file:py-2 file:font-semibold file:text-white hover:file:bg-brand-navy/90 disabled:cursor-not-allowed disabled:opacity-60"
             />
+            {isReadingPr ? <UploadBusyInline message={p.readingPrFile} /> : null}
           </div>
         </div>
         <div>
           <label className="mb-2 block text-sm font-semibold text-slate-700">{p.uploadPoExcelPrimary}</label>
-          <div className="rounded-lg border border-slate-300 bg-white px-3 py-2">
+          <div
+            className={`rounded-lg border bg-white px-3 py-2 ${
+              isParsingPo ? "border-brand-navy/40 bg-brand-navy/5 ring-1 ring-brand-navy/20" : "border-slate-300"
+            }`}
+          >
             <input
               ref={poFileInputRef}
               type="file"
               accept=".xlsx,.xls,.csv"
-              onChange={handlePoUpload}
-              className="block w-full text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-navy file:px-4 file:py-2 file:font-semibold file:text-white hover:file:bg-brand-navy/90"
+              disabled={isParsingPo || isReadingPr}
+              onChange={(event) => {
+                void handlePoUpload(event);
+              }}
+              className="block w-full text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-navy file:px-4 file:py-2 file:font-semibold file:text-white hover:file:bg-brand-navy/90 disabled:cursor-not-allowed disabled:opacity-60"
             />
+            {isParsingPo ? (
+              <UploadBusyInline
+                message={
+                  poParsingProgress > 0
+                    ? fmt(p.readingWorkbook, { percent: Math.min(100, poParsingProgress) })
+                    : p.extractingPoLines
+                }
+              />
+            ) : null}
           </div>
         </div>
         <div>
@@ -2186,17 +2360,23 @@ export function PrPoManager({
                     <input
                       type="file"
                       accept=".xlsx,.xls,.csv"
+                      disabled={parsingSisterIds.has(row.id)}
                       onChange={(e) => {
                         const f = e.target.files?.[0];
                         void handleSisterPoFileChosen(row.id, f);
                         e.target.value = "";
                       }}
-                      className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-brand-navy file:px-3 file:py-2 file:text-xs file:font-semibold file:text-white hover:file:bg-brand-navy/90"
+                      className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-brand-navy file:px-3 file:py-2 file:text-xs file:font-semibold file:text-white hover:file:bg-brand-navy/90 disabled:cursor-not-allowed disabled:opacity-60"
                     />
+                    {parsingSisterIds.has(row.id) ? (
+                      <UploadBusyInline message={p.parsingSupplierPo} />
+                    ) : null}
                   </div>
                   <div className="min-w-0 flex-1 text-xs text-slate-600">
                     {row.fileName ? <div className="font-medium text-slate-800">{row.fileName}</div> : null}
-                    {row.parseStatus ? <div className="mt-0.5">{row.parseStatus}</div> : null}
+                    {row.parseStatus && !parsingSisterIds.has(row.id) ? (
+                      <div className="mt-0.5">{row.parseStatus}</div>
+                    ) : null}
                   </div>
                   <button
                     type="button"
@@ -2231,6 +2411,7 @@ export function PrPoManager({
                 <th className="px-6 py-4 font-semibold text-right">{p.quantity}</th>
                 <th className="px-6 py-4 font-semibold text-right">{p.unitPrice}</th>
                 <th className="px-6 py-4 font-semibold text-right">{p.totalPrice}</th>
+                <th className="min-w-[180px] px-6 py-4 font-semibold">{p.remarks}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 bg-white">
@@ -2251,6 +2432,14 @@ export function PrPoManager({
                   <td className="px-6 py-4 text-right font-semibold">
                     {item.totalPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </td>
+                  <td className="px-6 py-4 align-top">
+                    <textarea
+                      rows={2}
+                      value={submitItemRemarks[String(item.lineNo)] ?? ""}
+                      onChange={(event) => setSubmitItemRemark(item.lineNo, event.target.value)}
+                      className="w-full min-w-[160px] rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-sm text-slate-700 placeholder:text-slate-400 focus:border-brand-navy/40 focus:outline-none focus:ring-1 focus:ring-brand-navy/30"
+                    />
+                  </td>
                 </tr>
               ))}
               {items.length > 0 ? (
@@ -2268,6 +2457,7 @@ export function PrPoManager({
                         maximumFractionDigits: 3,
                       })}
                     </td>
+                    <td className="px-6 py-4" />
                   </tr>
                   <tr className="bg-slate-50/50">
                     <td className="px-6 py-4" />
@@ -2282,6 +2472,7 @@ export function PrPoManager({
                         maximumFractionDigits: 3,
                       })}
                     </td>
+                    <td className="px-6 py-4" />
                   </tr>
                   <tr className="bg-slate-100/60">
                     <td className="px-6 py-4" />
@@ -2296,12 +2487,13 @@ export function PrPoManager({
                         maximumFractionDigits: 3,
                       })}
                     </td>
+                    <td className="px-6 py-4" />
                   </tr>
                 </>
               ) : null}
               {items.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-slate-500">
+                  <td colSpan={7} className="px-6 py-12 text-center text-slate-500">
                     {p.uploadPoSheetHint}
                   </td>
                 </tr>
@@ -2353,7 +2545,11 @@ export function PrPoManager({
               <label className="mb-2 block text-sm font-semibold text-slate-700">{p.branch}</label>
               <select value={filterBranch} onChange={(e) => setFilterBranch(e.target.value)} className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700">
                 <option value="">{p.allBranches}</option>
-                {BRANCH_OPTIONS.map((b) => <option key={b} value={b}>{b}</option>)}
+                {selectablePoBranches.map((b) => (
+                  <option key={b} value={b}>
+                    {b}
+                  </option>
+                ))}
               </select>
             </div>
             <div>
@@ -2956,13 +3152,12 @@ export function PrPoManager({
                 <div>
                   <label className="mb-2 block text-sm font-semibold text-slate-700">{p.branch}</label>
                   <select
-                    value={viewPoBranchScope.kind === "branch" ? viewPoBranchScope.branchName : filterBranch}
+                    value={filterBranch}
                     onChange={(e) => setFilterBranch(e.target.value)}
-                    disabled={viewPoBranchScope.kind === "branch"}
-                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-600"
+                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700"
                   >
                     <option value="">{p.allBranches}</option>
-                    {BRANCH_OPTIONS.map((b) => (
+                    {selectablePoBranches.map((b) => (
                       <option key={b} value={b}>
                         {b}
                       </option>
@@ -2990,11 +3185,11 @@ export function PrPoManager({
                   </select>
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-slate-700">{p.dateFrom}</label>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">{p.lastOpenedFrom}</label>
                   <input type="date" value={filterDateFrom} onChange={(e) => setFilterDateFrom(e.target.value)} className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700" />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-slate-700">{p.dateTo}</label>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">{p.lastOpenedTo}</label>
                   <input type="date" value={filterDateTo} onChange={(e) => setFilterDateTo(e.target.value)} className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700" />
                 </div>
               </div>
@@ -3060,12 +3255,13 @@ export function PrPoManager({
                               </td>
                               <td className="px-5 py-3.5 text-slate-500">
                                 {(() => {
-                                  const dates = (po.openingHistory ?? [])
-                                    .map((ph) => ph.openedAt?.toMillis ? ph.openedAt.toMillis() : null)
-                                    .filter((ms): ms is number => ms !== null);
-                                  if (dates.length === 0) return <span className="text-slate-300">—</span>;
-                                  const latest = new Date(Math.max(...dates));
-                                  return latest.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+                                  const latest = getPoLastOpenedDate(po);
+                                  if (!latest) return <span className="text-slate-300">—</span>;
+                                  return latest.toLocaleDateString("en-GB", {
+                                    day: "2-digit",
+                                    month: "short",
+                                    year: "numeric",
+                                  });
                                 })()}
                               </td>
                               <td className="px-5 py-3.5 text-right font-semibold tabular-nums text-brand-navy">
@@ -3132,6 +3328,55 @@ export function PrPoManager({
           )}
         </div>
 
+      ) : activeTab === "items" && canItemTracker ? (
+        <PoItemTrackerTab
+          pos={officeScopedPos as PoForItemTracker[]}
+          loading={loadingSaved}
+          branches={selectablePoBranches}
+          labels={{
+            itemTracker: p.itemTracker,
+            itemTrackerDesc: p.itemTrackerDesc,
+            searchItem: p.searchItem,
+            onlyWithRemaining: p.onlyWithRemaining,
+            itemName: p.itemName,
+            itemCode: p.itemCode,
+            unit: p.unit,
+            trackerColOrdered: p.trackerColOrdered,
+            totalOpened: p.totalOpened,
+            trackerColRemaining: p.trackerColRemaining,
+            poCount: p.poCount,
+            poBreakdown: p.poBreakdown,
+            viewPo: p.viewPo,
+            lineNo: p.no,
+            branch: p.branch,
+            prNumber: p.prNumber,
+            poNumber: p.poNumber,
+            orderedQty: p.orderedQty,
+            openedShort: p.openedShort,
+            qtyLeft: p.qtyLeft,
+            loadingRecords: p.loadingRecords,
+            noItemsFound: p.noItemsFound,
+            expandRow: p.expandRow,
+            collapseRow: p.collapseRow,
+            trackerSummary: p.trackerSummary,
+            allBranches: p.allBranches,
+            clearFilters: p.clearFilters,
+            fulfilled: p.fulfilled,
+            partial: p.partial,
+            notOpened: p.notOpened,
+          }}
+          fmt={fmt}
+          formatPoNumber={formatPoNumberDisplay}
+          onOpenPoInView={
+            canViewPo
+              ? (poId) => {
+                  setActiveTab("view");
+                  setSelectedViewPoId(poId);
+                  setCollapsedPhases(new Set());
+                }
+              : undefined
+          }
+        />
       ) : activeTab === "dashboard" && canDashboard ? (() => {
         const R = 40;
         const SW = 18;
@@ -3200,7 +3445,7 @@ export function PrPoManager({
           dashTo = dashDateTo ? new Date(`${dashDateTo}T23:59:59`) : null;
         }
 
-        const dashPos = savedPos.filter((po) => {
+        const dashPos = officeScopedPos.filter((po) => {
           const d = po.createdAt?.toDate ? po.createdAt.toDate() : null;
           if (dashFrom && (!d || d < dashFrom)) return false;
           if (dashTo && (!d || d > dashTo)) return false;
@@ -3209,7 +3454,7 @@ export function PrPoManager({
 
         const fmtUSD = (v: number) => v.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-        const branchStats = (BRANCH_OPTIONS as readonly string[]).map((branch) => {
+        const branchStats = selectablePoBranches.map((branch) => {
           const bpos = dashPos.filter((po) => po.branchName === branch);
           const counts = { notOpened: 0, partial: 0, fulfilled: 0 };
           const values = { notOpened: 0, partial: 0, fulfilled: 0 };

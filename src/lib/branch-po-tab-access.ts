@@ -10,13 +10,21 @@ export function resolveBranchPoTabAccess(
   canSubmit: boolean;
   canOpen: boolean;
   canViewPo: boolean;
+  canItemTracker: boolean;
 } {
   const p = new Set(permissions ?? []);
   const legacy = opts.isPrpoSuperUser || p.has("admin.prpo");
+  const canViewPo = legacy || p.has("admin.prpo.view");
+  const canOpen = legacy || p.has("admin.prpo.open");
   return {
     canDashboard: legacy || p.has("admin.prpo.dashboard"),
     canSubmit: legacy || p.has("admin.prpo.submit"),
-    canOpen: legacy || p.has("admin.prpo.open"),
-    canViewPo: legacy || p.has("admin.prpo.view"),
+    canOpen,
+    canViewPo,
+    canItemTracker:
+      legacy ||
+      p.has("admin.prpo.items") ||
+      canViewPo ||
+      canOpen,
   };
 }

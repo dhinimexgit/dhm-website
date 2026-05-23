@@ -8,6 +8,7 @@ import {
   displayName,
   humanizePermissionKey,
   normalizeLegacyPermissions,
+  formatStaffOfficeLabel,
 } from "./user-management-shared";
 
 function Field({ label, value }: { label: string; value: string }) {
@@ -74,7 +75,7 @@ export function ViewUserClient({ user }: { user: AdminUser }) {
         <Field label="First name" value={user.firstName ?? ""} />
         <Field label="Last name" value={user.lastName ?? ""} />
         <Field label="Email (optional)" value={user.email ?? ""} />
-        <Field label="Office" value={user.office ?? ""} />
+        <Field label="Office" value={formatStaffOfficeLabel(user.office)} />
         <Field label="Title" value={user.title ?? ""} />
         <Field label="Department" value={user.department ?? ""} />
       </div>
