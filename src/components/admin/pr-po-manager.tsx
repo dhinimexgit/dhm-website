@@ -19,7 +19,9 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "@/lib/firebase";
 import { useLanguage } from "@/lib/i18n";
 import {
+  canonicalPoBranchName,
   isPoInViewPoBranchScope,
+  poBranchNamesMatch,
   selectablePoBranchesForScope,
   viewPoScopeFromStaffProps,
 } from "@/lib/branch-po-view-scope";
@@ -433,7 +435,7 @@ type PrPoManagerProps = {
   canItemTracker?: boolean;
   /** 1 = PO list/tabs limited to branches in `viewPoAllowedBranches` (pipe-separated). */
   viewPoStaffLock?: number;
-  /** Allowed PO `branchName` values when `viewPoStaffLock` is 1 (e.g. `Kien Svay|EPOSE`). */
+  /** Allowed PO `branchName` values when `viewPoStaffLock` is 1 (pipe-separated canonical branch names). */
   viewPoAllowedBranches?: string;
   /** Signed-in user's full name for audit logs (remarks, Create SO, etc.). */
   actorDisplayName?: string;
@@ -722,7 +724,7 @@ export function PrPoManager({
 
   const listFilteredBase = useMemo(() => {
     return officeScopedPos.filter((po) => {
-      const byBranch = !filterBranch || po.branchName.toLowerCase() === filterBranch.toLowerCase();
+      const byBranch = !filterBranch || poBranchNamesMatch(po.branchName, filterBranch);
       const byPr = !filterPrNumber || po.prNumber.toLowerCase().includes(filterPrNumber.toLowerCase());
       const byPo = !filterPoNumber || po.poNumber.toLowerCase().includes(filterPoNumber.toLowerCase());
       const byInvoice =
@@ -1928,7 +1930,9 @@ export function PrPoManager({
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
                   <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{p.branch}</p>
-                  <p className="mt-1 text-base font-semibold text-brand-navy">{selectedPo.branchName}</p>
+                  <p className="mt-1 text-base font-semibold text-brand-navy">
+                    {canonicalPoBranchName(selectedPo.branchName)}
+                  </p>
                 </div>
                 <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
                   <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{p.prNumber}</p>
@@ -2632,7 +2636,9 @@ export function PrPoManager({
                             <span className="mt-0.5 inline-block rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-rose-600">{p.urgent}</span>
                           )}
                         </td>
-                        <td className="px-4 py-4 font-medium text-brand-navy">{po.branchName}</td>
+                        <td className="px-4 py-4 font-medium text-brand-navy">
+                          {canonicalPoBranchName(po.branchName)}
+                        </td>
                         <td className="px-4 py-4">{po.prNumber}</td>
                         <td className="px-3 py-4 font-semibold text-brand-navy">{formatPoNumberDisplay(po.poNumber)}</td>
                         <td className="px-3 py-4 text-right font-medium">{po.totalQuantity}</td>
@@ -2806,7 +2812,9 @@ export function PrPoManager({
                     </button>
                     <span className="text-sm text-slate-400">·</span>
                     <h3 className="text-sm font-bold text-slate-800">{formatPoNumberDisplay(po.poNumber)}</h3>
-                    <span className="text-xs text-slate-400">{po.branchName} · PR {po.prNumber}</span>
+                    <span className="text-xs text-slate-400">
+                      {canonicalPoBranchName(po.branchName)} · PR {po.prNumber}
+                    </span>
                   </div>
 
                   {/* PO summary card */}
@@ -2821,7 +2829,9 @@ export function PrPoManager({
                         <div className="h-8 w-px bg-slate-200" />
                         <div>
                           <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{p.branch}</p>
-                          <p className="text-sm font-semibold text-slate-700">{po.branchName}</p>
+                          <p className="text-sm font-semibold text-slate-700">
+                            {canonicalPoBranchName(po.branchName)}
+                          </p>
                         </div>
                         <div className="h-8 w-px bg-slate-200" />
                         <div>
@@ -3246,7 +3256,9 @@ export function PrPoManager({
                                 {formatPoNumberDisplay(po.poNumber)}
                                 {po.urgent === "yes" && <span className="ml-2 rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-rose-600">{p.urgent}</span>}
                               </td>
-                              <td className="px-5 py-3.5 text-slate-700">{po.branchName}</td>
+                              <td className="px-5 py-3.5 text-slate-700">
+                                {canonicalPoBranchName(po.branchName)}
+                              </td>
                               <td className="px-5 py-3.5 text-slate-600">{po.prNumber}</td>
                               <td className="px-5 py-3.5 text-slate-500">
                                 {po.createdAt?.toDate
@@ -3455,7 +3467,7 @@ export function PrPoManager({
         const fmtUSD = (v: number) => v.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
         const branchStats = selectablePoBranches.map((branch) => {
-          const bpos = dashPos.filter((po) => po.branchName === branch);
+          const bpos = dashPos.filter((po) => poBranchNamesMatch(po.branchName, branch));
           const counts = { notOpened: 0, partial: 0, fulfilled: 0 };
           const values = { notOpened: 0, partial: 0, fulfilled: 0 };
           let totalOrdered = 0;

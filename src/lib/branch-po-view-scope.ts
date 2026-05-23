@@ -1,27 +1,48 @@
 import type { SessionUser, StaffOffice } from "@/app/actions/auth";
 
-/** PO `branchName` values stored in Firestore (Submit PO / View PO). */
+/** Current PO `branchName` values (Submit PO dropdown / Firestore). */
 export const ALL_PO_BRANCHES = [
-  "Kien Svay",
-  "Touk Meas",
-  "EPOSE",
-  "Dong Tong",
-  "Tuek Saart",
-  "Tuek Saart Thpong",
+  "Akissini Kien Svay",
+  "Akissini EPOSE",
+  "Akissini Touk Meas",
+  "Akissini Dong Tong",
+  "Tuek Saart Touk Meas",
+  "Teuk Thpong",
+  "Tuek Saart Chhouk",
+  "Tuek Pongtraj",
+  "Tuek Pong Teuk",
 ] as const;
 
 export type PoBranchName = (typeof ALL_PO_BRANCHES)[number];
 
-/** Warehouse offices under Kien Svay (user management + PO scope). */
-export const KIEN_SVAY_PO_BRANCHES: readonly PoBranchName[] = ["Kien Svay", "EPOSE"];
-
-/** Warehouse offices under Touk Meas. */
-export const TOUK_MEAS_PO_BRANCHES: readonly PoBranchName[] = [
-  "Touk Meas",
-  "Dong Tong",
-  "Tuek Saart",
-  "Tuek Saart Thpong",
+/** Warehouse office — Kien Svay group. */
+export const KIEN_SVAY_PO_BRANCHES: readonly PoBranchName[] = [
+  "Akissini Kien Svay",
+  "Akissini EPOSE",
 ];
+
+/** Warehouse office — Touk Meas group. */
+export const TOUK_MEAS_PO_BRANCHES: readonly PoBranchName[] = [
+  "Akissini Touk Meas",
+  "Akissini Dong Tong",
+  "Tuek Saart Touk Meas",
+  "Teuk Thpong",
+  "Tuek Saart Chhouk",
+  "Tuek Pongtraj",
+  "Tuek Pong Teuk",
+];
+
+/** Previous `branchName` labels still stored on older PO records. */
+const LEGACY_TO_CANONICAL_PO_BRANCH: Record<string, PoBranchName> = {
+  "Kien Svay": "Akissini Kien Svay",
+  EPOSE: "Akissini EPOSE",
+  "Touk Meas": "Akissini Touk Meas",
+  "Dong Tong": "Akissini Dong Tong",
+  "Tuek Saart": "Tuek Saart Touk Meas",
+  "Teuk Saart": "Tuek Saart Touk Meas",
+  "Tuek Saart Thpong": "Teuk Thpong",
+  "Teuk Saart Thpong": "Teuk Thpong",
+};
 
 const OFFICE_TO_PO_BRANCHES: Partial<Record<StaffOffice, readonly PoBranchName[]>> = {
   KienSvay: KIEN_SVAY_PO_BRANCHES,
@@ -34,6 +55,34 @@ export type ViewPoBranchScope =
   | { kind: "none" };
 
 const BRANCH_SCOPE_DELIM = "|";
+
+function branchLookupKey(name: string): string {
+  return name.trim().toLowerCase();
+}
+
+/** Map stored or legacy branch label to the current canonical name (for display and matching). */
+export function canonicalPoBranchName(raw: string): string {
+  const t = raw.trim();
+  if (!t) return t;
+
+  const legacy = LEGACY_TO_CANONICAL_PO_BRANCH[t];
+  if (legacy) return legacy;
+
+  const legacyInsensitive = Object.entries(LEGACY_TO_CANONICAL_PO_BRANCH).find(
+    ([key]) => key.toLowerCase() === t.toLowerCase(),
+  )?.[1];
+  if (legacyInsensitive) return legacyInsensitive;
+
+  const current = (ALL_PO_BRANCHES as readonly string[]).find(
+    (b) => b.toLowerCase() === t.toLowerCase(),
+  );
+  return current ?? t;
+}
+
+/** True when two branch labels refer to the same branch (legacy or current spelling). */
+export function poBranchNamesMatch(a: string, b: string): boolean {
+  return branchLookupKey(canonicalPoBranchName(a)) === branchLookupKey(canonicalPoBranchName(b));
+}
 
 /**
  * Users at a warehouse office (Kien Svay / Touk Meas) may only work with POs for branches in that group.
@@ -59,8 +108,7 @@ export function resolveViewPoBranchScope(
 export function isPoInViewPoBranchScope(po: { branchName: string }, scope: ViewPoBranchScope): boolean {
   if (scope.kind === "all") return true;
   if (scope.kind === "none") return false;
-  const n = po.branchName.trim().toLowerCase();
-  return scope.branchNames.some((b) => b.trim().toLowerCase() === n);
+  return scope.branchNames.some((b) => poBranchNamesMatch(po.branchName, b));
 }
 
 export function selectablePoBranchesForScope(scope: ViewPoBranchScope): readonly string[] {

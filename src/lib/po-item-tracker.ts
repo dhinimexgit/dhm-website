@@ -1,3 +1,5 @@
+import { canonicalPoBranchName, poBranchNamesMatch } from "@/lib/branch-po-view-scope";
+
 /** PO row shape required for cross-PO item aggregation (Branch Functions item tracker). */
 export type PoForItemTracker = {
   id: string;
@@ -86,7 +88,7 @@ export function aggregatePoItemsByName(
   const onlyWithRemaining = options.onlyWithRemaining ?? false;
 
   const scopedPos = branchFilter
-    ? pos.filter((po) => po.branchName.trim().toLowerCase() === branchFilter.toLowerCase())
+    ? pos.filter((po) => poBranchNamesMatch(po.branchName, branchFilter))
     : pos;
 
   const groups = new Map<
@@ -111,7 +113,7 @@ export function aggregatePoItemsByName(
       const breakdown: PoItemLineBreakdown = {
         poId: po.id,
         poNumber: po.poNumber,
-        branchName: po.branchName,
+        branchName: canonicalPoBranchName(po.branchName),
         prNumber: po.prNumber,
         lineNo: line.lineNo,
         itemCode: line.itemCode,
