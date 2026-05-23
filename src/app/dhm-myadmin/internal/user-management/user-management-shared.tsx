@@ -25,6 +25,7 @@ export const DEPARTMENTS: StaffDepartment[] = [
   "Technology",
   "HR & Admin",
   "Accounting",
+  "Operations",
 ];
 
 export const CREATE_ROLES: { value: UserRole; label: string }[] = [

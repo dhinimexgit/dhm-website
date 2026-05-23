@@ -29,7 +29,8 @@ export type StaffDepartment =
   | 'Technical'
   | 'Technology'
   | 'HR & Admin'
-  | 'Accounting';
+  | 'Accounting'
+  | 'Operations';
 
 const STAFF_OFFICES: StaffOffice[] = ['Head Office', 'KienSvay', 'ToukMeas'];
 
@@ -48,6 +49,7 @@ const STAFF_DEPARTMENTS: StaffDepartment[] = [
   'Technology',
   'HR & Admin',
   'Accounting',
+  'Operations',
 ];
 
 /** Firestore rejects `undefined` field values — strip them before writes. */
