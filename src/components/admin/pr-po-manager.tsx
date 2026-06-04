@@ -589,6 +589,7 @@ export function PrPoManager({
   const [deliveryNoteLinksText, setDeliveryNoteLinksText] = useState("");
   const [isSavingOpen, setIsSavingOpen] = useState(false);
   const [confirmAction, setConfirmAction] = useState<"submit" | "open" | null>(null);
+  const [duplicatePoNumber, setDuplicatePoNumber] = useState<string | null>(null);
   const [remarkItemLineNo, setRemarkItemLineNo] = useState<number | null>(null);
   const [remarkText, setRemarkText] = useState("");
   /** Draft remarks per line on Submit PO (saved into `itemRemarkHistory` when the PO is submitted). */
@@ -766,8 +767,8 @@ export function PrPoManager({
         return fromOk && toOk;
       })
       .sort((a, b) => {
-        const aTime = getPoLastOpenedDate(a)?.getTime() ?? 0;
-        const bTime = getPoLastOpenedDate(b)?.getTime() ?? 0;
+        const aTime = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+        const bTime = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
         return bTime - aTime;
       });
   }, [listFilteredBase, filterDateFrom, filterDateTo]);
@@ -1613,6 +1614,16 @@ export function PrPoManager({
       }
     }
 
+    const normalizedPoNumber = poNumber.trim().toLowerCase();
+    const isDuplicatePo = savedPos.some(
+      (po) => po.poNumber.trim().toLowerCase() === normalizedPoNumber,
+    );
+    if (isDuplicatePo) {
+      setConfirmAction(null);
+      setDuplicatePoNumber(poNumber.trim());
+      return;
+    }
+
     if (!forceConfirmed) {
       setConfirmAction("submit");
       return;
@@ -1773,6 +1784,25 @@ export function PrPoManager({
                 className="rounded-lg bg-brand-navy px-4 py-2 text-sm font-semibold text-white hover:bg-brand-navy/90"
               >
                 {p.confirm}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+      {duplicatePoNumber ? (
+        <div className={`${PR_PO_MODAL_OVERLAY} z-[70] bg-slate-900/40`}>
+          <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl">
+            <h4 className="text-lg font-semibold text-red-600">{p.duplicatePoTitle}</h4>
+            <p className="mt-2 text-sm text-slate-600">
+              {fmt(p.duplicatePoMessage, { po: duplicatePoNumber })}
+            </p>
+            <div className="mt-5 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setDuplicatePoNumber(null)}
+                className="rounded-lg bg-brand-navy px-4 py-2 text-sm font-semibold text-white hover:bg-brand-navy/90"
+              >
+                {p.duplicatePoOk}
               </button>
             </div>
           </div>
