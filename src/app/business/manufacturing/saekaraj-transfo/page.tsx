@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { StickyHeader } from "@/components/home/sticky-header";
 import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
-import {
 import { useLanguage } from '@/lib/i18n';
+import {
   NavUtilityCluster,
   NavUtilityDivider,
   NAV_UTILITY_ICON_CLASS,
@@ -14,7 +14,7 @@ import { useLanguage } from '@/lib/i18n';
 
 const heroImage = "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1920&q=80";
 
-const highlights = [
+const getHighlights = (language: string) => [
   { title: language === 'kh' ? "ដំបូងគេនៅកម្ពុជា" : "First in Cambodia", description: language === 'kh' ? "បង្កើតឡើងក្នុងឆ្នាំ 2014 ជាក្រុមហ៊ុនផលិតត្រង់ស្វូម៉ាទ័រត្រួសត្រាយផ្លូវរបស់កម្ពុជា" : "Established in 2014 as Cambodia's pioneering transformer manufacturer" },
   { title: language === 'kh' ? "ម៉ាក៖ RAJ" : "Brand: RAJ", description: language === 'kh' ? "ត្រង់ស្វូម៉ាទ័រចែកចាយប្រភេទត្រាំប្រេងមានគុណភាពខ្ពស់" : "High-quality oil-immersed distribution transformers" },
   { title: language === 'kh' ? "សេវាកម្មពេញលេញ" : "Full Service", description: language === 'kh' ? "ការជួសជុល និងថែទាំគ្រប់ជ្រុងជ្រោយសម្រាប់គ្រប់ម៉ាកត្រង់ស្វូម៉ាទ័រ" : "Comprehensive repair & maintenance for all transformer brands" },
@@ -22,6 +22,7 @@ const highlights = [
 
 export default function SaekarajTransfoDetailPage() {
   const { t, language, setLanguage } = useLanguage();
+  const highlights = getHighlights(language);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {

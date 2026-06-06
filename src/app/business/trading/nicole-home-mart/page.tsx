@@ -6,8 +6,8 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { StickyHeader } from "@/components/home/sticky-header";
 import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
-import {
 import { useLanguage } from '@/lib/i18n';
+import {
   NavUtilityCluster,
   NavUtilityDivider,
   NAV_UTILITY_ICON_CLASS,
@@ -24,7 +24,7 @@ const brands = [
   { name: "LWD", country: "Malaysia" },
 ];
 
-const locations = [
+const getLocations = (language: string) => [
   { name: language === 'kh' ? "ទួលទំពូង" : "Toul Tum Pong", detail: language === 'kh' ? "(ជិតផ្សារទួលទំពូង)" : "(near Russian Market)", mapLink: "https://www.google.com/maps/search/Nicole+Home+Mart+Toul+Tum+Pong" },
   { name: language === 'kh' ? "ផ្លូវទេពផន" : "Tep Phan Street", detail: language === 'kh' ? "(នៅការិយាល័យឌីនីម៉ិច)" : "(at Dhinimex Office)", mapLink: "https://www.google.com/maps/search/Dhinimex+Co.,+Ltd" },
   { name: language === 'kh' ? "កៀនស្វាយ" : "Kiensvay", detail: language === 'kh' ? "(នៅការិយាល័យអគ្គិសនីកៀនស្វាយ)" : "(at Kiensvay Electricity Office)", mapLink: "https://www.google.com/maps/search/Electricite+du+Cambodge+Kien+Svay" },
@@ -32,6 +32,7 @@ const locations = [
 
 export default function NicoleHomeMartDetailPage() {
   const { t, language, setLanguage } = useLanguage();
+  const locations = getLocations(language);
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");

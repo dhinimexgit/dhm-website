@@ -41,12 +41,18 @@ function SearchResults() {
             <article key={index} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
               <div className="flex items-center justify-between">
                 <span className="inline-block rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 uppercase tracking-wider">
-                  {language === 'kh' 
-                    ? result.type === "Service" ? "សេវាកម្ម"
-                    : result.type === "Product" ? "ផលិតផល"
-                    : result.type === "Career" ? "ការងារ"
-                    : result.type === "News" ? "ព័ត៌មាន"
-                    : result.type
+                  {language === 'kh'
+                    ? (({
+                        Service: "សេវាកម្ម",
+                        Product: "ផលិតផល",
+                        Career: "ការងារ",
+                        News: "ព័ត៌មាន",
+                        "News Post": "ព័ត៌មាន",
+                        FAQ: "សំណួរ",
+                        Page: "ទំព័រ",
+                        Category: "ប្រភេទ",
+                        Brand: "ម៉ាក",
+                      } as Record<string, string>)[result.type] ?? result.type)
                     : result.type}
                 </span>
               </div>

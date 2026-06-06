@@ -15,7 +15,7 @@ import { StickyHeader } from "@/components/home/sticky-header";
 
 const heroImage = "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=1920&q=80";
 
-const licenses = [
+const getLicenses = (language: string) => [
   {
     name: language === 'kh' ? "អគ្គិសនីទូកមាស" : "Akissni Touk Meas",
     description: language === 'kh' ? "តំបន់អាជ្ញាប័ណ្ណធំជាងគេរបស់យើងដែលតំណាងឱ្យផ្នែកស្នូលនៃផលប័ត្រចែកចាយអគ្គិសនីរបស់យើង គាំទ្រដោយហេដ្ឋារចនាសម្ព័ន្ធដ៏រឹងមាំដើម្បីបំពេញតម្រូវការដែលកំពុងកើនឡើងនៅក្នុងខេត្តកំពត។" : "Our largest licensed area representing a core part of our electricity distribution portfolio, supported by substantial infrastructure to meet growing demand in Kampot Province.",
@@ -52,6 +52,7 @@ const licenses = [
 
 export default function ElectricityPage() {
   const { t, language, setLanguage } = useLanguage();
+  const licenses = getLicenses(language);
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");

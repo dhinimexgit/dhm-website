@@ -15,7 +15,7 @@ import { StickyHeader } from "@/components/home/sticky-header";
 
 const heroImage = "/water-supply.png";
 
-const licenses = [
+const getLicenses = (language: string) => [
   {
     name: language === 'kh' ? "អាជ្ញាប័ណ្ណទឹកស្អាតឈូក (CHHW)" : "Chhouk Water License (CHHW)",
     description: language === 'kh' ? "អាជ្ញាប័ណ្ណឈូកត្រូវបានឧទ្ទិសដល់ការពង្រីកលទ្ធភាពទទួលបានទឹកស្អាតនៅក្នុងសហគមន៍ជនបទ។ យើងផ្តោតលើការកសាងហេដ្ឋារចនាសម្ព័ន្ធប្រកបដោយនិរន្តរភាពដើម្បីធានាគុណភាព និងការផ្គត់ផ្គង់ទឹកក្នុងរយៈពេលវែង។" : "The Chhouk license is dedicated to expanding clean water access in rural communities. We focus on building sustainable infrastructure to secure long-term water quality and supply.",
@@ -62,6 +62,7 @@ const licenses = [
 
 export default function WaterSupplyPage() {
   const { t, language, setLanguage } = useLanguage();
+  const licenses = getLicenses(language);
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");

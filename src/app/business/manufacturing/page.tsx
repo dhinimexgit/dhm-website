@@ -15,7 +15,7 @@ import { StickyHeader } from "@/components/home/sticky-header";
 
 const heroImage = "/business-manufacturing-hero.jpg";
 
-const companies = [
+const getCompanies = (language: string) => [
   {
     name: language === 'kh' ? "ក្រុមហ៊ុន ខ្មែរខនគ្រីត ចំកាត់" : "Khmer Concrete Co., LTD",
     description: language === 'kh' ? "រោងចក្រ ខ្មែរខនគ្រីត (KCC) ដែលមានមូលដ្ឋាននៅខេត្តកណ្តាល គឺជាក្រុមហ៊ុនផលិតផលិតផលបេតុងដ៏រឹងមាំ និងមានគុណភាពខ្ពស់ឈានមុខគេ។ គ្រឿងបរិក្ខារទំនើបរបស់យើងផលិតបង្គោលបេតុង បំពង់ និងសមាសភាគហេដ្ឋារចនាសម្ព័ន្ធផ្សេងទៀត។" : "Khmer Concrete Factory (KCC), based in Kandal Province, is a leading manufacturer of durable and high-quality concrete products. Our state-of-the-art facility produces concrete poles, pipes, and other infrastructure components.",
@@ -44,6 +44,7 @@ const companies = [
 
 export default function ManufacturingPage() {
   const { t, language, setLanguage } = useLanguage();
+  const companies = getCompanies(language);
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");

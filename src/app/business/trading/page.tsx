@@ -15,7 +15,7 @@ import { StickyHeader } from "@/components/home/sticky-header";
 
 const heroImage = "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1920&q=80";
 
-const companies = [
+const getCompanies = (language: string) => [
   {
     name: language === 'kh' ? "ក្រុមហ៊ុន ឌីនីម៉ិច ចំកាត់" : "Dhinimex Co., LTD",
     description: language === 'kh' ? "ក្រុមហ៊ុន ឌីនីម៉ិច ចំកាត់ ដែលត្រូវបានបង្កើតឡើងក្នុងឆ្នាំ 2003 គឺជាក្រុមហ៊ុនឈានមុខគេក្នុងការផ្គត់ផ្គង់ឧបករណ៍អគ្គិសនី គ្រឿងប្រើប្រាស់ និងដំណោះស្រាយថាមពលព្រះអាទិត្យនៅកម្ពុជា។ ជាមួយនឹងបទពិសោធន៍ជាងពីរទសវត្សរ៍ យើងបានកសាងកេរ្តិ៍ឈ្មោះសម្រាប់ផលិតផលដែលមានគុណភាព និងសេវាកម្មដែលអាចទុកចិត្តបាន។" : "Dhinimex Co., Ltd., established in 2003, is a leading provider of electrical equipment, appliances, and solar solutions in Cambodia. With over two decades of experience, we have built a reputation for quality products and reliable service.",
@@ -36,6 +36,7 @@ const companies = [
 
 export default function TradingPage() {
   const { t, language, setLanguage } = useLanguage();
+  const companies = getCompanies(language);
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");

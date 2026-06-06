@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { StickyHeader } from "@/components/home/sticky-header";
 import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
-import {
 import { useLanguage } from '@/lib/i18n';
+import {
   NavUtilityCluster,
   NavUtilityDivider,
   NAV_UTILITY_ICON_CLASS,
@@ -14,7 +14,7 @@ import { useLanguage } from '@/lib/i18n';
 
 const heroImage = "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1920&q=80";
 
-const products = [
+const getProducts = (language: string) => [
   language === 'kh' ? "ខ្សែភ្លើងសម្រាប់អគារ" : "Building Cables",
   language === 'kh' ? "ខ្សែភ្លើងតង់ស្យុងទាប" : "Low Voltage Cables",
   language === 'kh' ? "ខ្សែភ្លើងតង់ស្យុងមធ្យម" : "Medium Voltage Cables",
@@ -22,6 +22,7 @@ const products = [
 
 export default function VongChanCableDetailPage() {
   const { t, language, setLanguage } = useLanguage();
+  const products = getProducts(language);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {

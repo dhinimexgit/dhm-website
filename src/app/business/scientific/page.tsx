@@ -15,7 +15,7 @@ import { StickyHeader } from "@/components/home/sticky-header";
 
 const heroImage = "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=1920&q=80";
 
-const companies = [
+const getCompanies = (language: string) => [
   {
     name: language === 'kh' ? "មជ្ឈមណ្ឌលរោគវិនិច្ឆ័យ ខេមរ៉ាដ" : "CamRad Diagnostic Center",
     description: language === 'kh' ? "មជ្ឈមណ្ឌលរោគវិនិច្ឆ័យ ខេមរ៉ាដ នៅរាជធានីភ្នំពេញ ផ្តល់នូវសេវាកម្មរូបភាពវេជ្ជសាស្ត្រ និងមន្ទីរពិសោធន៍ដែលមានគុណភាពខ្ពស់ និងអាចទុកចិត្តបាន ដោយមានជំនាញលើការថត CT ស្កេន និងកាំរស្មីអ៊ិច ដើម្បីគាំទ្រដល់ការធ្វើរោគវិនិច្ឆ័យថែទាំសុខភាពដែលត្រឹមត្រូវ និងគួរឱ្យទុកចិត្ត។" : "CamRad Diagnostic Center in Phnom Penh offers reliable, high-quality imaging and laboratory services, specializing in CT scans and radiology to support accurate and trusted healthcare diagnostics.",
@@ -36,6 +36,7 @@ const companies = [
 
 export default function ScientificPage() {
   const { t, language, setLanguage } = useLanguage();
+  const companies = getCompanies(language);
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");

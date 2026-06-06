@@ -6,8 +6,8 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { StickyHeader } from "@/components/home/sticky-header";
 import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
-import {
 import { useLanguage } from '@/lib/i18n';
+import {
   NavUtilityCluster,
   NavUtilityDivider,
   NAV_UTILITY_ICON_CLASS,
@@ -15,7 +15,7 @@ import { useLanguage } from '@/lib/i18n';
 
 const heroImage = "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1920&q=80";
 
-const products = [
+const getProducts = (language: string) => [
   language === 'kh' ? "បង្គោលបេតុង (7m ដល់ 14m)" : "Prestressed Spun Concrete Poles (7m to 14m)",
   language === 'kh' ? "ខ្វែងបង្គោលបេតុង" : "Concrete Cross Arms",
   language === 'kh' ? "ឥដ្ឋ និងប្លុកបេតុង" : "Concrete Blocks & Bricks",
@@ -24,6 +24,7 @@ const products = [
 
 export default function KhmerConcreteDetailPage() {
   const { t, language, setLanguage } = useLanguage();
+  const products = getProducts(language);
   const [isScrolled, setIsScrolled] = useState(false);
   const router = useRouter();
 
