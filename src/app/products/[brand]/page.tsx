@@ -1,11 +1,11 @@
-import { getProductCategories } from "@/data/site-content";
+import { DHINIMEX_BRANDS } from "@/data/dhinimex-taxonomy";
 import { ProductsPageClient } from "../products-client";
 
 // Pre-render the known static brands; brands added later via the admin
 // dashboard are rendered on demand (dynamicParams defaults to true).
 export async function generateStaticParams() {
-  return getProductCategories('en').map((category) => ({
-    brand: category.slug,
+  return DHINIMEX_BRANDS.map((brand) => ({
+    brand: brand.slug,
   }));
 }
 

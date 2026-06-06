@@ -8,7 +8,7 @@ import {
   orderBy,
   type Unsubscribe,
 } from "firebase/firestore";
-import { getProductCategories } from "@/data/product-categories";
+import { DHINIMEX_BRANDS, DHINIMEX_CATEGORIES } from "@/data/dhinimex-taxonomy";
 import type { Language } from "@/data/translations";
 
 /**
@@ -54,40 +54,9 @@ export type CategoryNode = Category & { children: Category[] };
 // Static fallbacks (used when Firestore has no data yet)
 // ---------------------------------------------------------------------------
 
-export const FALLBACK_BRANDS: Brand[] = getProductCategories('en').map((c, i) => ({
-  slug: c.slug,
-  name: c.name,
-  tagline: c.tagline,
-  description: c.description,
-  focus: c.focus,
-  brandColor: c.brandColor,
-  heroImage: c.heroImage,
-  order: i,
-}));
+export const FALLBACK_BRANDS: Brand[] = DHINIMEX_BRANDS;
 
-export const FALLBACK_CATEGORIES: Category[] = [
-  { id: "power-tools", label: "Power Tools", parentId: null, order: 0 },
-  { id: "drills", label: "Drills & Drivers", parentId: "power-tools", order: 0 },
-  { id: "impact", label: "Impact & Fastening", parentId: "power-tools", order: 1 },
-  { id: "rotary", label: "Rotary & Demolition", parentId: "power-tools", order: 2 },
-  { id: "woodworking", label: "Woodworking & Sanders", parentId: "power-tools", order: 3 },
-  { id: "saws", label: "Saws & Cutting", parentId: "power-tools", order: 4 },
-  { id: "outdoor", label: "Outdoor & Garden", parentId: "power-tools", order: 5 },
-
-  { id: "automotive-tools", label: "Automotive Tools", parentId: null, order: 1 },
-  { id: "wrenches", label: "Impact Wrenches", parentId: "automotive-tools", order: 0 },
-  { id: "polishers", label: "Polishers & Finishers", parentId: "automotive-tools", order: 1 },
-  { id: "inflators", label: "Inflators & Compressors", parentId: "automotive-tools", order: 2 },
-  { id: "battery-care", label: "Battery Chargers", parentId: "automotive-tools", order: 3 },
-  { id: "accessories", label: "Auto Accessories & Coolers", parentId: "automotive-tools", order: 4 },
-
-  { id: "cleaning", label: "Cleaning & Floor Care", parentId: null, order: 2 },
-  { id: "pressure-washers", label: "Pressure Washers", parentId: "cleaning", order: 0 },
-  { id: "vacuums", label: "Vacuums (Wet/Dry & Handheld)", parentId: "cleaning", order: 1 },
-  { id: "robot-vacs", label: "Robot Vacuums", parentId: "cleaning", order: 2 },
-  { id: "steam", label: "Steam Mops", parentId: "cleaning", order: 3 },
-  { id: "extractors", label: "Dust Extractors", parentId: "cleaning", order: 4 },
-];
+export const FALLBACK_CATEGORIES: Category[] = DHINIMEX_CATEGORIES;
 
 // ---------------------------------------------------------------------------
 // Helpers

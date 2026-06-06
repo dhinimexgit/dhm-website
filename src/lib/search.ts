@@ -5,6 +5,7 @@ import {
   getFaqs, 
   getProductCategories 
 } from "@/data/site-content";
+import { DHINIMEX_BRANDS, DHINIMEX_CATEGORIES } from "@/data/dhinimex-taxonomy";
 
 export type SearchResult = {
   title: string;
@@ -13,20 +14,10 @@ export type SearchResult = {
   type: "Service" | "Product" | "News Post" | "Career" | "FAQ" | "Page" | "Category" | "Brand";
 };
 
-const productCategoryList = [
-  { id: "automotive-tools", label: "Automotive Tools" },
-  { id: "cleaning-drainage", label: "Cleaning & Drainage" },
-  { id: "decorating-tiling", label: "Decorating & Tiling" },
-  { id: "detectors-testing", label: "Detectors & Testing" },
-  { id: "electrical", label: "Electrical" },
-  { id: "engineering-tools", label: "Engineering Tools" },
-  { id: "hand-tools", label: "Hand Tools" },
-  { id: "power-tool-accessories", label: "Accessories" },
-  { id: "power-tools", label: "Power Tools" },
-  { id: "tool-boxes-storage", label: "Storage" },
-  { id: "tool-kits", label: "Tool Kits" },
-  { id: "workwear", label: "Workwear" },
-];
+const productCategoryList = DHINIMEX_CATEGORIES.filter((c) => !c.parentId).map((c) => ({
+  id: c.id,
+  label: c.label,
+}));
 
 export function searchContent(query: string, lang: 'en' | 'kh' = 'en'): SearchResult[] {
   const results: SearchResult[] = [];
@@ -55,22 +46,21 @@ export function searchContent(query: string, lang: 'en' | 'kh' = 'en'): SearchRe
     }
   });
 
-  // Search Brands & Products
-  getProductCategories(lang).forEach((category) => {
-    // 1. Check the Brand itself
-    if (
-      category.name.toLowerCase().includes(lowerQuery) ||
-      category.description.toLowerCase().includes(lowerQuery)
-    ) {
+  // Search catalog brands (PDF taxonomy)
+  DHINIMEX_BRANDS.forEach((brand) => {
+    const haystack = `${brand.name} ${brand.tagline ?? ""} ${brand.focus ?? ""}`.toLowerCase();
+    if (haystack.includes(lowerQuery)) {
       results.push({
-        title: category.name,
-        description: category.description,
-        url: `/products/${category.slug}`,
+        title: brand.name,
+        description: brand.tagline || `Browse ${brand.name} products`,
+        url: `/products/${brand.slug}`,
         type: "Brand",
       });
     }
+  });
 
-    // 2. Search Products within this Brand
+  // Search legacy static product data (STANLEY, DEWALT, etc.)
+  getProductCategories(lang).forEach((category) => {
     category.products.forEach((product) => {
       // Combine all searchable text into one string to check safely
       // Removed 'description' and 'summary' to fix Build Error

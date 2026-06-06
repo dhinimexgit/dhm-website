@@ -259,9 +259,9 @@ export function BrandManager() {
             <button
               onClick={handleImportDefaults}
               disabled={importing}
-              className="rounded-full border border-brand-navy/20 bg-brand-navy/5 px-5 py-2.5 text-sm font-semibold text-brand-navy transition hover:bg-brand-navy/10 disabled:opacity-50"
+              className="rounded-full border border-brand-navy/30 bg-white px-6 py-2.5 text-sm font-semibold text-brand-navy shadow-sm transition hover:bg-brand-navy/5 disabled:opacity-50"
             >
-              {importing ? "Importing..." : "Import default brands"}
+              {importing ? "Importing..." : "Import Defaults"}
             </button>
           )}
           <button
@@ -272,12 +272,6 @@ export function BrandManager() {
           </button>
         </div>
       </div>
-
-      {usingFallback && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          These are the built-in default brands. Click <strong>Import default brands</strong> to make them editable, or add a new brand directly.
-        </div>
-      )}
 
       <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full text-left text-sm text-slate-600">
