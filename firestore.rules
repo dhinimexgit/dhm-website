@@ -20,6 +20,26 @@ service cloud.firestore {
       allow write: if true;
     }
 
+    // Admin / managed user accounts. Login (a server action using the client
+    // SDK, with no Firebase Auth context) must be able to read these, so read
+    // is open — matching the rest of this project's current posture.
+    match /admin_users/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Allow public read access to brands (catalog taxonomy, managed in admin)
+    match /brands/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Allow public read access to categories (catalog taxonomy, managed in admin)
+    match /categories/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+
     // Allow public read access to posts
     match /posts/{document=**} {
       allow read: if true;

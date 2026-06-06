@@ -2,12 +2,15 @@
 
 import Image from "next/image";
 import { useState, useCallback, TouchEvent, useMemo, useEffect } from "react";
+import { useLanguage } from "@/lib/i18n";
 
 type Props = {
   images: string[] | null | undefined;
 };
 
 export function ProductGallery({ images }: Props) {
+  const { language } = useLanguage();
+  const isKh = language === 'kh';
   // Filter out empty strings, null, and undefined values
   const validImages = useMemo(() => {
     if (!images || !Array.isArray(images)) return [];
@@ -74,7 +77,7 @@ export function ProductGallery({ images }: Props) {
             <svg className="mx-auto h-16 w-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            <p className="text-sm font-medium">No image available</p>
+            <p className="text-sm font-medium">{isKh ? "មិនមានរូបភាពទេ" : "No image available"}</p>
           </div>
         </div>
       </div>
@@ -108,7 +111,7 @@ export function ProductGallery({ images }: Props) {
             <button
               onClick={prevImage}
               className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 text-brand-navy shadow-md transition hover:bg-white hover:scale-110 focus:outline-none focus:ring-2 focus:ring-brand-navy opacity-0 group-hover:opacity-100"
-              aria-label="Previous image"
+              aria-label={isKh ? "រូបភាពមុន" : "Previous image"}
             >
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
@@ -117,7 +120,7 @@ export function ProductGallery({ images }: Props) {
             <button
               onClick={nextImage}
               className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 text-brand-navy shadow-md transition hover:bg-white hover:scale-110 focus:outline-none focus:ring-2 focus:ring-brand-navy opacity-0 group-hover:opacity-100"
-              aria-label="Next image"
+              aria-label={isKh ? "រូបភាពបន្ទាប់" : "Next image"}
             >
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />

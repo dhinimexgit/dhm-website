@@ -1,11 +1,16 @@
 import Link from "next/link";
 import type { CareerRole } from "@/data/site-content";
+import { getCareers } from "@/data/site-content";
+import { useLanguage } from "@/lib/i18n";
 
 type Props = {
-  roles: CareerRole[];
+  roles?: CareerRole[];
 };
 
-export function JobList({ roles }: Props) {
+export function JobList({ roles: propRoles }: Props) {
+  const { language } = useLanguage();
+  const roles = propRoles || getCareers(language);
+
   return (
     <div className="space-y-4">
       {roles.map((role) => (

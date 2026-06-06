@@ -17,46 +17,46 @@ const heroImage = "/water-supply.png";
 
 const licenses = [
   {
-    name: "Chhouk Water License (CHHW)",
-    description: "The Chhouk license is dedicated to expanding clean water access in rural communities. We focus on building sustainable infrastructure to secure long-term water quality and supply.",
+    name: language === 'kh' ? "អាជ្ញាប័ណ្ណទឹកស្អាតឈូក (CHHW)" : "Chhouk Water License (CHHW)",
+    description: language === 'kh' ? "អាជ្ញាប័ណ្ណឈូកត្រូវបានឧទ្ទិសដល់ការពង្រីកលទ្ធភាពទទួលបានទឹកស្អាតនៅក្នុងសហគមន៍ជនបទ។ យើងផ្តោតលើការកសាងហេដ្ឋារចនាសម្ព័ន្ធប្រកបដោយនិរន្តរភាពដើម្បីធានាគុណភាព និងការផ្គត់ផ្គង់ទឹកក្នុងរយៈពេលវែង។" : "The Chhouk license is dedicated to expanding clean water access in rural communities. We focus on building sustainable infrastructure to secure long-term water quality and supply.",
     link: "/business/water-supply/chhouk",
     image: "/water-supply.png",
-    province: "Kampot"
+    province: language === 'kh' ? "កំពត" : "Kampot"
   },
   {
-    name: "TPhong Water License (TPHW)",
-    description: "The TPhong license supports growing demand for safe water in its region. Our investments here strengthen water networks and improve service reliability for households and enterprises.",
+    name: language === 'kh' ? "អាជ្ញាប័ណ្ណទឹកស្អាតថ្ពង (TPHW)" : "TPhong Water License (TPHW)",
+    description: language === 'kh' ? "អាជ្ញាប័ណ្ណថ្ពងគាំទ្រដល់តម្រូវការទឹកដែលមានសុវត្ថិភាពដែលកំពុងកើនឡើងនៅក្នុងតំបន់របស់ខ្លួន។ ការវិនិយោគរបស់យើងនៅទីនេះពង្រឹងបណ្តាញទឹក និងធ្វើឱ្យប្រសើរឡើងនូវភាពជឿជាក់នៃសេវាកម្មសម្រាប់គ្រួសារ និងសហគ្រាស។" : "The TPhong license supports growing demand for safe water in its region. Our investments here strengthen water networks and improve service reliability for households and enterprises.",
     link: "/business/water-supply/tphong",
     image: "/water-supply.png",
-    province: "Kampot"
+    province: language === 'kh' ? "កំពត" : "Kampot"
   },
   {
-    name: "Pong Traj Water License (PTRW)",
-    description: "The Pong Traj license reflects our commitment to rural development through modern water distribution systems, ensuring consistent service and improved community well-being.",
+    name: language === 'kh' ? "អាជ្ញាប័ណ្ណទឹកស្អាតពងទឹក (PTRW)" : "Pong Traj Water License (PTRW)",
+    description: language === 'kh' ? "អាជ្ញាប័ណ្ណពងទឹកឆ្លុះបញ្ចាំងពីការប្តេជ្ញាចិត្តរបស់យើងចំពោះការអភិវឌ្ឍន៍ជនបទតាមរយៈប្រព័ន្ធចែកចាយទឹកទំនើប ដោយធានានូវសេវាកម្មជាប់លាប់ និងធ្វើឱ្យប្រសើរឡើងនូវសុខុមាលភាពសហគមន៍។" : "The Pong Traj license reflects our commitment to rural development through modern water distribution systems, ensuring consistent service and improved community well-being.",
     link: "/business/water-supply/pong-traj",
     image: "/water-supply.png",
-    province: "Kampot"
+    province: language === 'kh' ? "កំពត" : "Kampot"
   },
   {
-    name: "Touk Meas Water License (TMW)",
-    description: "This license covers the Touk Meas area. Our investment in pipelines and treatment systems ensures households and businesses receive safe, reliable clean water.",
+    name: language === 'kh' ? "អាជ្ញាប័ណ្ណទឹកស្អាតទូកមាស (TMW)" : "Touk Meas Water License (TMW)",
+    description: language === 'kh' ? "អាជ្ញាប័ណ្ណនេះគ្របដណ្តប់តំបន់ទូកមាស។ ការវិនិយោគរបស់យើងលើបំពង់ និងប្រព័ន្ធប្រព្រឹត្តកម្មធានាថាគ្រួសារ និងអាជីវកម្មទទួលបានទឹកស្អាតដែលមានសុវត្ថិភាព និងអាចទុកចិត្តបាន។" : "This license covers the Touk Meas area. Our investment in pipelines and treatment systems ensures households and businesses receive safe, reliable clean water.",
     link: "/business/water-supply/touk-meas",
     image: "/water-supply.png",
-    province: "Kampot"
+    province: language === 'kh' ? "កំពត" : "Kampot"
   },
   {
-    name: "Damnak Chang Eur Water Supply",
-    description: "The Damnak Chang Eur water supply project represents our commitment to providing clean, reliable water access to communities in this vital region through strategic infrastructure investments.",
+    name: language === 'kh' ? "ការផ្គត់ផ្គង់ទឹកស្អាតដំណាក់ចង្អើរ" : "Damnak Chang Eur Water Supply",
+    description: language === 'kh' ? "គម្រោងផ្គត់ផ្គង់ទឹកស្អាតដំណាក់ចង្អើរតំណាងឱ្យការប្តេជ្ញាចិត្តរបស់យើងក្នុងការផ្តល់នូវលទ្ធភាពទទួលបានទឹកស្អាត និងអាចទុកចិត្តបានដល់សហគមន៍នៅក្នុងតំបន់ដ៏សំខាន់នេះតាមរយៈការវិនិយោគហេដ្ឋារចនាសម្ព័ន្ធជាយុទ្ធសាស្ត្រ។" : "The Damnak Chang Eur water supply project represents our commitment to providing clean, reliable water access to communities in this vital region through strategic infrastructure investments.",
     link: "/business/water-supply/damnak-chang-eur",
     image: "/water-supply.png",
-    province: "Kampot"
+    province: language === 'kh' ? "កំពត" : "Kampot"
   },
   {
-    name: "Teuk Pong Teuk Water License (TPTW)",
-    description: "This license serves smaller communities with tailored infrastructure solutions, reinforcing our dedication to accessibility and quality even in underserved areas.",
+    name: language === 'kh' ? "អាជ្ញាប័ណ្ណទឹកស្អាតទឹកផុស (TPTW)" : "Teuk Pong Teuk Water License (TPTW)",
+    description: language === 'kh' ? "អាជ្ញាប័ណ្ណនេះបម្រើសហគមន៍តូចៗជាមួយនឹងដំណោះស្រាយហេដ្ឋារចនាសម្ព័ន្ធតាមតម្រូវការ ដោយពង្រឹងការយកចិត្តទុកដាក់របស់យើងចំពោះភាពងាយស្រួល និងគុណភាពសូម្បីតែនៅក្នុងតំបន់ដែលមិនសូវមានសេវាកម្ម។" : "This license serves smaller communities with tailored infrastructure solutions, reinforcing our dedication to accessibility and quality even in underserved areas.",
     link: "/business/water-supply/teuk-pong-teuk",
     image: "/water-supply.png",
-    province: "Kampot"
+    province: language === 'kh' ? "កំពត" : "Kampot"
   },
 ];
 
@@ -128,30 +128,26 @@ export default function WaterSupplyPage() {
                     <Image src="/brands/DHM-WHITE.png" alt="Dhinimex logo" width={160} height={46} priority className="h-auto w-[160px]" />
                   </Link>
                   <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
-                    <Link href="/about" className="group relative transition hover:text-white/80">
-                      About Us
-                      <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                    <Link href="/about" className="group relative transition hover:text-white/80">{t.nav.about}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
                     <div className="group relative">
-                      <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">
-                        Business Portfolio
-                        <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">{t.nav.business}<svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                         </svg>
                       </Link>
                       <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" />
                       <div className="invisible absolute left-0 top-full mt-3 w-56 rounded-xl bg-white p-2 opacity-0 shadow-2xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
-                        <Link href="/business/trading" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Trading</Link>
-                        <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Manufacturing</Link>
-                        <Link href="/business/electricity" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Electricity Distribution</Link>
-                        <Link href="/business/water-supply" className="block rounded-lg bg-slate-100 px-4 py-2.5 text-sm font-medium text-brand-red">Water Supply</Link>
-                        <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Scientific</Link>
+                        <Link href="/business/trading" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.trading}</Link>
+                        <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.manufacturing}</Link>
+                        <Link href="/business/electricity" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.electricity}</Link>
+                        <Link href="/business/water-supply" className="block rounded-lg bg-slate-100 px-4 py-2.5 text-sm font-medium text-brand-red">{t.business.water}</Link>
+                        <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.scientific}</Link>
                       </div>
                     </div>
-                    <Link href="/services" className="group relative transition hover:text-white/80">Services<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/products" className="group relative transition hover:text-white/80">Products<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/news" className="group relative transition hover:text-white/80">News<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/careers" className="group relative transition hover:text-white/80">Careers<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/services" className="group relative transition hover:text-white/80">{t.nav.services}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/products" className="group relative transition hover:text-white/80">{t.nav.products}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/news" className="group relative transition hover:text-white/80">{t.nav.blog}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/careers" className="group relative transition hover:text-white/80">{t.nav.careers}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                   </nav>
                   <div className="flex items-center gap-3">
                     <NavUtilityCluster>
@@ -181,7 +177,7 @@ export default function WaterSupplyPage() {
                     <NavUtilityDivider />
                     <NavAdminLoginLink />
                   </NavUtilityCluster>
-                    <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">Contact Us</Link>
+                    <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">{t.nav.contact}</Link>
                   </div>
                 </div>
                 {searchOpen && (
@@ -190,10 +186,10 @@ export default function WaterSupplyPage() {
                       <form onSubmit={handleSearchSubmit} className="flex items-center gap-4">
                         <div className="relative flex-1">
                           <svg className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                          <input ref={searchInputRef} type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search for services, products, careers..." className="w-full rounded-lg bg-slate-100 py-3 pl-12 pr-4 text-slate-900 placeholder-slate-500 outline-none transition focus:bg-white focus:shadow-inner" />
+                          <input ref={searchInputRef} type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder={t.nav.searchPlaceholder} className="w-full rounded-lg bg-slate-100 py-3 pl-12 pr-4 text-slate-900 placeholder-slate-500 outline-none transition focus:bg-white focus:shadow-inner" />
                         </div>
-                        <button type="submit" className="rounded-lg bg-brand-navy px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-navy/90">Search</button>
-                        <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} className="rounded-lg px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100">Cancel</button>
+                        <button type="submit" className="rounded-lg bg-brand-navy px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-navy/90">{t.nav.searchBtn}</button>
+                        <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} className="rounded-lg px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100">{t.nav.cancel}</button>
                       </form>
                     </div>
                   </div>
@@ -207,18 +203,13 @@ export default function WaterSupplyPage() {
             <div className="flex min-h-[calc(60vh-120px)] items-center py-16 lg:min-h-[calc(70vh-120px)] lg:py-0">
               <div className="max-w-2xl space-y-6">
                 <div className="flex items-center gap-3">
-                  <Link href="/business" className="text-sm font-medium text-white/70 transition hover:text-white">
-                    Business Portfolio
-                  </Link>
+                  <Link href="/business" className="text-sm font-medium text-white/70 transition hover:text-white">{t.nav.business}</Link>
                   <span className="text-white/40">/</span>
-                  <span className="text-sm font-medium text-brand-red">Water Supply</span>
+                  <span className="text-sm font-medium text-brand-red">{t.business.water}</span>
                 </div>
-                <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
-                  Water Supply
-                </h1>
+                <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">{t.business.water}</h1>
                 <p className="max-w-xl text-lg text-white/80">
-                  Delivering clean, safe water to communities across Cambodia through 
-                  modern infrastructure and sustainable distribution networks.
+                  {language === 'kh' ? "ផ្តល់ទឹកស្អាត និងមានសុវត្ថិភាពដល់សហគមន៍ទូទាំងប្រទេសកម្ពុជា តាមរយៈហេដ្ឋារចនាសម្ព័ន្ធទំនើប និងបណ្តាញចែកចាយប្រកបដោយនិរន្តរភាព។" : "Delivering clean, safe water to communities across Cambodia through modern infrastructure and sustainable distribution networks."}
                 </p>
                 <div className="flex items-center gap-6 pt-4">
                   <div className="flex items-center gap-2">
@@ -229,7 +220,7 @@ export default function WaterSupplyPage() {
                     </div>
                     <div>
                       <p className="text-2xl font-bold text-white">{licenses.length}</p>
-                      <p className="text-sm text-white/60">Licenses</p>
+                      <p className="text-sm text-white/60">{language === 'kh' ? "អាជ្ញាប័ណ្ណ" : "Licenses"}</p>
                     </div>
                   </div>
                   <div className="h-12 w-px bg-white/20" />
@@ -241,7 +232,7 @@ export default function WaterSupplyPage() {
                     </div>
                     <div>
                       <p className="text-2xl font-bold text-white">100%</p>
-                      <p className="text-sm text-white/60">Clean Water</p>
+                      <p className="text-sm text-white/60">{language === 'kh' ? "ទឹកស្អាត" : "Clean Water"}</p>
                     </div>
                   </div>
                 </div>
@@ -256,13 +247,13 @@ export default function WaterSupplyPage() {
             {/* Section Header */}
             <div className="mb-16 text-center">
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-brand-red">
-                Our Licenses
+                {language === 'kh' ? "អាជ្ញាប័ណ្ណរបស់យើង" : "Our Licenses"}
               </p>
               <h2 className="text-3xl font-bold text-brand-navy lg:text-4xl">
-                Water Supply Distribution Areas
+                {language === 'kh' ? "តំបន់ចែកចាយទឹកស្អាត" : "Water Supply Distribution Areas"}
               </h2>
               <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
-                Licensed distribution networks bringing clean water to communities
+                {language === 'kh' ? "បណ្តាញចែកចាយដែលមានអាជ្ញាប័ណ្ណនាំយកទឹកស្អាតដល់សហគមន៍" : "Licensed distribution networks bringing clean water to communities"}
               </p>
             </div>
 
@@ -314,7 +305,7 @@ export default function WaterSupplyPage() {
                       href={license.link}
                       className="inline-flex items-center gap-2 text-sm font-semibold text-brand-navy transition-all group-hover:gap-3 group-hover:text-brand-red"
                     >
-                      View Details
+                      {language === 'kh' ? "មើលព័ត៌មានលម្អិត" : "View Details"}
                       <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
@@ -333,18 +324,16 @@ export default function WaterSupplyPage() {
           </div>
           <div className="relative mx-auto max-w-4xl px-6 text-center lg:px-8">
             <h2 className="mb-4 text-3xl font-bold text-white lg:text-4xl">
-              Questions About Our Services?
+              {language === 'kh' ? "មានសំណួរអំពីសេវាកម្មរបស់យើង?" : "Questions About Our Services?"}
             </h2>
             <p className="mb-8 text-lg text-white/80">
-              Contact us to learn more about water supply services and solutions.
+              {language === 'kh' ? "ទាក់ទងមកយើងដើម្បីស្វែងយល់បន្ថែមអំពីសេវាកម្ម និងដំណោះស្រាយផ្គត់ផ្គង់ទឹកស្អាត។" : "Contact us to learn more about water supply services and solutions."}
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/contact-us"
                 className="inline-flex items-center gap-2 rounded-lg bg-brand-red px-8 py-4 text-base font-semibold text-white transition hover:bg-[#c91e21]"
-              >
-                Contact Us
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              >{t.nav.contact}<svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </Link>
@@ -352,7 +341,7 @@ export default function WaterSupplyPage() {
                 href="/services"
                 className="inline-flex items-center gap-2 rounded-lg border-2 border-white/30 px-8 py-4 text-base font-semibold text-white transition hover:bg-white/10"
               >
-                View All Services
+                {language === 'kh' ? "មើលសេវាកម្មទាំងអស់" : "View All Services"}
               </Link>
             </div>
           </div>

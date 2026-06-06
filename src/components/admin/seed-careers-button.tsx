@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { db } from "@/lib/firebase";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
-import { careers } from "@/data/site-content";
+import { getCareers } from "@/data/site-content";
+import { useLanguage } from "@/lib/i18n";
 
 export function SeedCareersButton() {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
+  const { language } = useLanguage();
 
   const handleSeed = async () => {
     if (!confirm("This will populate the database with careers from your static files. Existing careers with the same slug will be updated. Continue?")) {
@@ -19,6 +21,7 @@ export function SeedCareersButton() {
 
     try {
       let count = 0;
+      const careers = getCareers(language);
 
       for (const career of careers) {
         setStatus(`Processing ${career.title}...`);

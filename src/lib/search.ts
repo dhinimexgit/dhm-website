@@ -1,9 +1,9 @@
 import { 
-  services, 
-  posts, 
-  careers, 
-  faqs, 
-  productCategories 
+  getServices, 
+  getPosts, 
+  getCareers, 
+  getFaqs, 
+  getProductCategories 
 } from "@/data/site-content";
 
 export type SearchResult = {
@@ -28,11 +28,16 @@ const productCategoryList = [
   { id: "workwear", label: "Workwear" },
 ];
 
-export function searchContent(query: string): SearchResult[] {
+export function searchContent(query: string, lang: 'en' | 'kh' = 'en'): SearchResult[] {
   const results: SearchResult[] = [];
   const lowerQuery = query.toLowerCase().trim();
 
   if (!lowerQuery) return results;
+
+  const services = getServices(lang);
+  const posts = getPosts(lang);
+  const careers = getCareers(lang);
+  const faqs = getFaqs(lang);
 
   // Search Services
   services.forEach((service) => {
@@ -51,7 +56,7 @@ export function searchContent(query: string): SearchResult[] {
   });
 
   // Search Brands & Products
-  productCategories.forEach((category) => {
+  getProductCategories(lang).forEach((category) => {
     // 1. Check the Brand itself
     if (
       category.name.toLowerCase().includes(lowerQuery) ||

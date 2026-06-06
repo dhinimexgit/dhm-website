@@ -13,6 +13,7 @@ import {
 } from "@/components/layout/nav-utility-cluster";
 import { StickyHeader } from "@/components/home/sticky-header";
 import type { CareerRole } from "@/data/site-content";
+import { getCareer } from "@/data/site-content";
 
 // Hero background image - Team collaboration
 const heroImage = "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1920&q=80";
@@ -21,8 +22,9 @@ type Props = {
   job: CareerRole;
 };
 
-export function JobDetailClient({ job }: Props) {
+export function JobDetailClient({ job: propJob }: Props) {
   const { t, language, setLanguage } = useLanguage();
+  const job = getCareer(propJob.slug, language) || propJob;
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -115,42 +117,30 @@ export function JobDetailClient({ job }: Props) {
                     />
                   </Link>
                   <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
-                    <Link href="/about" className="group relative transition hover:text-white/80">
-                      About Us
-                      <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                    <Link href="/about" className="group relative transition hover:text-white/80">{t.nav.about}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
                     <div className="group relative">
-                      <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">
-                        Business Portfolio
-                        <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">{t.nav.business}<svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                         </svg>
                       </Link>
                       <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                       <div className="invisible absolute left-0 top-full mt-3 w-56 rounded-xl bg-white p-2 opacity-0 shadow-2xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
-                        <Link href="/business/trading" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Trading</Link>
-                        <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Manufacturing</Link>
-                        <Link href="/business/electricity" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Electricity Distribution</Link>
-                        <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Water Supply</Link>
-                        <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Scientific</Link>
+                        <Link href="/business/trading" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.trading}</Link>
+                        <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.manufacturing}</Link>
+                        <Link href="/business/electricity" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.electricity}</Link>
+                        <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.water}</Link>
+                        <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.scientific}</Link>
                       </div>
                     </div>
-                    <Link href="/services" className="group relative transition hover:text-white/80">
-                      Services
-                      <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                    <Link href="/services" className="group relative transition hover:text-white/80">{t.nav.services}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
-                    <Link href="/products" className="group relative transition hover:text-white/80">
-                      Products
-                      <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                    <Link href="/products" className="group relative transition hover:text-white/80">{t.nav.products}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
-                    <Link href="/news" className="group relative transition hover:text-white/80">
-                      News
-                      <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                    <Link href="/news" className="group relative transition hover:text-white/80">{t.nav.blog}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
                     {/* Careers - Active */}
-                    <Link href="/careers" className="group relative transition hover:text-white/80">
-                      Careers
-                      <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" />
+                    <Link href="/careers" className="group relative transition hover:text-white/80">{t.nav.careers}<span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" />
                     </Link>
                   </nav>
                   <div className="flex items-center gap-3">
@@ -183,9 +173,7 @@ export function JobDetailClient({ job }: Props) {
                     <NavUtilityDivider />
                     <NavAdminLoginLink />
                   </NavUtilityCluster>
-                    <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">
-                      Contact Us
-                    </Link>
+                    <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">{t.nav.contact}</Link>
                   </div>
                 </div>
 
@@ -206,12 +194,12 @@ export function JobDetailClient({ job }: Props) {
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Search for services, products, careers..."
+                            placeholder={t.nav.searchPlaceholder}
                             className="w-full rounded-lg bg-slate-100 py-3 pl-12 pr-4 text-slate-900 placeholder-slate-500 outline-none transition focus:bg-white focus:shadow-inner"
                           />
                         </div>
-                        <button type="submit" className="rounded-lg bg-brand-navy px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-navy/90">Search</button>
-                        <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} className="rounded-lg px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100">Cancel</button>
+                        <button type="submit" className="rounded-lg bg-brand-navy px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-navy/90">{t.nav.searchBtn}</button>
+                        <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} className="rounded-lg px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100">{t.nav.cancel}</button>
                       </form>
                     </div>
                   </div>
@@ -230,9 +218,7 @@ export function JobDetailClient({ job }: Props) {
                     Home
                   </Link>
                   <span>/</span>
-                  <Link href="/careers" className="hover:text-white transition">
-                    Careers
-                  </Link>
+                  <Link href="/careers" className="hover:text-white transition">{t.nav.careers}</Link>
                   <span>/</span>
                   <span className="text-white">{job.title}</span>
                 </nav>
@@ -260,7 +246,7 @@ export function JobDetailClient({ job }: Props) {
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    Deadline: {job.deadline}
+                    {language === 'kh' ? "ថ្ងៃផុតកំណត់:" : "Deadline:"} {job.deadline}
                   </span>
                 </div>
               </div>
@@ -275,7 +261,7 @@ export function JobDetailClient({ job }: Props) {
               {/* Job Description */}
               {job.description && (
                 <div className="space-y-4">
-                  <h2 className="text-2xl font-bold text-brand-navy">About the Role</h2>
+                  <h2 className="text-2xl font-bold text-brand-navy">{language === 'kh' ? "អំពីតួនាទី" : "About the Role"}</h2>
                   <div className="prose prose-slate max-w-none text-base leading-relaxed text-slate-600">
                     <p dangerouslySetInnerHTML={{ __html: job.description.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") }} />
                   </div>
@@ -285,7 +271,7 @@ export function JobDetailClient({ job }: Props) {
               {/* Key Responsibilities */}
               {job.keyResponsibilities && job.keyResponsibilities.length > 0 && (
                 <div className="space-y-4">
-                  <h2 className="text-2xl font-bold text-brand-navy">Key Responsibilities</h2>
+                  <h2 className="text-2xl font-bold text-brand-navy">{language === 'kh' ? "ទំនួលខុសត្រូវសំខាន់ៗ" : "Key Responsibilities"}</h2>
                   <ul className="space-y-3">
                     {job.keyResponsibilities.map((responsibility, index) => (
                       <li key={index} className="flex gap-3 text-slate-600">
@@ -300,7 +286,7 @@ export function JobDetailClient({ job }: Props) {
               {/* Requirements */}
               {job.requirements && job.requirements.length > 0 && (
                 <div className="space-y-4">
-                  <h2 className="text-2xl font-bold text-brand-navy">Requirements</h2>
+                  <h2 className="text-2xl font-bold text-brand-navy">{language === 'kh' ? "តម្រូវការ" : "Requirements"}</h2>
                   <ul className="space-y-3">
                     {job.requirements.map((requirement, index) => (
                       <li key={index} className="flex gap-3 text-slate-600">
@@ -315,7 +301,7 @@ export function JobDetailClient({ job }: Props) {
               {/* What We Offer */}
               {job.whatWeOffer && job.whatWeOffer.length > 0 && (
                 <div className="space-y-4">
-                  <h2 className="text-2xl font-bold text-brand-navy">What We Offer</h2>
+                  <h2 className="text-2xl font-bold text-brand-navy">{language === 'kh' ? "អ្វីដែលយើងផ្តល់ជូន" : "What We Offer"}</h2>
                   <ul className="space-y-3">
                     {job.whatWeOffer.map((offer, index) => (
                       <li key={index} className="flex gap-3 text-slate-600">
@@ -331,18 +317,18 @@ export function JobDetailClient({ job }: Props) {
 
               {/* How to Apply */}
               <div className="rounded-2xl bg-slate-50 p-8">
-                <h2 className="mb-4 text-2xl font-bold text-brand-navy">How to Apply</h2>
+                <h2 className="mb-4 text-2xl font-bold text-brand-navy">{language === 'kh' ? "របៀបដាក់ពាក្យ" : "How to Apply"}</h2>
                 {job.howToApply ? (
                   <div className="prose prose-slate max-w-none text-base leading-relaxed text-slate-600">
                     <p dangerouslySetInnerHTML={{ __html: job.howToApply.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/_(.*?)_/g, "<em>$1</em>") }} />
                   </div>
                 ) : (
                   <p className="text-slate-600">
-                    Send your CV and cover letter to{" "}
+                    {language === 'kh' ? "ផ្ញើប្រវត្តិរូបសង្ខេប និងលិខិតចំណាប់អារម្មណ៍របស់អ្នកទៅកាន់" : "Send your CV and cover letter to"}{" "}
                     <a href="mailto:recruitment@dhinimex.com" className="font-semibold text-brand-navy hover:underline">
                       recruitment@dhinimex.com
                     </a>{" "}
-                    with the subject line: <strong>&quot;{job.title}&quot;</strong>
+                    {language === 'kh' ? "ជាមួយនឹងប្រធានបទ:" : "with the subject line:"} <strong>&quot;{job.title}&quot;</strong>
                   </p>
                 )}
                 <div className="mt-6 flex flex-wrap gap-4">
@@ -353,7 +339,7 @@ export function JobDetailClient({ job }: Props) {
                     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
-                    Apply Now
+                    {language === 'kh' ? "ដាក់ពាក្យឥឡូវនេះ" : "Apply Now"}
                   </a>
                   <Link
                     href="/careers"
@@ -362,7 +348,7 @@ export function JobDetailClient({ job }: Props) {
                     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
-                    View All Jobs
+                    {language === 'kh' ? "មើលការងារទាំងអស់" : "View All Jobs"}
                   </Link>
                 </div>
               </div>
@@ -374,23 +360,23 @@ export function JobDetailClient({ job }: Props) {
         <section className="bg-brand-navy py-16">
           <div className="mx-auto max-w-4xl px-6 text-center lg:px-8">
             <h2 className="mb-4 text-2xl font-bold text-white lg:text-3xl">
-              Not the right fit?
+              {language === 'kh' ? "មិនមែនជាជម្រើសត្រឹមត្រូវមែនទេ?" : "Not the right fit?"}
             </h2>
             <p className="mb-8 text-white/70">
-              Explore other open positions or send us your CV for future opportunities.
+              {language === 'kh' ? "ស្វែងរកមុខតំណែងដែលបើកផ្សេងទៀត ឬផ្ញើប្រវត្តិរូបសង្ខេបរបស់អ្នកមកយើងសម្រាប់ឱកាសនាពេលអនាគត។" : "Explore other open positions or send us your CV for future opportunities."}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <Link
                 href="/careers"
                 className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-brand-navy transition hover:bg-slate-100"
               >
-                Browse All Positions
+                {language === 'kh' ? "មើលមុខតំណែងទាំងអស់" : "Browse All Positions"}
               </Link>
               <a
                 href="mailto:recruitment@dhinimex.com"
                 className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
               >
-                Send Your CV
+                {language === 'kh' ? "ផ្ញើប្រវត្តិរូបសង្ខេបរបស់អ្នក" : "Send Your CV"}
               </a>
             </div>
           </div>

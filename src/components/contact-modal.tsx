@@ -9,14 +9,19 @@ type Props = {
   triggerText?: string;
   triggerClassName?: string;
   initialQuestion?: string;
+  language?: 'en' | 'kh';
 };
 
 export function ContactModal({ 
   productName, 
-  triggerText = "Contact Us", 
+  triggerText, 
   triggerClassName = "w-full sm:w-auto rounded-full bg-brand-navy px-8 py-4 text-center text-sm font-bold text-white shadow-lg transition hover:bg-[#252f6e]",
-  initialQuestion = ""
+  initialQuestion = "",
+  language = 'en'
 }: Props) {
+  const isKh = language === 'kh';
+  const defaultTriggerText = isKh ? "ទំនាក់ទំនងយើង" : "Contact Us";
+  const finalTriggerText = triggerText || defaultTriggerText;
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -74,7 +79,7 @@ export function ContactModal({
         }}
         className={triggerClassName}
       >
-        {triggerText}
+        {finalTriggerText}
       </button>
     );
   }
@@ -83,7 +88,7 @@ export function ContactModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
       <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-xl font-bold text-brand-navy">Product Inquiry</h3>
+          <h3 className="text-xl font-bold text-brand-navy">{isKh ? "សំណួរអំពីផលិតផល" : "Product Inquiry"}</h3>
           <button
             onClick={() => {
               setIsOpen(false);
@@ -105,13 +110,13 @@ export function ContactModal({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h4 className="mb-2 font-semibold text-green-900">Message Sent!</h4>
-            <p className="text-sm text-green-700">We'll get back to you shortly regarding {productName}.</p>
+            <h4 className="mb-2 font-semibold text-green-900">{isKh ? "សារត្រូវបានបញ្ជូន!" : "Message Sent!"}</h4>
+            <p className="text-sm text-green-700">{isKh ? `យើងនឹងទាក់ទងទៅអ្នកវិញក្នុងពេលឆាប់ៗនេះទាក់ទងនឹង ${productName}។` : `We'll get back to you shortly regarding ${productName}.`}</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Product</label>
+              <label className="mb-1 block text-sm font-medium text-slate-700">{isKh ? "ផលិតផល" : "Product"}</label>
               <input
                 type="text"
                 value={productName}
@@ -122,7 +127,7 @@ export function ContactModal({
 
             <div>
               <label htmlFor="name" className="mb-1 block text-sm font-medium text-slate-700">
-                Your Name *
+                {isKh ? "ឈ្មោះរបស់អ្នក *" : "Your Name *"}
               </label>
               <input
                 type="text"
@@ -130,13 +135,13 @@ export function ContactModal({
                 id="name"
                 required
                 className="w-full rounded-lg border border-slate-200 px-4 py-2 focus:border-brand-navy focus:outline-none focus:ring-1 focus:ring-brand-navy"
-                placeholder="Bopha Vatey"
+                placeholder={isKh ? "បុប្ផា វត្តី" : "Bopha Vatey"}
               />
             </div>
 
             <div>
               <label htmlFor="phone" className="mb-1 block text-sm font-medium text-slate-700">
-                Phone Number *
+                {isKh ? "លេខទូរស័ព្ទ *" : "Phone Number *"}
               </label>
               <div className="relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
@@ -168,7 +173,7 @@ export function ContactModal({
 
             <div>
               <label htmlFor="inquiry" className="mb-1 block text-sm font-medium text-slate-700">
-                Your Question *
+                {isKh ? "សំណួររបស់អ្នក *" : "Your Question *"}
               </label>
               <textarea
                 name="inquiry"
@@ -177,18 +182,18 @@ export function ContactModal({
                 rows={3}
                 defaultValue={initialQuestion}
                 className="w-full rounded-lg border border-slate-200 px-4 py-2 focus:border-brand-navy focus:outline-none focus:ring-1 focus:ring-brand-navy"
-                placeholder="I would like to know more about..."
+                placeholder={isKh ? "ខ្ញុំចង់ដឹងបន្ថែមអំពី..." : "I would like to know more about..."}
               />
             </div>
 
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            {error && <p className="text-sm text-red-600">{isKh ? "បរាជ័យក្នុងការផ្ញើសារ។ សូមព្យាយាមម្តងទៀត។" : error}</p>}
 
             <button
               type="submit"
               disabled={loading}
               className="w-full rounded-full bg-brand-navy py-3 font-semibold text-white transition hover:bg-[#252f6e] disabled:opacity-70"
             >
-              {loading ? 'Sending...' : 'Send Inquiry'}
+              {loading ? (isKh ? 'កំពុងផ្ញើ...' : 'Sending...') : (isKh ? 'ផ្ញើសំណួរ' : 'Send Inquiry')}
             </button>
           </form>
         )}

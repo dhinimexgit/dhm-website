@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { ProductUploadForm } from "@/components/admin/product-upload-form";
 import { ProductList } from "@/components/admin/product-list";
+import { BrandManager } from "@/components/admin/brand-manager";
+import { CategoryManager } from "@/components/admin/category-manager";
 import { PostList } from "@/components/admin/post-list";
 import { PostForm } from "@/components/admin/post-form";
 import { CareerList } from "@/components/admin/career-list";
@@ -13,7 +15,7 @@ import { QRCodeManager } from "@/components/admin/qr-code-manager";
 import { useLanguage } from "@/lib/i18n";
 import type { CareerRole, Post } from "@/data/site-content";
 
-type TabType = "products" | "posts" | "careers" | "inquiries" | "qrcode";
+type TabType = "products" | "brands" | "categories" | "posts" | "careers" | "inquiries" | "qrcode";
 type UserRole = "admin" | "marketing";
 
 export default function AdminDashboard() {
@@ -44,6 +46,8 @@ export default function AdminDashboard() {
   const isTabAccessible = (tab: TabType): boolean => {
     const map: Record<TabType, string> = {
       products: "admin.products",
+      brands: "admin.products",
+      categories: "admin.products",
       posts: "admin.posts",
       careers: "admin.careers",
       inquiries: "admin.inquiries",
@@ -115,6 +119,8 @@ export default function AdminDashboard() {
     <div className="space-y-8">
       <div className="-mx-1 flex gap-4 overflow-x-auto border-b border-slate-200 px-1 pb-px [-webkit-overflow-scrolling:touch] sm:gap-8">
         <TabButton tab="products" label={t.admin.dashboard.products} />
+        <TabButton tab="brands" label="Brands" />
+        <TabButton tab="categories" label="Categories" />
         <TabButton tab="posts" label={t.admin.dashboard.posts} />
         <TabButton tab="careers" label={t.admin.dashboard.careers} />
         <TabButton tab="inquiries" label={t.admin.dashboard.inquiries} badge={isTabAccessible("inquiries") ? <InquiryBadge />: undefined} />
@@ -152,6 +158,28 @@ export default function AdminDashboard() {
               <ProductUploadForm initialData={editingProduct} onSuccess={handleFormSuccess} onCancel={handleCancel} />
             </div>
           )}
+        </>
+      ): activeTab === "brands" ? (
+        <>
+          <div className="flex flex-col gap-6 border-b border-slate-200 pb-6 sm:pb-8">
+            <div className="min-w-0 space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-red sm:text-sm">{t.admin.dashboard.database}</p>
+              <h1 className="text-2xl font-semibold leading-tight text-brand-navy sm:text-3xl md:text-4xl">Manage Brands</h1>
+              <p className="max-w-2xl text-base text-slate-600 sm:text-lg">Add or edit the brands that appear in the product form and on the public Brands listing.</p>
+            </div>
+          </div>
+          <BrandManager />
+        </>
+      ): activeTab === "categories" ? (
+        <>
+          <div className="flex flex-col gap-6 border-b border-slate-200 pb-6 sm:pb-8">
+            <div className="min-w-0 space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-red sm:text-sm">{t.admin.dashboard.database}</p>
+              <h1 className="text-2xl font-semibold leading-tight text-brand-navy sm:text-3xl md:text-4xl">Manage Categories</h1>
+              <p className="max-w-2xl text-base text-slate-600 sm:text-lg">Build the category tree used as checkboxes on products and as filters on the public site.</p>
+            </div>
+          </div>
+          <CategoryManager />
         </>
       ): activeTab === "posts" ? (
         <>

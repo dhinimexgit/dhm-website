@@ -12,6 +12,7 @@ import {
   NavUtilityDivider,
   NAV_UTILITY_ICON_CLASS,
 } from "@/components/layout/nav-utility-cluster";
+import { getHeroContent } from "@/data/site-content";
 
 // 5 placeholder images for the carousel
 const heroImages = [
@@ -32,6 +33,7 @@ export function HomeHero() {
   const searchPanelRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { language, setLanguage, t } = useLanguage();
+  const heroContent = getHeroContent(language);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -282,12 +284,10 @@ export function HomeHero() {
                     <strong className="text-lg text-brand-navy">Since 2003</strong>
                 </p> */}
                 <h1 className="text-3xl font-bold leading-tight text-white sm:text-3xl lg:text-6xl xl:text-[62px] xl:leading-[1.1]">
-                  {t.home.hero.title1}
-                  <br />
-                  <span>{t.home.hero.title2}</span>
+                  {heroContent.title}
                 </h1>
                 <p className="max-w-xl text-lg leading-relaxed text-white/80 lg:text-xl">
-                  {t.home.hero.description}
+                  {heroContent.description}
                 </p>
               </div>
               <div className="flex flex-wrap items-center gap-4">

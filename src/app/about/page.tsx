@@ -11,7 +11,7 @@ import {
   NavUtilityDivider,
   NAV_UTILITY_ICON_CLASS,
 } from "@/components/layout/nav-utility-cluster";
-import { leadership } from "@/data/site-content";
+import { getLeadership } from "@/data/site-content";
 import { StickyHeader } from "@/components/home/sticky-header";
 
 // Hero background image
@@ -65,6 +65,7 @@ const coreValues = [
 
 export default function AboutPage() {
   const { t, language, setLanguage } = useLanguage();
+  const leadership = getLeadership(language as 'en' | 'kh');
   const [isScrolled, setIsScrolled] = useState(false);
   const [openAccordion, setOpenAccordion] = useState<number | null>(0);
   const [visionVisible, setVisionVisible] = useState(false);
@@ -205,41 +206,29 @@ export default function AboutPage() {
                   </Link>
                   <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
                     {/* About Us - Active: white text with underline only */}
-                    <Link href="/about" className="group relative transition hover:text-white/80">
-                      About Us
-                      <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" />
+                    <Link href="/about" className="group relative transition hover:text-white/80">{t.nav.about}<span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" />
                     </Link>
                     <div className="group relative">
-                      <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">
-                        Business Portfolio
-                        <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">{t.nav.business}<svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                         </svg>
                       </Link>
                       <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                       <div className="invisible absolute left-0 top-full mt-3 w-56 rounded-xl bg-white p-2 opacity-0 shadow-2xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
-                        <Link href="/business/trading" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Trading</Link>
-                        <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Manufacturing</Link>
-                        <Link href="/business/electricity" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Electricity Distribution</Link>
-                        <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Water Supply</Link>
-                        <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Scientific</Link>
+                        <Link href="/business/trading" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.trading}</Link>
+                        <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.manufacturing}</Link>
+                        <Link href="/business/electricity" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.electricity}</Link>
+                        <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.water}</Link>
+                        <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.scientific}</Link>
                       </div>
                     </div>
-                    <Link href="/services" className="group relative transition hover:text-white/80">
-                      Services
-                      <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                    <Link href="/services" className="group relative transition hover:text-white/80">{t.nav.services}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
-                    <Link href="/products" className="group relative transition hover:text-white/80">
-                      Products
-                      <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                    <Link href="/products" className="group relative transition hover:text-white/80">{t.nav.products}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
-                    <Link href="/news" className="group relative transition hover:text-white/80">
-                      News
-                      <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                    <Link href="/news" className="group relative transition hover:text-white/80">{t.nav.blog}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
-                    <Link href="/careers" className="group relative transition hover:text-white/80">
-                      Careers
-                      <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                    <Link href="/careers" className="group relative transition hover:text-white/80">{t.nav.careers}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
                   </nav>
                   <div className="flex items-center gap-3">
@@ -275,9 +264,7 @@ export default function AboutPage() {
                     <Link
                       href="/contact-us"
                       className="rounded-full bg-brand-red px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#c91e21] hover:shadow-md"
-                    >
-                      Contact Us
-                    </Link>
+                    >{t.nav.contact}</Link>
                   </div>
                 </div>
 
@@ -303,16 +290,14 @@ export default function AboutPage() {
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Search for services, products, careers..."
+                            placeholder={t.nav.searchPlaceholder}
                             className="w-full rounded-lg bg-slate-100 py-3 pl-12 pr-4 text-slate-900 placeholder-slate-500 outline-none transition focus:bg-white focus:shadow-inner"
                           />
                         </div>
                         <button
                           type="submit"
                           className="rounded-lg bg-brand-navy px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-navy/90"
-                        >
-                          Search
-                        </button>
+                        >{t.nav.searchBtn}</button>
                         <button
                           type="button"
                           onClick={() => {
@@ -320,9 +305,7 @@ export default function AboutPage() {
                             setSearchQuery("");
                           }}
                           className="rounded-lg px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
-                        >
-                          Cancel
-                        </button>
+                        >{t.nav.cancel}</button>
                       </form>
                     </div>
                   </div>
@@ -723,12 +706,12 @@ export default function AboutPage() {
 
             <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3">
               {[
-                { name: "Hong Thary", title: "Accounting Manager", photo: "/acct-dhm.jpg" },
-                { name: "Som Vateyneardey", title: "Sales & Marketing Manager", photo: "/sm.jpg" },
-                { name: "Nem Phyrun", title: "Admin & HR Manager", photo: "/hr.jpg" },
-                { name: "Phuong Malen", title: "Accounting Manager (Branch)", photo: "/acct-br.jpg" },
-                { name: "Chan Reaksmey", title: "Purchasing & Logistics Manager", photo: "/lm.jpg" },
-                { name: "Victor Khov", title: "Technology Manager", photo: "/tm.jpg" },
+                { name: language === 'kh' ? "ហុង ធារី" : "Hong Thary", title: language === 'kh' ? "ប្រធានផ្នែកគណនេយ្យ" : "Accounting Manager", photo: "/acct-dhm.jpg" },
+                { name: language === 'kh' ? "សម វតីនាឌី" : "Som Vateyneardey", title: language === 'kh' ? "ប្រធានផ្នែកលក់ និងទីផ្សារ" : "Sales & Marketing Manager", photo: "/sm.jpg" },
+                { name: language === 'kh' ? "ណែម ភិរុណ" : "Nem Phyrun", title: language === 'kh' ? "ប្រធានផ្នែករដ្ឋបាល និងធនធានមនុស្ស" : "Admin & HR Manager", photo: "/hr.jpg" },
+                { name: language === 'kh' ? "ភួង ម៉ាលែន" : "Phuong Malen", title: language === 'kh' ? "ប្រធានផ្នែកគណនេយ្យ (សាខា)" : "Accounting Manager (Branch)", photo: "/acct-br.jpg" },
+                { name: language === 'kh' ? "ចាន់ រស្មី" : "Chan Reaksmey", title: language === 'kh' ? "ប្រធានផ្នែកទិញ និងភស្តុភារ" : "Purchasing & Logistics Manager", photo: "/lm.jpg" },
+                { name: language === 'kh' ? "វិចទ័រ ខូវ" : "Victor Khov", title: language === 'kh' ? "ប្រធានផ្នែកបច្ចេកវិទ្យា" : "Technology Manager", photo: "/tm.jpg" },
               ].map((manager) => (
                 <div key={manager.name} className="flex flex-col items-center text-center mb-8">
                   <div className="relative mb-4 h-[220px] w-[160px] overflow-hidden rounded-2xl shadow-lg sm:h-[240px] sm:w-[180px]">

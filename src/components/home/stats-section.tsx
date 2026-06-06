@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/lib/i18n";
+import { getStats } from "@/data/site-content";
 
 function AnimatedNumber({ value, suffix = "" }: { value: string; suffix?: string }) {
   const [displayValue, setDisplayValue] = useState(0);
@@ -86,14 +87,17 @@ const statIcons = [
 ];
 
 export function StatsSection() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const statsData = getStats(language);
 
-  const displayStats = [
-    { label: t.home.stats.years, value: "21", suffix: "+", icon: statIcons[0] },
-    { label: t.home.stats.team, value: "500", suffix: "+", icon: statIcons[1] },
-    { label: t.home.stats.industries, value: "5", suffix: "", icon: statIcons[2] },
-    { label: t.home.stats.companies, value: "18", suffix: "", icon: statIcons[3] },
-  ];
+  const displayStats = statsData.map((stat, index) => ({
+    label: stat.label,
+    value: stat.value.replace(/[^0-9]/g, ""),
+    suffix: stat.value.replace(/[0-9]/g, ""),
+    icon: statIcons[index] || (
+      <img src={stat.icon} alt={stat.label} className="h-8 w-8 object-contain" />
+    ),
+  }));
 
   return (
     <section className="relative overflow-hidden bg-white py-24">

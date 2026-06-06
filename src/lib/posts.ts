@@ -2,20 +2,20 @@ import { db } from "./firebase";
 import { collection, getDocs, doc, getDoc, query, where, orderBy, limit } from "firebase/firestore";
 import type { Post } from "@/data/site-content";
 
-const docToPost = (doc: any): Post => {
+const docToPost = (doc: any, lang: 'en' | 'kh' = 'en'): Post => {
   const data = doc.data();
   return {
     slug: data.slug || doc.id, // Use slug from data if available, otherwise use doc ID
-    title: data.title || "",
+    title: lang === 'kh' && data.titleKh ? data.titleKh : data.title || "",
     date: data.date || "",
     tag: data.tag || "News",
-    excerpt: data.excerpt || "",
+    excerpt: lang === 'kh' && data.excerptKh ? data.excerptKh : data.excerpt || "",
     cover: data.cover || "",
-    content: data.content || [],
+    content: lang === 'kh' && data.contentKh ? data.contentKh : data.content || [],
   };
 };
 
-export async function getAllPosts(): Promise<Post[]> {
+export async function getAllPosts(lang: 'en' | 'kh' = 'en'): Promise<Post[]> {
   try {
     const postsRef = collection(db, "posts");
     const q = query(postsRef, orderBy("date", "desc"));
@@ -25,14 +25,14 @@ export async function getAllPosts(): Promise<Post[]> {
       return [];
     }
 
-    return snapshot.docs.map(docToPost);
+    return snapshot.docs.map(doc => docToPost(doc, lang));
   } catch (error) {
     console.error("Error fetching posts:", error);
     return [];
   }
 }
 
-export async function getPost(slug: string): Promise<Post | null> {
+export async function getPost(slug: string, lang: 'en' | 'kh' = 'en'): Promise<Post | null> {
   try {
     // Decode URL-encoded slug and normalize
     const decodedSlug = decodeURIComponent(slug).trim();
@@ -42,7 +42,7 @@ export async function getPost(slug: string): Promise<Post | null> {
     const postSnap = await getDoc(postRef);
     
     if (postSnap.exists()) {
-      return docToPost(postSnap);
+      return docToPost(postSnap, lang);
     }
     
     // Second try: Query by slug field (case-insensitive)
@@ -51,7 +51,7 @@ export async function getPost(slug: string): Promise<Post | null> {
     const snapshot = await getDocs(q);
     
     if (!snapshot.empty) {
-      return docToPost(snapshot.docs[0]);
+      return docToPost(snapshot.docs[0], lang);
     }
     
     // Third try: Get all posts and find by slug (handles any case/special char issues)
@@ -60,7 +60,7 @@ export async function getPost(slug: string): Promise<Post | null> {
       const data = docSnap.data();
       const docSlug = (data.slug || docSnap.id).toLowerCase().trim();
       if (docSlug === decodedSlug.toLowerCase().trim()) {
-        return docToPost(docSnap);
+        return docToPost(docSnap, lang);
       }
     }
     
@@ -72,7 +72,7 @@ export async function getPost(slug: string): Promise<Post | null> {
   }
 }
 
-export async function getLatestPosts(count: number = 3): Promise<Post[]> {
+export async function getLatestPosts(count: number = 3, lang: 'en' | 'kh' = 'en'): Promise<Post[]> {
   try {
     const postsRef = collection(db, "posts");
     const q = query(postsRef, orderBy("date", "desc"), limit(count));
@@ -82,7 +82,7 @@ export async function getLatestPosts(count: number = 3): Promise<Post[]> {
       return [];
     }
 
-    return snapshot.docs.map(docToPost);
+    return snapshot.docs.map(doc => docToPost(doc, lang));
   } catch (error) {
     console.error("Error fetching latest posts:", error);
     return [];

@@ -1,10 +1,15 @@
 import type { Faq } from "@/data/site-content";
+import { getFaqs } from "@/data/site-content";
+import { useLanguage } from "@/lib/i18n";
 
 type Props = {
-  faqs: Faq[];
+  faqs?: Faq[];
 };
 
-export function FAQAccordion({ faqs }: Props) {
+export function FAQAccordion({ faqs: propFaqs }: Props) {
+  const { language } = useLanguage();
+  const faqs = propFaqs || getFaqs(language);
+
   return (
     <div className="space-y-3">
       {faqs.map((faq) => (

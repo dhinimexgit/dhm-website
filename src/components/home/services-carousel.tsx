@@ -4,11 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useLanguage } from "@/lib/i18n";
+import { getServices } from "@/data/site-content";
 import type { Service } from "@/data/site-content";
 import type { ReactNode } from "react";
 
 type Props = {
-  services: Service[];
+  services?: Service[];
 };
 
 // Line icons matching JP Morgan style (single color - brand navy)
@@ -41,7 +42,7 @@ const serviceIcons: Record<string, ReactNode> = {
 };
 
 // Service descriptions (institutional tone)
-const serviceDescriptions: Record<string, string> = {
+const serviceDescriptionsEn: Record<string, string> = {
   "manufacturing-and-repair": "We design and manufacture high-quality electrical equipment, including cables, conductors, distribution transformers, control panels, and concrete poles.",
   "construction-and-installation": "We deliver end-to-end power infrastructure solutions—from poles and transformers to fully equipped substations and monitoring systems.",
   "testing-and-engineering-consultation": "From relay setting and transformer oil purification to system diagnostics, our testing services maximize performance and extend asset lifecycle.",
@@ -49,8 +50,17 @@ const serviceDescriptions: Record<string, string> = {
   "electrical-and-heavy-equipment-supply-services": "We provide a comprehensive range of high-quality electrical and heavy equipment solutions to support infrastructure development.",
 };
 
-export function ServicesCarousel({ services }: Props) {
-  const { t } = useLanguage();
+const serviceDescriptionsKh: Record<string, string> = {
+  "manufacturing-and-repair": "យើងរចនា និងផលិតឧបករណ៍អគ្គិសនីដែលមានគុណភាពខ្ពស់ រួមមានខ្សែកាប ខ្សែចម្លង ម៉ាស៊ីនបំប្លែង ផ្ទាំងបញ្ជា និងបង្គោលបេតុង។",
+  "construction-and-installation": "យើងផ្តល់ជូននូវដំណោះស្រាយហេដ្ឋារចនាសម្ព័ន្ធថាមពលពីដើមដល់ចប់—ចាប់ពីបង្គោល និងម៉ាស៊ីនបំប្លែង រហូតដល់អនុស្ថានីយ និងប្រព័ន្ធត្រួតពិនិត្យដែលបំពាក់យ៉ាងពេញលេញ។",
+  "testing-and-engineering-consultation": "ចាប់ពីការកំណត់រ៉ឺឡែ និងការបន្សុទ្ធប្រេងម៉ាស៊ីនបំប្លែង រហូតដល់ការធ្វើរោគវិនិច្ឆ័យប្រព័ន្ធ សេវាកម្មធ្វើតេស្តរបស់យើងបង្កើនដំណើរការ និងពន្យារអាយុកាលទ្រព្យសកម្ម។",
+  "utilities-provider": "លើសពីឧបករណ៍ និងសេវាកម្ម ឌីនីម៉ិច គឺជាអ្នកផ្តល់សេវាទឹកភ្លើងដែលគួរឱ្យទុកចិត្ត ដោយផ្តល់ជូននូវហេដ្ឋារចនាសម្ព័ន្ធអគ្គិសនី និងទឹកនៅទូទាំងប្រទេសកម្ពុជា។",
+  "electrical-and-heavy-equipment-supply-services": "យើងផ្តល់ជូននូវជួរដ៏ទូលំទូលាយនៃដំណោះស្រាយឧបករណ៍អគ្គិសនី និងគ្រឿងចក្រធុនធ្ងន់ដែលមានគុណភាពខ្ពស់ ដើម្បីគាំទ្រដល់ការអភិវឌ្ឍន៍ហេដ្ឋារចនាសម្ព័ន្ធ។",
+};
+
+export function ServicesCarousel({ services: propServices }: Props) {
+  const { t, language } = useLanguage();
+  const services = propServices || getServices(language);
   const allServices = services.slice(0, 5);
   const totalServices = allServices.length;
   
@@ -134,7 +144,7 @@ export function ServicesCarousel({ services }: Props) {
                 {allServices[currentIndex].name}
               </h3>
               <p className="mb-4 flex-grow text-sm leading-relaxed text-slate-500">
-                {serviceDescriptions[allServices[currentIndex].slug] || allServices[currentIndex].description}
+                {(language === 'kh' ? serviceDescriptionsKh[allServices[currentIndex].slug] : serviceDescriptionsEn[allServices[currentIndex].slug]) || allServices[currentIndex].description}
               </p>
               <Link
                 href={`/services#${allServices[currentIndex].slug}`}
@@ -185,7 +195,7 @@ export function ServicesCarousel({ services }: Props) {
                       {service.name}
                     </h3>
                     <p className="flex-grow text-sm leading-relaxed text-slate-500 line-clamp-5">
-                      {serviceDescriptions[service.slug] || service.description}
+                      {(language === 'kh' ? serviceDescriptionsKh[service.slug] : serviceDescriptionsEn[service.slug]) || service.description}
                     </p>
                     <Link
                       href={`/services#${service.slug}`}

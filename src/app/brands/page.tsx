@@ -1,11 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-
-export const metadata = {
-  title: "Brands & Partnerships",
-  description:
-    "Dhinimex represents global brands across electrical, water, and automation technologies. Explore our trusted partnerships.",
-};
+import { useLanguage } from '@/lib/i18n';
 
 // All brand logos with their info - matches actual files in /public/brands/
 const brandPartners = [
@@ -34,6 +31,8 @@ const brandPartners = [
 ];
 
 export default function BrandsPage() {
+  const { language } = useLanguage();
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
@@ -47,17 +46,13 @@ export default function BrandsPage() {
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <div className="text-center">
             <p className="mb-4 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-brand-red">
-              
-              Partners & Partnerships
-              
+              {language === 'kh' ? 'ដៃគូសហការ និងភាពជាដៃគូ' : 'Partners & Partnerships'}
             </p>
             <h1 className="mb-6 text-4xl font-bold text-white sm:text-5xl lg:text-6xl">
-              Brands We Represent
+              {language === 'kh' ? 'ម៉ាកយីហោដែលយើងតំណាង' : 'Brands We Represent'}
             </h1>
             <p className="mx-auto max-w-3xl text-lg text-white/70 lg:text-xl">
-              We are the official distributor of renowned international brands, 
-              bringing trusted global quality to the Cambodian market. Our partnerships 
-              span electrical, water, automation, and engineering technologies.
+              {language === 'kh' ? 'យើងគឺជាអ្នកចែកចាយផ្លូវការនៃម៉ាកល្បីៗអន្តរជាតិ ដែលនាំយកគុណភាពស្តង់ដារពិភពលោកមកកាន់ទីផ្សារកម្ពុជា។ ភាពជាដៃគូរបស់យើងគ្របដណ្តប់លើបច្ចេកវិទ្យាអគ្គិសនី ទឹក ស្វ័យប្រវត្តិកម្ម និងវិស្វកម្ម។' : 'We are the official distributor of renowned international brands, bringing trusted global quality to the Cambodian market. Our partnerships span electrical, water, automation, and engineering technologies.'}
             </p>
           </div>
         </div>
@@ -68,11 +63,10 @@ export default function BrandsPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mb-16 text-center">
             <h2 className="mb-4 text-3xl font-bold text-brand-navy sm:text-4xl">
-              Our Trusted Partners
+              {language === 'kh' ? 'ដៃគូដែលគួរឱ្យទុកចិត្តរបស់យើង' : 'Our Trusted Partners'}
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-slate-600">
-              We collaborate with world-class brands to deliver superior quality 
-              products and solutions to our clients.
+              {language === 'kh' ? 'យើងសហការជាមួយម៉ាកល្បីៗលំដាប់ពិភពលោក ដើម្បីផ្តល់ជូនផលិតផលនិងដំណោះស្រាយប្រកបដោយគុណភាពខ្ពស់បំផុតដល់អតិថិជនរបស់យើង។' : 'We collaborate with world-class brands to deliver superior quality products and solutions to our clients.'}
             </p>
           </div>
 
@@ -105,22 +99,27 @@ export default function BrandsPage() {
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
             <div>
               <h2 className="mb-6 text-3xl font-bold text-brand-navy sm:text-4xl">
-                Why Partner With Dhinimex?
+                {language === 'kh' ? 'ហេតុអ្វីជ្រើសរើសធ្វើជាដៃគូជាមួយឌីនីម៉ិច?' : 'Why Partner With Dhinimex?'}
               </h2>
               <p className="mb-8 text-lg text-slate-600">
-                As Cambodia&apos;s leading electrical and infrastructure solutions provider, 
-                we offer our partners access to a growing market with established 
-                distribution networks and professional support.
+                {language === 'kh' ? 'ក្នុងនាមជាអ្នកផ្តល់ដំណោះស្រាយអគ្គិសនី និងហេដ្ឋារចនាសម្ព័ន្ធឈានមុខគេនៅកម្ពុជា យើងផ្តល់ជូនដៃគូរបស់យើងនូវការចូលទៅកាន់ទីផ្សារដែលកំពុងរីកចម្រើន ជាមួយនឹងបណ្តាញចែកចាយដែលបានបង្កើតឡើងយ៉ាងរឹងមាំ និងការគាំទ្រប្រកបដោយវិជ្ជាជីវៈ។' : 'As Cambodia\'s leading electrical and infrastructure solutions provider, we offer our partners access to a growing market with established distribution networks and professional support.'}
               </p>
               <ul className="space-y-4">
-                {[
+                {(language === 'kh' ? [
+                  "បទពិសោធន៍ទីផ្សារជាង ២១ ឆ្នាំ",
+                  "បណ្តាញចែកចាយទូទាំងប្រទេស",
+                  "ក្រុមលក់ និងបច្ចេកទេសប្រកបដោយវិជ្ជាជីវៈ",
+                  "សេវាកម្ម និងការគាំទ្រក្រោយពេលលក់",
+                  "សមត្ថភាពឃ្លាំង និងភស្តុភារ",
+                  "ការគាំទ្រផ្នែកទីផ្សារ និងការផ្សព្វផ្សាយម៉ាកយីហោ",
+                ] : [
                   "21+ years of market experience",
                   "Nationwide distribution network",
                   "Professional sales and technical teams",
                   "After-sales service and support",
                   "Warehousing and logistics capabilities",
                   "Marketing and brand promotion support",
-                ].map((benefit) => (
+                ]).map((benefit) => (
                   <li key={benefit} className="flex items-center gap-3">
                     <div className="flex h-6 w-6 items-center justify-center rounded-full bg-brand-red/10">
                       <svg className="h-4 w-4 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -136,7 +135,7 @@ export default function BrandsPage() {
               <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-2xl">
                 <Image
                   src="https://www.dhinimex.com/wp-content/uploads/2025/11/Dhinimex-building_e.jpg"
-                  alt="Dhinimex headquarters"
+                  alt={language === 'kh' ? "ទីស្នាក់ការកណ្តាលឌីនីម៉ិច" : "Dhinimex headquarters"}
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 50vw"
@@ -158,18 +157,17 @@ export default function BrandsPage() {
         </div>
         <div className="relative mx-auto max-w-4xl px-6 text-center lg:px-8">
           <h2 className="mb-6 text-3xl font-bold text-white sm:text-4xl">
-            Interested in Partnership?
+            {language === 'kh' ? 'ចាប់អារម្មណ៍ក្នុងភាពជាដៃគូមែនទេ?' : 'Interested in Partnership?'}
           </h2>
           <p className="mb-8 text-lg text-white/70">
-            We&apos;re always looking to expand our network of trusted brands and partners. 
-            Contact us to discuss distribution opportunities in Cambodia.
+            {language === 'kh' ? 'យើងតែងតែស្វែងរកការពង្រីកបណ្តាញនៃម៉ាកយីហោ និងដៃគូដែលគួរឱ្យទុកចិត្តរបស់យើង។ ទាក់ទងមកយើងដើម្បីពិភាក្សាអំពីឱកាសចែកចាយនៅក្នុងប្រទេសកម្ពុជា។' : 'We\'re always looking to expand our network of trusted brands and partners. Contact us to discuss distribution opportunities in Cambodia.'}
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/contact-us"
               className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-semibold text-brand-navy transition-all hover:bg-brand-red hover:text-white"
             >
-              Contact Us
+              {language === 'kh' ? 'ទំនាក់ទំនងមកយើង' : 'Contact Us'}
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
@@ -178,7 +176,7 @@ export default function BrandsPage() {
               href="/about"
               className="inline-flex items-center gap-2 rounded-full border border-white/30 px-8 py-4 text-sm font-semibold text-white transition-all hover:border-white hover:bg-white/10"
             >
-              Learn About Us
+              {language === 'kh' ? 'ស្វែងយល់ពីយើង' : 'Learn About Us'}
             </Link>
           </div>
         </div>

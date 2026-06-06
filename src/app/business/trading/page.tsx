@@ -17,20 +17,20 @@ const heroImage = "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1
 
 const companies = [
   {
-    name: "Dhinimex Co., LTD",
-    description: "Dhinimex Co., Ltd., established in 2003, is a leading provider of electrical equipment, appliances, and solar solutions in Cambodia. With over two decades of experience, we have built a reputation for quality products and reliable service.",
+    name: language === 'kh' ? "ក្រុមហ៊ុន ឌីនីម៉ិច ចំកាត់" : "Dhinimex Co., LTD",
+    description: language === 'kh' ? "ក្រុមហ៊ុន ឌីនីម៉ិច ចំកាត់ ដែលត្រូវបានបង្កើតឡើងក្នុងឆ្នាំ 2003 គឺជាក្រុមហ៊ុនឈានមុខគេក្នុងការផ្គត់ផ្គង់ឧបករណ៍អគ្គិសនី គ្រឿងប្រើប្រាស់ និងដំណោះស្រាយថាមពលព្រះអាទិត្យនៅកម្ពុជា។ ជាមួយនឹងបទពិសោធន៍ជាងពីរទសវត្សរ៍ យើងបានកសាងកេរ្តិ៍ឈ្មោះសម្រាប់ផលិតផលដែលមានគុណភាព និងសេវាកម្មដែលអាចទុកចិត្តបាន។" : "Dhinimex Co., Ltd., established in 2003, is a leading provider of electrical equipment, appliances, and solar solutions in Cambodia. With over two decades of experience, we have built a reputation for quality products and reliable service.",
     link: "/business/trading/dhinimex",
     image: "/dhinimex.jpg",
     logo: "/brands/ALL-LOGO-25.png",
-    specialty: "Electrical Equipment & Solar"
+    specialty: language === 'kh' ? "ឧបករណ៍អគ្គិសនី និងថាមពលព្រះអាទិត្យ" : "Electrical Equipment & Solar"
   },
   {
-    name: "Nicole Home Mart Co., LTD",
-    description: "Nicole Home Mart (NHM) is the official distributor of high-quality mechanical and electrical tools, home appliances, and safety equipment. We partner with leading global brands to bring the best products to Cambodian consumers.",
+    name: language === 'kh' ? "ក្រុមហ៊ុន នីកូល ហូមម៉ាត ចំកាត់" : "Nicole Home Mart Co., LTD",
+    description: language === 'kh' ? "នីកូល ហូមម៉ាត (NHM) គឺជាអ្នកចែកចាយផ្លូវការនូវឧបករណ៍មេកានិក និងអគ្គិសនី គ្រឿងប្រើប្រាស់ក្នុងផ្ទះ និងឧបករណ៍សុវត្ថិភាពដែលមានគុណភាពខ្ពស់។ យើងសហការជាមួយម៉ាកយីហោល្បីៗទូទាំងពិភពលោក ដើម្បីនាំយកផលិតផលល្អបំផុតដល់អ្នកប្រើប្រាស់កម្ពុជា។" : "Nicole Home Mart (NHM) is the official distributor of high-quality mechanical and electrical tools, home appliances, and safety equipment. We partner with leading global brands to bring the best products to Cambodian consumers.",
     link: "/business/trading/nicole-home-mart",
     image: "/nicole.jpg",
     logo: "/brands/nicole home mart logo.png",
-    specialty: "Tools & Home Appliances"
+    specialty: language === 'kh' ? "ឧបករណ៍ និងគ្រឿងប្រើប្រាស់ក្នុងផ្ទះ" : "Tools & Home Appliances"
   },
 ];
 
@@ -102,30 +102,26 @@ export default function TradingPage() {
                     <Image src="/brands/DHM-WHITE.png" alt="Dhinimex logo" width={160} height={46} priority className="h-auto w-[160px]" />
                   </Link>
                   <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
-                    <Link href="/about" className="group relative transition hover:text-white/80">
-                      About Us
-                      <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                    <Link href="/about" className="group relative transition hover:text-white/80">{t.nav.about}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
                     <div className="group relative">
-                      <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">
-                        Business Portfolio
-                        <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">{t.nav.business}<svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                         </svg>
                       </Link>
                       <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" />
                       <div className="invisible absolute left-0 top-full mt-3 w-56 rounded-xl bg-white p-2 opacity-0 shadow-2xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
-                        <Link href="/business/trading" className="block rounded-lg bg-slate-100 px-4 py-2.5 text-sm font-medium text-brand-red">Trading</Link>
-                        <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Manufacturing</Link>
-                        <Link href="/business/electricity" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Electricity Distribution</Link>
-                        <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Water Supply</Link>
-                        <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Scientific</Link>
+                        <Link href="/business/trading" className="block rounded-lg bg-slate-100 px-4 py-2.5 text-sm font-medium text-brand-red">{t.business.trading}</Link>
+                        <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.manufacturing}</Link>
+                        <Link href="/business/electricity" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.electricity}</Link>
+                        <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.water}</Link>
+                        <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.scientific}</Link>
                       </div>
                     </div>
-                    <Link href="/services" className="group relative transition hover:text-white/80">Services<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/products" className="group relative transition hover:text-white/80">Products<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/news" className="group relative transition hover:text-white/80">News<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/careers" className="group relative transition hover:text-white/80">Careers<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/services" className="group relative transition hover:text-white/80">{t.nav.services}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/products" className="group relative transition hover:text-white/80">{t.nav.products}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/news" className="group relative transition hover:text-white/80">{t.nav.blog}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/careers" className="group relative transition hover:text-white/80">{t.nav.careers}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                   </nav>
                   <div className="flex items-center gap-3">
                     <NavUtilityCluster>
@@ -155,7 +151,7 @@ export default function TradingPage() {
                     <NavUtilityDivider />
                     <NavAdminLoginLink />
                   </NavUtilityCluster>
-                    <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">Contact Us</Link>
+                    <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">{t.nav.contact}</Link>
                   </div>
                 </div>
                 {searchOpen && (
@@ -164,10 +160,10 @@ export default function TradingPage() {
                       <form onSubmit={handleSearchSubmit} className="flex items-center gap-4">
                         <div className="relative flex-1">
                           <svg className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                          <input ref={searchInputRef} type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search for services, products, careers..." className="w-full rounded-lg bg-slate-100 py-3 pl-12 pr-4 text-slate-900 placeholder-slate-500 outline-none transition focus:bg-white focus:shadow-inner" />
+                          <input ref={searchInputRef} type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder={t.nav.searchPlaceholder} className="w-full rounded-lg bg-slate-100 py-3 pl-12 pr-4 text-slate-900 placeholder-slate-500 outline-none transition focus:bg-white focus:shadow-inner" />
                         </div>
-                        <button type="submit" className="rounded-lg bg-brand-navy px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-navy/90">Search</button>
-                        <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} className="rounded-lg px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100">Cancel</button>
+                        <button type="submit" className="rounded-lg bg-brand-navy px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-navy/90">{t.nav.searchBtn}</button>
+                        <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} className="rounded-lg px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100">{t.nav.cancel}</button>
                       </form>
                     </div>
                   </div>
@@ -181,18 +177,13 @@ export default function TradingPage() {
             <div className="flex min-h-[calc(60vh-120px)] items-center py-16 lg:min-h-[calc(70vh-120px)] lg:py-0">
               <div className="max-w-2xl space-y-6">
                 <div className="flex items-center gap-3">
-                  <Link href="/business" className="text-sm font-medium text-white/70 transition hover:text-white">
-                    Business Portfolio
-                  </Link>
+                  <Link href="/business" className="text-sm font-medium text-white/70 transition hover:text-white">{t.nav.business}</Link>
                   <span className="text-white/40">/</span>
-                  <span className="text-sm font-medium text-brand-red">Trading</span>
+                  <span className="text-sm font-medium text-brand-red">{t.business.trading}</span>
                 </div>
-                <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
-                  Trading
-                </h1>
+                <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">{t.business.trading}</h1>
                 <p className="max-w-xl text-lg text-white/80">
-                  Our trading division brings world-class electrical equipment, tools, and home appliances 
-                  to Cambodia through strategic partnerships with global brands.
+                  {language === 'kh' ? "ផ្នែកពាណិជ្ជកម្មរបស់យើងនាំយកឧបករណ៍អគ្គិសនី ឧបករណ៍ និងគ្រឿងប្រើប្រាស់ក្នុងផ្ទះលំដាប់ពិភពលោកមកកាន់កម្ពុជា តាមរយៈភាពជាដៃគូយុទ្ធសាស្ត្រជាមួយម៉ាកយីហោសកល។" : "Our trading division brings world-class electrical equipment, tools, and home appliances to Cambodia through strategic partnerships with global brands."}
                 </p>
                 <div className="flex items-center gap-6 pt-4">
                   <div className="flex items-center gap-2">
@@ -203,7 +194,7 @@ export default function TradingPage() {
                     </div>
                     <div>
                       <p className="text-2xl font-bold text-white">{companies.length}</p>
-                      <p className="text-sm text-white/60">Companies</p>
+                      <p className="text-sm text-white/60">{language === 'kh' ? "ក្រុមហ៊ុន" : "Companies"}</p>
                     </div>
                   </div>
                   <div className="h-12 w-px bg-white/20" />
@@ -215,7 +206,7 @@ export default function TradingPage() {
                     </div>
                     <div>
                       <p className="text-2xl font-bold text-white">20+</p>
-                      <p className="text-sm text-white/60">Years Experience</p>
+                      <p className="text-sm text-white/60">{language === 'kh' ? "ឆ្នាំបទពិសោធន៍" : "Years Experience"}</p>
                     </div>
                   </div>
                 </div>
@@ -230,13 +221,13 @@ export default function TradingPage() {
             {/* Section Header */}
             <div className="mb-16 text-center">
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-brand-red">
-                Our Companies
+                {language === 'kh' ? "ក្រុមហ៊ុនរបស់យើង" : "Our Companies"}
               </p>
               <h2 className="text-3xl font-bold text-brand-navy lg:text-4xl">
-                Trading Division
+                {language === 'kh' ? "ផ្នែកពាណិជ្ជកម្ម" : "Trading Division"}
               </h2>
               <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
-                Connecting Cambodia with world-leading brands and products
+                {language === 'kh' ? "ភ្ជាប់ប្រទេសកម្ពុជាជាមួយម៉ាកយីហោ និងផលិតផលឈានមុខគេលើពិភពលោក" : "Connecting Cambodia with world-leading brands and products"}
               </p>
             </div>
 
@@ -294,7 +285,7 @@ export default function TradingPage() {
                       href={company.link}
                       className="inline-flex items-center gap-3 text-base font-semibold text-brand-navy transition-all group-hover:gap-4 group-hover:text-brand-red"
                     >
-                      Learn More
+                      {language === 'kh' ? "ស្វែងយល់បន្ថែម" : "Learn More"}
                       <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
@@ -313,18 +304,16 @@ export default function TradingPage() {
           </div>
           <div className="relative mx-auto max-w-4xl px-6 text-center lg:px-8">
             <h2 className="mb-4 text-3xl font-bold text-white lg:text-4xl">
-              Questions About Our Services?
+              {language === 'kh' ? "មានសំណួរអំពីសេវាកម្មរបស់យើង?" : "Questions About Our Services?"}
             </h2>
             <p className="mb-8 text-lg text-white/80">
-              Contact us to learn more about our trading solutions and product offerings.
+              {language === 'kh' ? "ទាក់ទងមកយើងដើម្បីស្វែងយល់បន្ថែមអំពីដំណោះស្រាយពាណិជ្ជកម្ម និងការផ្តល់ជូនផលិតផលរបស់យើង។" : "Contact us to learn more about our trading solutions and product offerings."}
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/contact-us"
                 className="inline-flex items-center gap-2 rounded-lg bg-brand-red px-8 py-4 text-base font-semibold text-white transition hover:bg-[#c91e21]"
-              >
-                Contact Us
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              >{t.nav.contact}<svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </Link>
@@ -332,7 +321,7 @@ export default function TradingPage() {
                 href="/services"
                 className="inline-flex items-center gap-2 rounded-lg border-2 border-white/30 px-8 py-4 text-base font-semibold text-white transition hover:bg-white/10"
               >
-                View All Services
+                {language === 'kh' ? "មើលសេវាកម្មទាំងអស់" : "View All Services"}
               </Link>
             </div>
           </div>

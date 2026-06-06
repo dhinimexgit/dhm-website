@@ -17,36 +17,36 @@ const heroImage = "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?
 
 const licenses = [
   {
-    name: "Akissni Touk Meas",
-    description: "Our largest licensed area representing a core part of our electricity distribution portfolio, supported by substantial infrastructure to meet growing demand in Kampot Province.",
+    name: language === 'kh' ? "អគ្គិសនីទូកមាស" : "Akissni Touk Meas",
+    description: language === 'kh' ? "តំបន់អាជ្ញាប័ណ្ណធំជាងគេរបស់យើងដែលតំណាងឱ្យផ្នែកស្នូលនៃផលប័ត្រចែកចាយអគ្គិសនីរបស់យើង គាំទ្រដោយហេដ្ឋារចនាសម្ព័ន្ធដ៏រឹងមាំដើម្បីបំពេញតម្រូវការដែលកំពុងកើនឡើងនៅក្នុងខេត្តកំពត។" : "Our largest licensed area representing a core part of our electricity distribution portfolio, supported by substantial infrastructure to meet growing demand in Kampot Province.",
     link: "/business/electricity/touk-meas",
     image: "/elect_distribute-1.png",
     logo: "/brands/Vector Smart Object.png",
-    province: "Kampot"
+    province: language === 'kh' ? "កំពត" : "Kampot"
   },
   {
-    name: "Akissni Dong Tong",
-    description: "Supporting vital communities in Dong Tong with operations focused on accessibility, reliability, and continuous improvement in service delivery.",
+    name: language === 'kh' ? "អគ្គិសនីដងទង់" : "Akissni Dong Tong",
+    description: language === 'kh' ? "គាំទ្រសហគមន៍សំខាន់ៗនៅក្នុងស្រុកដងទង់ ជាមួយនឹងប្រតិបត្តិការដែលផ្តោតលើភាពងាយស្រួល ភាពជឿជាក់ និងការកែលម្អជាបន្តបន្ទាប់ក្នុងការផ្តល់សេវា។" : "Supporting vital communities in Dong Tong with operations focused on accessibility, reliability, and continuous improvement in service delivery.",
     link: "/business/electricity/dong-tong",
     image: "/elect_distribute-2.png",
     logo: null,
-    province: "Kampong Speu"
+    province: language === 'kh' ? "កំពង់ស្ពឺ" : "Kampong Speu"
   },
   {
-    name: "Akissni EPOSE",
-    description: "Ensuring electricity supply to the EPOSE region with investment supporting rural development by strengthening grid reliability and expanding access to modern energy.",
+    name: language === 'kh' ? "អគ្គិសនី EPOSE" : "Akissni EPOSE",
+    description: language === 'kh' ? "ធានាការផ្គត់ផ្គង់អគ្គិសនីដល់តំបន់ EPOSE ជាមួយនឹងការវិនិយោគគាំទ្រដល់ការអភិវឌ្ឍន៍ជនបទ ដោយការពង្រឹងភាពជឿជាក់នៃបណ្តាញអគ្គិសនី និងការពង្រីកលទ្ធភាពទទួលបានថាមពលទំនើប។" : "Ensuring electricity supply to the EPOSE region with investment supporting rural development by strengthening grid reliability and expanding access to modern energy.",
     link: "/business/electricity/epose",
     image: "/elect_distribute-1.png",
     logo: "/brands/EPOSE LOGO-01.png",
-    province: "Prey Veng"
+    province: language === 'kh' ? "ព្រៃវែង" : "Prey Veng"
   },
   {
-    name: "Akissni KEANSVAY",
-    description: "Covering distribution of electricity across the Keansvay area with infrastructure investments delivering stable and affordable energy to households and businesses.",
+    name: language === 'kh' ? "អគ្គិសនីកៀនស្វាយ" : "Akissni KEANSVAY",
+    description: language === 'kh' ? "គ្របដណ្តប់ការចែកចាយអគ្គិសនីទូទាំងតំបន់កៀនស្វាយ ជាមួយនឹងការវិនិយោគហេដ្ឋារចនាសម្ព័ន្ធផ្តល់នូវថាមពលមានស្ថេរភាព និងតម្លៃសមរម្យដល់គ្រួសារ និងអាជីវកម្ម។" : "Covering distribution of electricity across the Keansvay area with infrastructure investments delivering stable and affordable energy to households and businesses.",
     link: "/business/electricity/keansvay",
     image: "/elect_distribute-2.png",
     logo: "/brands/ELEK-01.png",
-    province: "Kandal"
+    province: language === 'kh' ? "កណ្តាល" : "Kandal"
   },
 ];
 
@@ -118,30 +118,26 @@ export default function ElectricityPage() {
                     <Image src="/brands/DHM-WHITE.png" alt="Dhinimex logo" width={160} height={46} priority className="h-auto w-[160px]" />
                   </Link>
                   <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
-                    <Link href="/about" className="group relative transition hover:text-white/80">
-                      About Us
-                      <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                    <Link href="/about" className="group relative transition hover:text-white/80">{t.nav.about}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
                     <div className="group relative">
-                      <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">
-                        Business Portfolio
-                        <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">{t.nav.business}<svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                         </svg>
                       </Link>
                       <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" />
                       <div className="invisible absolute left-0 top-full mt-3 w-56 rounded-xl bg-white p-2 opacity-0 shadow-2xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
-                        <Link href="/business/trading" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Trading</Link>
-                        <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Manufacturing</Link>
-                        <Link href="/business/electricity" className="block rounded-lg bg-slate-100 px-4 py-2.5 text-sm font-medium text-brand-red">Electricity Distribution</Link>
-                        <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Water Supply</Link>
-                        <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Scientific</Link>
+                        <Link href="/business/trading" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.trading}</Link>
+                        <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.manufacturing}</Link>
+                        <Link href="/business/electricity" className="block rounded-lg bg-slate-100 px-4 py-2.5 text-sm font-medium text-brand-red">{t.business.electricity}</Link>
+                        <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.water}</Link>
+                        <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.scientific}</Link>
                       </div>
                     </div>
-                    <Link href="/services" className="group relative transition hover:text-white/80">Services<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/products" className="group relative transition hover:text-white/80">Products<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/news" className="group relative transition hover:text-white/80">News<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/careers" className="group relative transition hover:text-white/80">Careers<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/services" className="group relative transition hover:text-white/80">{t.nav.services}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/products" className="group relative transition hover:text-white/80">{t.nav.products}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/news" className="group relative transition hover:text-white/80">{t.nav.blog}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/careers" className="group relative transition hover:text-white/80">{t.nav.careers}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                   </nav>
                   <div className="flex items-center gap-3">
                     <NavUtilityCluster>
@@ -171,7 +167,7 @@ export default function ElectricityPage() {
                     <NavUtilityDivider />
                     <NavAdminLoginLink />
                   </NavUtilityCluster>
-                    <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">Contact Us</Link>
+                    <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">{t.nav.contact}</Link>
                   </div>
                 </div>
                 {searchOpen && (
@@ -180,10 +176,10 @@ export default function ElectricityPage() {
                       <form onSubmit={handleSearchSubmit} className="flex items-center gap-4">
                         <div className="relative flex-1">
                           <svg className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                          <input ref={searchInputRef} type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search for services, products, careers..." className="w-full rounded-lg bg-slate-100 py-3 pl-12 pr-4 text-slate-900 placeholder-slate-500 outline-none transition focus:bg-white focus:shadow-inner" />
+                          <input ref={searchInputRef} type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder={t.nav.searchPlaceholder} className="w-full rounded-lg bg-slate-100 py-3 pl-12 pr-4 text-slate-900 placeholder-slate-500 outline-none transition focus:bg-white focus:shadow-inner" />
                         </div>
-                        <button type="submit" className="rounded-lg bg-brand-navy px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-navy/90">Search</button>
-                        <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} className="rounded-lg px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100">Cancel</button>
+                        <button type="submit" className="rounded-lg bg-brand-navy px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-navy/90">{t.nav.searchBtn}</button>
+                        <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} className="rounded-lg px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100">{t.nav.cancel}</button>
                       </form>
                     </div>
                   </div>
@@ -197,18 +193,13 @@ export default function ElectricityPage() {
             <div className="flex min-h-[calc(60vh-120px)] items-center py-16 lg:min-h-[calc(70vh-120px)] lg:py-0">
               <div className="max-w-2xl space-y-6">
                 <div className="flex items-center gap-3">
-                  <Link href="/business" className="text-sm font-medium text-white/70 transition hover:text-white">
-                    Business Portfolio
-                  </Link>
+                  <Link href="/business" className="text-sm font-medium text-white/70 transition hover:text-white">{t.nav.business}</Link>
                   <span className="text-white/40">/</span>
-                  <span className="text-sm font-medium text-brand-red">Electricity Distribution</span>
+                  <span className="text-sm font-medium text-brand-red">{t.business.electricity}</span>
                 </div>
-                <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
-                  Electricity Distribution
-                </h1>
+                <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">{t.business.electricity}</h1>
                 <p className="max-w-xl text-lg text-white/80">
-                  Powering communities across Cambodia through licensed electricity distribution 
-                  networks in multiple provinces with reliable and sustainable energy solutions.
+                  {language === 'kh' ? "ផ្តល់ថាមពលដល់សហគមន៍ទូទាំងប្រទេសកម្ពុជា តាមរយៈបណ្តាញចែកចាយអគ្គិសនីដែលមានអាជ្ញាប័ណ្ណនៅក្នុងខេត្តជាច្រើន ជាមួយនឹងដំណោះស្រាយថាមពលដែលអាចទុកចិត្តបាន និងប្រកបដោយនិរន្តរភាព។" : "Powering communities across Cambodia through licensed electricity distribution networks in multiple provinces with reliable and sustainable energy solutions."}
                 </p>
                 <div className="flex items-center gap-6 pt-4">
                   <div className="flex items-center gap-2">
@@ -219,7 +210,7 @@ export default function ElectricityPage() {
                     </div>
                     <div>
                       <p className="text-2xl font-bold text-white">{licenses.length}</p>
-                      <p className="text-sm text-white/60">Licenses</p>
+                      <p className="text-sm text-white/60">{language === 'kh' ? "អាជ្ញាប័ណ្ណ" : "Licenses"}</p>
                     </div>
                   </div>
                   <div className="h-12 w-px bg-white/20" />
@@ -231,7 +222,7 @@ export default function ElectricityPage() {
                     </div>
                     <div>
                       <p className="text-2xl font-bold text-white">4</p>
-                      <p className="text-sm text-white/60">Provinces</p>
+                      <p className="text-sm text-white/60">{language === 'kh' ? "ខេត្ត" : "Provinces"}</p>
                     </div>
                   </div>
                 </div>
@@ -246,13 +237,13 @@ export default function ElectricityPage() {
             {/* Section Header */}
             <div className="mb-16 text-center">
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-brand-red">
-                Our Licenses
+                {language === 'kh' ? "អាជ្ញាប័ណ្ណរបស់យើង" : "Our Licenses"}
               </p>
               <h2 className="text-3xl font-bold text-brand-navy lg:text-4xl">
-                Electricity Distribution Areas
+                {language === 'kh' ? "តំបន់ចែកចាយអគ្គិសនី" : "Electricity Distribution Areas"}
               </h2>
               <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
-                Licensed distribution networks bringing reliable power to communities
+                {language === 'kh' ? "បណ្តាញចែកចាយដែលមានអាជ្ញាប័ណ្ណនាំយកថាមពលដែលអាចទុកចិត្តបានដល់សហគមន៍" : "Licensed distribution networks bringing reliable power to communities"}
               </p>
             </div>
 
@@ -315,7 +306,7 @@ export default function ElectricityPage() {
                       href={license.link}
                       className="inline-flex items-center gap-3 text-base font-semibold text-brand-navy transition-all group-hover:gap-4 group-hover:text-brand-red"
                     >
-                      View Details
+                      {language === 'kh' ? "មើលព័ត៌មានលម្អិត" : "View Details"}
                       <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
@@ -334,18 +325,16 @@ export default function ElectricityPage() {
           </div>
           <div className="relative mx-auto max-w-4xl px-6 text-center lg:px-8">
             <h2 className="mb-4 text-3xl font-bold text-white lg:text-4xl">
-              Questions About Our Services?
+              {language === 'kh' ? "មានសំណួរអំពីសេវាកម្មរបស់យើង?" : "Questions About Our Services?"}
             </h2>
             <p className="mb-8 text-lg text-white/80">
-              Contact us to learn more about electricity distribution services and solutions.
+              {language === 'kh' ? "ទាក់ទងមកយើងដើម្បីស្វែងយល់បន្ថែមអំពីសេវាកម្ម និងដំណោះស្រាយចែកចាយអគ្គិសនី។" : "Contact us to learn more about electricity distribution services and solutions."}
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/contact-us"
                 className="inline-flex items-center gap-2 rounded-lg bg-brand-red px-8 py-4 text-base font-semibold text-white transition hover:bg-[#c91e21]"
-              >
-                Contact Us
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              >{t.nav.contact}<svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </Link>
@@ -353,7 +342,7 @@ export default function ElectricityPage() {
                 href="/services"
                 className="inline-flex items-center gap-2 rounded-lg border-2 border-white/30 px-8 py-4 text-base font-semibold text-white transition hover:bg-white/10"
               >
-                View All Services
+                {language === 'kh' ? "មើលសេវាកម្មទាំងអស់" : "View All Services"}
               </Link>
             </div>
           </div>

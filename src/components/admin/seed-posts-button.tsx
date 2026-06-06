@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { db } from "@/lib/firebase";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
-import { posts } from "@/data/site-content";
+import { getPosts } from "@/data/site-content";
+import { useLanguage } from "@/lib/i18n";
 
 export function SeedPostsButton() {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
+  const { language } = useLanguage();
 
   const handleSeed = async () => {
     if (!confirm("This will populate the database with news posts from your static files. Existing posts with the same slug will be updated. Continue?")) {
@@ -19,6 +21,7 @@ export function SeedPostsButton() {
 
     try {
       let count = 0;
+      const posts = getPosts(language);
 
       for (const post of posts) {
         setStatus(`Processing ${post.title}...`);

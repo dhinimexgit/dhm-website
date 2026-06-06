@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { contactInfo } from "@/data/site-content";
+import { getContactInfo } from "@/data/site-content";
 import { useLanguage } from "@/lib/i18n";
 
 const ourBusinesses = [
@@ -63,7 +63,8 @@ const socialIconMap: Record<string, ReactNode> = {
 };
 
 export function SiteFooter() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const contactInfo = getContactInfo(language);
 
   const quickLinks = [
     { label: t.nav.about, href: "/about" },

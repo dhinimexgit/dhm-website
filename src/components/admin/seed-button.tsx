@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, query, where, getDocs, updateDoc, Timestamp } from "firebase/firestore";
-import { productCategories } from "@/data/site-content";
+import { getProductCategories } from "@/data/site-content";
 
 export function SeedButton() {
   const [loading, setLoading] = useState(false);
@@ -21,7 +21,7 @@ export function SeedButton() {
       let count = 0;
       const productsRef = collection(db, "products");
 
-      for (const brandCategory of productCategories) {
+      for (const brandCategory of getProductCategories('en')) {
         const brandSlug = brandCategory.slug;
         
         for (const product of brandCategory.products) {

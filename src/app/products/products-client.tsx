@@ -6,11 +6,18 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { db } from "@/lib/firebase";
 import { collection, onSnapshot } from "firebase/firestore";
-import type { ProductCategory, Product } from "@/data/site-content";
-import { productCategories } from "@/data/site-content";
+import type { Product } from "@/data/site-content";
 import { StickyHeader } from "@/components/home/sticky-header";
 import { ContactModal } from "@/components/contact-modal";
 import { useLanguage } from "@/lib/i18n";
+import {
+  subscribeBrands,
+  subscribeCategories,
+  buildCategoryTree,
+  localized,
+  type Brand as TaxonomyBrand,
+  type CategoryNode,
+} from "@/lib/taxonomy";
 import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
 import {
   NavUtilityCluster,
@@ -25,54 +32,9 @@ const sortOptions = [
   { label: "Price: High → Low", value: "price-desc" },
 ];
 
-const categoryTree = [
-  {
-    id: "power-tools",
-    label: "Power Tools",
-    children: [
-      { id: "drills", label: "Drills & Drivers" },
-      { id: "impact", label: "Impact & Fastening" },
-      { id: "rotary", label: "Rotary & Demolition" },
-      // NEW: For B+D Sanders and DeWalt Planers/Routers
-      { id: "woodworking", label: "Woodworking & Sanders" },
-      { id: "saws", label: "Saws & Cutting" },
-      // NEW: Huge category for B+D Mowers, Trimmers, Blowers
-      { id: "outdoor", label: "Outdoor & Garden" },
-    ],
-  },
-  {
-    id: "automotive-tools",
-    label: "Automotive Tools",
-    children: [
-      { id: "wrenches", label: "Impact Wrenches" },
-      { id: "polishers", label: "Polishers & Finishers" },
-      // NEW: For B+D ASI200 Inflator
-      { id: "inflators", label: "Inflators & Compressors" },
-      // NEW: For B+D Smart Chargers
-      { id: "battery-care", label: "Battery Chargers" },
-      // NEW: For B+D Coolers and 12V Car Vacs
-      { id: "accessories", label: "Auto Accessories & Coolers" },
-    ],
-  },
-  {
-    // RENAMED: "Dust Management" is too industrial. 
-    // "Cleaning & Floor Care" covers DeWalt jobsite vacs AND B+D home appliances.
-    id: "cleaning", 
-    label: "Cleaning & Floor Care",
-    children: [
-      // NEW: For B+D BEPW series
-      { id: "pressure-washers", label: "Pressure Washers" },
-      // Merges DeWalt extractors with B+D Handheld/Stick vacs
-      { id: "vacuums", label: "Vacuums (Wet/Dry & Handheld)" },
-      // NEW: For B+D Robot Vacs
-      { id: "robot-vacs", label: "Robot Vacuums" },
-      // NEW: For B+D Steam Mops
-      { id: "steam", label: "Steam Mops" },
-      // Kept for DeWalt Silica safety tools
-      { id: "extractors", label: "Dust Extractors" },
-    ],
-  },
-];
+// Brand list and category tree are now loaded dynamically from Firestore
+// (see @/lib/taxonomy) so they can be managed from the admin dashboard.
+
 // Helper to convert Firestore data to Product type (same as admin page)
 const docToProduct = (doc: any): Product => {
   const data = doc.data ? doc.data() : doc;
@@ -94,6 +56,9 @@ const docToProduct = (doc: any): Product => {
     brand: data.brand,
     model: data.model,
     name: data.name,
+    nameKh: data.nameKh || "",
+    summary: data.summary || "",
+    summaryKh: data.summaryKh || "",
     price: data.price,
     categories: data.categories || [],
     subCategories: data.subCategories || [],
@@ -104,7 +69,7 @@ const docToProduct = (doc: any): Product => {
     createdBy: data.createdBy,
     updatedAt: data.updatedAt?.toDate?.().toISOString() || data.updatedAt || null,
     updatedBy: data.updatedBy,
-  };
+  } as Product;
 };
 
 type Props = {
@@ -116,6 +81,10 @@ export function ProductsPageClient({ initialBrand }: Props) {
   // Real-time products from Firebase (like admin page)
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Dynamic brands & category tree (managed from the admin dashboard).
+  const [brandsList, setBrandsList] = useState<TaxonomyBrand[]>([]);
+  const [categoryTree, setCategoryTree] = useState<CategoryNode[]>([]);
   
   // Sticky header scroll state
   const [isScrolled, setIsScrolled] = useState(false);
@@ -137,6 +106,16 @@ export function ProductsPageClient({ initialBrand }: Props) {
     });
 
     return () => unsubscribe();
+  }, []);
+
+  // Subscribe to dynamic brands & categories
+  useEffect(() => {
+    const unsubBrands = subscribeBrands(setBrandsList);
+    const unsubCats = subscribeCategories((cats) => setCategoryTree(buildCategoryTree(cats)));
+    return () => {
+      unsubBrands();
+      unsubCats();
+    };
   }, []);
 
   // Scroll detection for sticky header
@@ -190,13 +169,21 @@ export function ProductsPageClient({ initialBrand }: Props) {
     }
   };
 
-  // Build categories structure from products
+  // Build brand "category" structure (brand + its products) from dynamic brands
   const categories = useMemo(() => {
-    return productCategories.map(cat => ({
-      ...cat,
-      products: products.filter(p => p.brand === cat.slug)
-    }));
-  }, [products]);
+    return brandsList
+      .filter((b) => !b.hidden)
+      .map((b) => ({
+        slug: b.slug,
+        name: localized(language, b.name, b.nameKh),
+        tagline: b.tagline || "",
+        description: b.description || "",
+        focus: b.focus || "",
+        brandColor: b.brandColor || "#1e2a78",
+        heroImage: b.heroImage || "",
+        products: products.filter((p) => p.brand === b.slug),
+      }));
+  }, [brandsList, products, language]);
 
   // State for View Mode (Landing vs Listing)
   const [viewMode, setViewMode] = useState<'landing' | 'listing'>(initialBrand ? 'listing' : 'landing');
@@ -377,30 +364,25 @@ export function ProductsPageClient({ initialBrand }: Props) {
 
     if (selectedCategories.length === 1) {
       // Find label from flat list or tree (simplified check)
-      const catLabel = categoryTree.flatMap(c => [c, ...(c.children || [])]).find(c => c.id === selectedCategories[0])?.label || selectedCategories[0];
+      const flat = categoryTree.flatMap(c => [c, ...(c.children || [])]);
+      const match = flat.find(c => c.id === selectedCategories[0]);
+      const catLabel = match ? localized(language, match.label, match.labelKh) : selectedCategories[0];
       parts.push(catLabel);
     } else if (selectedCategories.length > 1) {
       parts.push(`${selectedCategories.length} Categories`);
     }
 
     return parts.length > 0 ? parts.join(" / ") : t.productsPage.listing.allProducts;
-  }, [selectedBrands, selectedCategories, categories, t]);
+  }, [selectedBrands, selectedCategories, categories, categoryTree, language, t]);
 
-  // Updated categories list to remove redundancy and match the user's request
-  const displayCategories = [
-    { id: "automotive-tools", label: "Automotive Tools", count: 12 },
-    { id: "cleaning-drainage", label: "Cleaning & Drainage", count: 8 },
-    { id: "decorating-tiling", label: "Decorating & Tiling", count: 15 },
-    { id: "detectors-testing", label: "Detectors & Testing", count: 6 },
-    { id: "electrical", label: "Electrical", count: 24 },
-    { id: "engineering-tools", label: "Engineering Tools", count: 10 },
-    { id: "hand-tools", label: "Hand Tools", count: 32 },
-    { id: "power-tool-accessories", label: "Accessories", count: 45 },
-    { id: "power-tools", label: "Power Tools", count: 28 },
-    { id: "tool-boxes-storage", label: "Storage", count: 14 },
-    { id: "tool-kits", label: "Tool Kits", count: 9 },
-    { id: "workwear", label: "Workwear", count: 18 },
-  ];
+  // Top-level categories shown as "browse by category" tiles on the landing.
+  const displayCategories = useMemo(() => {
+    return categoryTree.map((group) => {
+      const ids = [group.id, ...group.children.map((c) => c.id)];
+      const count = products.filter((p) => p.categories?.some((c: string) => ids.includes(c))).length;
+      return { id: group.id, label: localized(language, group.label, group.labelKh), count };
+    });
+  }, [categoryTree, products, language]);
 
   // Get featured products (just taking top rated from all brands for the showcase)
   const featuredProducts = useMemo(() => {
@@ -611,7 +593,7 @@ export function ProductsPageClient({ initialBrand }: Props) {
                               htmlFor={`cat-${group.id}`} 
                               className="font-medium text-slate-700 cursor-pointer flex-1"
                             >
-                              {group.label}
+                              {localized(language, group.label, group.labelKh)}
                             </label>
                             {hasChildren && (
                               <button
@@ -646,7 +628,7 @@ export function ProductsPageClient({ initialBrand }: Props) {
                                     onChange={() => toggleCategory(child.id)}
                                     className="rounded border-slate-300 text-brand-navy focus:ring-brand-navy"
                                   />
-                                  <label htmlFor={`cat-${child.id}`} className="text-slate-600 cursor-pointer">{child.label}</label>
+                                  <label htmlFor={`cat-${child.id}`} className="text-slate-600 cursor-pointer">{localized(language, child.label, child.labelKh)}</label>
                                 </li>
                               ))}
                             </ul>
@@ -690,7 +672,15 @@ export function ProductsPageClient({ initialBrand }: Props) {
                           onChange={() => setSortOption(option.value)}
                           className="text-brand-navy focus:ring-brand-navy"
                         />
-                        <label htmlFor={`sort-${option.value}`} className="text-sm text-slate-600 cursor-pointer">{option.label}</label>
+                        <label htmlFor={`sort-${option.value}`} className="text-sm text-slate-600 cursor-pointer">
+                          {language === 'kh' 
+                            ? option.value === "newest" ? "ថ្មីបំផុត → ចាស់បំផុត"
+                            : option.value === "oldest" ? "ចាស់បំផុត → ថ្មីបំផុត"
+                            : option.value === "price-asc" ? "តម្លៃ: ទាប → ខ្ពស់"
+                            : option.value === "price-desc" ? "តម្លៃ: ខ្ពស់ → ទាប"
+                            : option.label
+                            : option.label}
+                        </label>
                       </div>
                     ))}
                   </div>
@@ -921,7 +911,7 @@ function FeaturedProductCard({ product, categorySlug }: { product: any, category
       
       <div className="mb-2 text-xs font-semibold uppercase text-slate-400">{product.brand}</div>
       <h3 className="mb-2 line-clamp-2 min-h-[2.5rem] text-sm font-bold text-brand-navy group-hover:text-brand-red">
-        {product.name}
+        {language === "kh" && product.nameKh ? product.nameKh : product.name}
       </h3>
       
       {product.price && Number(product.price) > 0 ? (
@@ -934,7 +924,8 @@ function FeaturedProductCard({ product, categorySlug }: { product: any, category
             productName={product.name}
             triggerText={t.productsPage.card.requestQuote}
             triggerClassName="inline-block rounded-md bg-slate-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-navy hover:bg-slate-200 transition-colors"
-            initialQuestion={`I would like to request a quotation for ${product.name}.`}
+            initialQuestion={language === 'kh' ? `ខ្ញុំចង់ស្នើសុំសម្រង់តម្លៃសម្រាប់ ${product.name}។` : `I would like to request a quotation for ${product.name}.`}
+            language={language}
           />
         </div>
       )}
@@ -1032,42 +1023,30 @@ function HeroSection({
                 />
               </Link>
               <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
-                <Link href="/about" className="group relative transition hover:text-white/80">
-                  About Us
-                  <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                <Link href="/about" className="group relative transition hover:text-white/80">{t.nav.about}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                 </Link>
                 <div className="group relative">
-                  <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">
-                    Business Portfolio
-                    <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">{t.nav.business}<svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                     </svg>
                   </Link>
                   <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                   <div className="invisible absolute left-0 top-full mt-3 w-56 rounded-xl bg-white p-2 opacity-0 shadow-2xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
-                    <Link href="/business/trading" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Trading</Link>
-                    <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Manufacturing</Link>
-                    <Link href="/business/electricity" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Electricity Distribution</Link>
-                    <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Water Supply</Link>
-                    <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Scientific</Link>
+                    <Link href="/business/trading" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.trading}</Link>
+                    <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.manufacturing}</Link>
+                    <Link href="/business/electricity" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.electricity}</Link>
+                    <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.water}</Link>
+                    <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.scientific}</Link>
                   </div>
                 </div>
-                <Link href="/services" className="group relative transition hover:text-white/80">
-                  Services
-                  <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                <Link href="/services" className="group relative transition hover:text-white/80">{t.nav.services}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                 </Link>
                 {/* Products - Active */}
-                <Link href="/products" className="group relative transition hover:text-white/80">
-                  Products
-                  <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" />
+                <Link href="/products" className="group relative transition hover:text-white/80">{t.nav.products}<span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" />
                 </Link>
-                <Link href="/news" className="group relative transition hover:text-white/80">
-                  News
-                  <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                <Link href="/news" className="group relative transition hover:text-white/80">{t.nav.blog}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                 </Link>
-                <Link href="/careers" className="group relative transition hover:text-white/80">
-                  Careers
-                  <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                <Link href="/careers" className="group relative transition hover:text-white/80">{t.nav.careers}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                 </Link>
               </nav>
               <div className="flex items-center gap-3">
@@ -1100,9 +1079,7 @@ function HeroSection({
                     <NavUtilityDivider />
                     <NavAdminLoginLink />
                   </NavUtilityCluster>
-                <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">
-                  Contact Us
-                </Link>
+                <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">{t.nav.contact}</Link>
               </div>
             </div>
 
@@ -1123,12 +1100,12 @@ function HeroSection({
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Search for services, products, careers..."
+                        placeholder={t.nav.searchPlaceholder}
                         className="w-full rounded-lg bg-slate-100 py-3 pl-12 pr-4 text-slate-900 placeholder-slate-500 outline-none transition focus:bg-white focus:shadow-inner"
                       />
                     </div>
-                    <button type="submit" className="rounded-lg bg-brand-navy px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-navy/90">Search</button>
-                    <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} className="rounded-lg px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100">Cancel</button>
+                    <button type="submit" className="rounded-lg bg-brand-navy px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-navy/90">{t.nav.searchBtn}</button>
+                    <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} className="rounded-lg px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100">{t.nav.cancel}</button>
                   </form>
                 </div>
               </div>

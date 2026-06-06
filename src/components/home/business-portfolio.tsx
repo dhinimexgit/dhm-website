@@ -3,21 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n";
-
-const companyLogos = [
-  { name: "ThiPha Cable", logo: "/brands/ALL-LOGO-01.png", href: "/business/trading" },
-  { name: "Mitsubishi Electric", logo: "/brands/ALL-LOGO-02.png", href: "/business/manufacturing" },
-  { name: "LS VINA", logo: "/brands/ALL-LOGO-03.png", href: "/business/electricity" },
-  { name: "Partner Brand", logo: "/brands/ALL-LOGO-04.png", href: "#" },
-  { name: "Black+Decker", logo: "/brands/ALL-LOGO-05.png", href: "/business/scientific" },
-  { name: "Stanley", logo: "/brands/ALL-LOGO-06.png", href: "#" },
-  { name: "Hi-Min Solar", logo: "/brands/ALL-LOGO-07.png", href: "#" },
-  { name: "Partner Brand", logo: "/brands/ALL-LOGO-10.png", href: "#" },
-  { name: "Partner Brand", logo: "/brands/ALL-LOGO-11.png", href: "#" },
-];
+import { getBrands } from "@/data/site-content";
 
 export function BusinessPortfolio() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const companyLogos = getBrands(language);
   const items = [...companyLogos, ...companyLogos];
 
   return (
@@ -54,7 +44,7 @@ export function BusinessPortfolio() {
             {items.map((company, index) => (
               <Link
                 key={`${company.name}-${index}`}
-                href={company.href}
+                href={"#"}
                 className="group relative flex h-20 w-40 flex-shrink-0 items-center justify-center transition-all duration-300 hover:scale-110"
               >
                 <Image

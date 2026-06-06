@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { StickyHeader } from "@/components/home/sticky-header";
 import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
+import { useLanguage } from '@/lib/i18n';
 import {
   NavUtilityCluster,
   NavUtilityDivider,
@@ -16,21 +17,8 @@ const heroImage = "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=1
 // Content: Water treatment plant (same as Chhouk license page)
 const contentImage = "/water-supply.png";
 
-const waterServices = [
-  "Water treatment plant design and construction",
-  "Pumping station installation and maintenance",
-  "Distribution network development",
-  "Smart metering and monitoring systems",
-];
-
-const utilityFeatures = [
-  "24/7 operational monitoring",
-  "Preventive maintenance programs",
-  "Emergency response teams",
-  "Quality assurance and testing",
-];
-
 export default function WaterAndUtilityDetailPage() {
+  const { t, language, setLanguage } = useLanguage();
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -38,6 +26,30 @@ export default function WaterAndUtilityDetailPage() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const waterServices = language === 'kh' ? [
+    "ការរចនា និងសាងសង់រោងចក្រប្រព្រឹត្តកម្មទឹកស្អាត",
+    "ការដំឡើង និងថែទាំស្ថានីយបូមទឹក",
+    "ការអភិវឌ្ឍបណ្តាញចែកចាយទឹក",
+    "ប្រព័ន្ធម៉ែត្រឆ្លាតវៃ និងប្រព័ន្ធត្រួតពិនិត្យ",
+  ] : [
+    "Water treatment plant design and construction",
+    "Pumping station installation and maintenance",
+    "Distribution network development",
+    "Smart metering and monitoring systems",
+  ];
+
+  const utilityFeatures = language === 'kh' ? [
+    "ការត្រួតពិនិត្យប្រតិបត្តិការ 24/7",
+    "កម្មវិធីថែទាំបង្ការ",
+    "ក្រុមឆ្លើយតបបន្ទាន់",
+    "ការធានាគុណភាព និងការធ្វើតេស្ត",
+  ] : [
+    "24/7 operational monitoring",
+    "Preventive maintenance programs",
+    "Emergency response teams",
+    "Quality assurance and testing",
+  ];
 
   return (
     <>
@@ -47,7 +59,7 @@ export default function WaterAndUtilityDetailPage() {
         {/* Hero Banner Section */}
         <section className="relative min-h-[50vh] overflow-hidden lg:min-h-[60vh]">
           <div className="absolute inset-0 z-0">
-            <Image src={heroImage} alt="Water and Utility" fill priority className="object-cover" sizes="100vw" />
+            <Image src={heroImage} alt={language === 'kh' ? "ទឹក និងសេវាកម្ម" : "Water and Utility"} fill priority className="object-cover" sizes="100vw" />
             <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/90 via-brand-navy/70 to-brand-navy/50" />
           </div>
 
@@ -60,30 +72,28 @@ export default function WaterAndUtilityDetailPage() {
                     <Image src="/brands/DHM-WHITE.png" alt="Dhinimex logo" width={160} height={46} priority className="h-auto w-[160px]" />
                   </Link>
                   <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
-                    <Link href="/about" className="group relative transition hover:text-white/80">About Us<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/about" className="group relative transition hover:text-white/80">{t.nav.about}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                     <div className="group relative">
-                      <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">
-                        Business Portfolio
-                        <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                      <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">{t.nav.business}<svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
                       </Link>
                       <div className="invisible absolute left-0 top-full mt-3 w-56 rounded-xl bg-white p-2 opacity-0 shadow-2xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
-                        <Link href="/business/trading" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Trading</Link>
-                        <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Manufacturing</Link>
-                        <Link href="/business/electricity" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Electricity Distribution</Link>
-                        <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Water Supply</Link>
-                        <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Scientific</Link>
+                        <Link href="/business/trading" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.trading}</Link>
+                        <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.manufacturing}</Link>
+                        <Link href="/business/electricity" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.electricity}</Link>
+                        <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.water}</Link>
+                        <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.scientific}</Link>
                       </div>
                     </div>
-                    <Link href="/services" className="group relative transition hover:text-white/80">Services<span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" /></Link>
-                    <Link href="/products" className="group relative transition hover:text-white/80">Products<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/news" className="group relative transition hover:text-white/80">News<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/careers" className="group relative transition hover:text-white/80">Careers<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/services" className="group relative transition hover:text-white/80">{t.nav.services}<span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" /></Link>
+                    <Link href="/products" className="group relative transition hover:text-white/80">{t.nav.products}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/news" className="group relative transition hover:text-white/80">{t.nav.blog}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/careers" className="group relative transition hover:text-white/80">{t.nav.careers}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                   </nav>
                   <div className="flex items-center gap-3">
                     <NavUtilityCluster>
                     <NavAdminLoginLink />
                   </NavUtilityCluster>
-                  <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">Contact Us</Link>
+                  <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">{t.nav.contact}</Link>
                   </div>
                 </div>
               </div>
@@ -95,17 +105,17 @@ export default function WaterAndUtilityDetailPage() {
             <div className="flex min-h-[calc(50vh-120px)] items-center py-16 lg:min-h-[calc(60vh-120px)] lg:py-0">
               <div className="max-w-2xl space-y-4">
                 <div className="flex items-center gap-3 text-sm">
-                  <Link href="/" className="font-medium text-white/70 transition hover:text-white">Home</Link>
+                  <Link href="/" className="font-medium text-white/70 transition hover:text-white">{language === 'kh' ? 'ទំព័រដើម' : 'Home'}</Link>
                   <span className="text-white/40">/</span>
-                  <Link href="/services" className="font-medium text-white/70 transition hover:text-white">Services</Link>
+                  <Link href="/services" className="font-medium text-white/70 transition hover:text-white">{t.nav.services}</Link>
                   <span className="text-white/40">/</span>
-                  <span className="font-medium text-brand-red">Water & Utility</span>
+                  <span className="font-medium text-brand-red">{language === 'kh' ? 'ទឹក និងសេវាកម្ម' : 'Water & Utility'}</span>
                 </div>
                 <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
-                  Water & Utility
+                  {language === 'kh' ? 'ទឹក និងសេវាកម្ម' : 'Water & Utility'}
                 </h1>
                 <p className="max-w-xl text-lg text-white/80">
-                  Comprehensive water infrastructure and utility management solutions.
+                  {language === 'kh' ? 'ហេដ្ឋារចនាសម្ព័ន្ធទឹកគ្រប់ជ្រុងជ្រោយ និងដំណោះស្រាយគ្រប់គ្រងសេវាកម្ម។' : 'Comprehensive water infrastructure and utility management solutions.'}
                 </p>
               </div>
             </div>
@@ -120,30 +130,30 @@ export default function WaterAndUtilityDetailPage() {
               <div className="relative">
                 <div className="absolute -left-4 -top-4 h-full w-full rounded-2xl bg-brand-navy/10 lg:-left-6 lg:-top-6" />
                 <div className="relative overflow-hidden rounded-2xl shadow-2xl">
-                  <Image src={contentImage} alt="Water and Utility" width={720} height={480} className="h-auto w-full object-cover" priority />
+                  <Image src={contentImage} alt={language === 'kh' ? "ទឹក និងសេវាកម្ម" : "Water and Utility"} width={720} height={480} className="h-auto w-full object-cover" priority />
                 </div>
               </div>
 
               {/* Content Side */}
               <div className="space-y-8">
                 <div>
-                  <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-brand-red">Our Services</p>
-                  <h2 className="text-3xl font-bold text-brand-navy lg:text-4xl">Water & Utility</h2>
+                  <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-brand-red">{language === 'kh' ? 'សេវាកម្មរបស់យើង' : 'Our Services'}</p>
+                  <h2 className="text-3xl font-bold text-brand-navy lg:text-4xl">{language === 'kh' ? 'ទឹក និងសេវាកម្ម' : 'Water & Utility'}</h2>
                 </div>
                 
                 <div className="space-y-4 text-base leading-relaxed text-slate-600">
                   <p>
-                    Our <strong className="text-brand-navy">Water & Utility services</strong> provide comprehensive solutions for water infrastructure, pumping systems, and utility management across Cambodia.
+                    <strong className="text-brand-navy">{language === 'kh' ? 'សេវាកម្មទឹកនិងសេវាកម្មរបស់យើង' : 'Our Water & Utility services'}</strong> {language === 'kh' ? 'ផ្តល់នូវដំណោះស្រាយគ្រប់ជ្រុងជ្រោយសម្រាប់ហេដ្ឋារចនាសម្ព័ន្ធទឹក ប្រព័ន្ធបូមទឹក និងការគ្រប់គ្រងសេវាកម្មនៅទូទាំងប្រទេសកម្ពុជា។' : 'provide comprehensive solutions for water infrastructure, pumping systems, and utility management across Cambodia.'}
                   </p>
                   <p>
-                    From treatment plant design to distribution network development, we deliver end-to-end solutions that ensure communities have access to clean, reliable water supply.
+                    {language === 'kh' ? 'ចាប់ពីការរចនារោងចក្រប្រព្រឹត្តកម្ម រហូតដល់ការអភិវឌ្ឍបណ្តាញចែកចាយ យើងផ្តល់នូវដំណោះស្រាយពីចុងដល់ចប់ ដែលធានាថាសហគមន៍អាចទទួលបានការផ្គត់ផ្គង់ទឹកស្អាត និងអាចពឹងផ្អែកបាន។' : 'From treatment plant design to distribution network development, we deliver end-to-end solutions that ensure communities have access to clean, reliable water supply.'}
                   </p>
                 </div>
 
                 {/* Service Cards */}
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="rounded-xl bg-white p-6 shadow-md">
-                    <h3 className="mb-3 text-lg font-semibold text-brand-navy">Water Services</h3>
+                    <h3 className="mb-3 text-lg font-semibold text-brand-navy">{language === 'kh' ? 'សេវាកម្មទឹក' : 'Water Services'}</h3>
                     <ul className="space-y-2 text-sm text-slate-600">
                       {waterServices.map((item, index) => (
                         <li key={index} className="flex gap-2">
@@ -154,7 +164,7 @@ export default function WaterAndUtilityDetailPage() {
                     </ul>
                   </div>
                   <div className="rounded-xl bg-white p-6 shadow-md">
-                    <h3 className="mb-3 text-lg font-semibold text-brand-navy">Utility Features</h3>
+                    <h3 className="mb-3 text-lg font-semibold text-brand-navy">{language === 'kh' ? 'លក្ខណៈសេវាកម្ម' : 'Utility Features'}</h3>
                     <ul className="space-y-2 text-sm text-slate-600">
                       {utilityFeatures.map((item, index) => (
                         <li key={index} className="flex gap-2">
@@ -168,18 +178,16 @@ export default function WaterAndUtilityDetailPage() {
 
                 {/* Actions */}
                 <div className="flex flex-wrap items-center gap-4 pt-4">
-                  <Link href="/contact-us" className="inline-flex items-center gap-2 rounded-lg bg-brand-red px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#c91e21]">
-                    Contact Us
-                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                  <Link href="/contact-us" className="inline-flex items-center gap-2 rounded-lg bg-brand-red px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#c91e21]">{t.nav.contact}<svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                   </Link>
                   <Link href="/business/water-supply" className="inline-flex items-center gap-2 rounded-lg border-2 border-brand-navy px-6 py-3 text-sm font-semibold text-brand-navy transition hover:bg-brand-navy hover:text-white">
-                    View Water Licenses
+                    {language === 'kh' ? 'មើលអាជ្ញាប័ណ្ណទឹក' : 'View Water Licenses'}
                   </Link>
                 </div>
 
                 {/* Social Media */}
                 <div className="flex items-center gap-3 pt-4">
-                  <span className="text-sm font-medium text-slate-500">Follow us:</span>
+                  <span className="text-sm font-medium text-slate-500">{language === 'kh' ? 'តាមដានពួកយើង៖' : 'Follow us:'}</span>
                   <a href="https://facebook.com/dhinimex" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-navy text-white transition hover:bg-brand-navy/80" aria-label="Facebook">
                     <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                   </a>
@@ -192,10 +200,10 @@ export default function WaterAndUtilityDetailPage() {
         {/* CTA Section */}
         <section className="bg-brand-navy py-16">
           <div className="mx-auto max-w-4xl px-6 text-center lg:px-8">
-            <h2 className="mb-4 text-2xl font-bold text-white lg:text-3xl">Need Water & Utility Solutions?</h2>
-            <p className="mb-8 text-white/80">Contact us to discuss your water infrastructure and utility needs.</p>
+            <h2 className="mb-4 text-2xl font-bold text-white lg:text-3xl">{language === 'kh' ? 'ត្រូវការដំណោះស្រាយទឹកនិងសេវាកម្មមែនទេ?' : 'Need Water & Utility Solutions?'}</h2>
+            <p className="mb-8 text-white/80">{language === 'kh' ? 'ទាក់ទងមកយើងដើម្បីពិភាក្សាអំពីហេដ្ឋារចនាសម្ព័ន្ធទឹក និងតម្រូវការសេវាកម្មរបស់អ្នក។' : 'Contact us to discuss your water infrastructure and utility needs.'}</p>
             <Link href="/contact-us" className="inline-flex items-center gap-2 rounded-lg bg-brand-red px-8 py-4 text-base font-semibold text-white transition hover:bg-[#c91e21]">
-              Get in Touch
+              {language === 'kh' ? 'ទំនាក់ទំនងមកយើង' : 'Get in Touch'}
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
             </Link>
           </div>

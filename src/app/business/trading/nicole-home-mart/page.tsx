@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { StickyHeader } from "@/components/home/sticky-header";
 import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
 import {
+import { useLanguage } from '@/lib/i18n';
   NavUtilityCluster,
   NavUtilityDivider,
   NAV_UTILITY_ICON_CLASS,
@@ -24,12 +25,13 @@ const brands = [
 ];
 
 const locations = [
-  { name: "Toul Tum Pong", detail: "(near Russian Market)", mapLink: "https://www.google.com/maps/search/Nicole+Home+Mart+Toul+Tum+Pong" },
-  { name: "Tep Phan Street", detail: "(at Dhinimex Office)", mapLink: "https://www.google.com/maps/search/Dhinimex+Co.,+Ltd" },
-  { name: "Kiensvay", detail: "(at Kiensvay Electricity Office)", mapLink: "https://www.google.com/maps/search/Electricite+du+Cambodge+Kien+Svay" },
+  { name: language === 'kh' ? "ទួលទំពូង" : "Toul Tum Pong", detail: language === 'kh' ? "(ជិតផ្សារទួលទំពូង)" : "(near Russian Market)", mapLink: "https://www.google.com/maps/search/Nicole+Home+Mart+Toul+Tum+Pong" },
+  { name: language === 'kh' ? "ផ្លូវទេពផន" : "Tep Phan Street", detail: language === 'kh' ? "(នៅការិយាល័យឌីនីម៉ិច)" : "(at Dhinimex Office)", mapLink: "https://www.google.com/maps/search/Dhinimex+Co.,+Ltd" },
+  { name: language === 'kh' ? "កៀនស្វាយ" : "Kiensvay", detail: language === 'kh' ? "(នៅការិយាល័យអគ្គិសនីកៀនស្វាយ)" : "(at Kiensvay Electricity Office)", mapLink: "https://www.google.com/maps/search/Electricite+du+Cambodge+Kien+Svay" },
 ];
 
 export default function NicoleHomeMartDetailPage() {
+  const { t, language, setLanguage } = useLanguage();
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -96,25 +98,23 @@ export default function NicoleHomeMartDetailPage() {
                     <Image src="/brands/DHM-WHITE.png" alt="Dhinimex logo" width={160} height={46} priority className="h-auto w-[160px]" />
                   </Link>
                   <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
-                    <Link href="/about" className="group relative transition hover:text-white/80">About Us<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/about" className="group relative transition hover:text-white/80">{t.nav.about}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                     <div className="group relative">
-                      <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">
-                        Business Portfolio
-                        <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                      <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">{t.nav.business}<svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
                       </Link>
                       <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" />
                       <div className="invisible absolute left-0 top-full mt-3 w-56 rounded-xl bg-white p-2 opacity-0 shadow-2xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
-                        <Link href="/business/trading" className="block rounded-lg bg-slate-100 px-4 py-2.5 text-sm font-medium text-brand-red">Trading</Link>
-                        <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Manufacturing</Link>
-                        <Link href="/business/electricity" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Electricity Distribution</Link>
-                        <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Water Supply</Link>
-                        <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Scientific</Link>
+                        <Link href="/business/trading" className="block rounded-lg bg-slate-100 px-4 py-2.5 text-sm font-medium text-brand-red">{t.business.trading}</Link>
+                        <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.manufacturing}</Link>
+                        <Link href="/business/electricity" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.electricity}</Link>
+                        <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.water}</Link>
+                        <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.scientific}</Link>
                       </div>
                     </div>
-                    <Link href="/services" className="group relative transition hover:text-white/80">Services<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/products" className="group relative transition hover:text-white/80">Products<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/news" className="group relative transition hover:text-white/80">News<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/careers" className="group relative transition hover:text-white/80">Careers<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/services" className="group relative transition hover:text-white/80">{t.nav.services}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/products" className="group relative transition hover:text-white/80">{t.nav.products}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/news" className="group relative transition hover:text-white/80">{t.nav.blog}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/careers" className="group relative transition hover:text-white/80">{t.nav.careers}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                   </nav>
                   <div className="flex items-center gap-3">
                     <NavUtilityCluster>
@@ -129,7 +129,7 @@ export default function NicoleHomeMartDetailPage() {
                     <NavUtilityDivider />
                     <NavAdminLoginLink />
                   </NavUtilityCluster>
-                    <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">Contact Us</Link>
+                    <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">{t.nav.contact}</Link>
                   </div>
                 </div>
                 {searchOpen && (
@@ -140,7 +140,7 @@ export default function NicoleHomeMartDetailPage() {
                           <svg className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                           <input ref={searchInputRef} type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search..." className="w-full rounded-lg bg-slate-100 py-3 pl-12 pr-4 text-slate-900 placeholder-slate-500 outline-none" />
                         </div>
-                        <button type="submit" className="rounded-lg bg-brand-navy px-6 py-3 text-sm font-semibold text-white">Search</button>
+                        <button type="submit" className="rounded-lg bg-brand-navy px-6 py-3 text-sm font-semibold text-white">{t.nav.searchBtn}</button>
                       </form>
                     </div>
                   </div>
@@ -154,9 +154,9 @@ export default function NicoleHomeMartDetailPage() {
             <div className="flex min-h-[calc(50vh-120px)] items-center py-16 lg:min-h-[calc(60vh-120px)] lg:py-0">
               <div className="max-w-2xl space-y-4">
                 <div className="flex items-center gap-3 text-sm">
-                  <Link href="/business" className="font-medium text-white/70 transition hover:text-white">Business Portfolio</Link>
+                  <Link href="/business" className="font-medium text-white/70 transition hover:text-white">{t.nav.business}</Link>
                   <span className="text-white/40">/</span>
-                  <Link href="/business/trading" className="font-medium text-white/70 transition hover:text-white">Trading</Link>
+                  <Link href="/business/trading" className="font-medium text-white/70 transition hover:text-white">{t.business.trading}</Link>
                   <span className="text-white/40">/</span>
                   <span className="font-medium text-brand-red">Nicole Home Mart</span>
                 </div>
@@ -192,19 +192,19 @@ export default function NicoleHomeMartDetailPage() {
                 
                 <div className="space-y-4 text-base leading-relaxed text-slate-600">
                   <p>
-                    <strong className="text-brand-navy">Nicole Home Mart (NHM)</strong> is the official distributor of high-quality mechanical and electrical tools, home appliances, and safety equipment.
+                    <strong className="text-brand-navy">{language === 'kh' ? "នីកូល ហូមម៉ាត (NHM)" : "Nicole Home Mart (NHM)"}</strong>{language === 'kh' ? " គឺជាអ្នកចែកចាយផ្លូវការនូវឧបករណ៍មេកានិក និងអគ្គិសនី គ្រឿងប្រើប្រាស់ក្នុងផ្ទះ និងឧបករណ៍សុវត្ថិភាពដែលមានគុណភាពខ្ពស់។" : " is the official distributor of high-quality mechanical and electrical tools, home appliances, and safety equipment."}
                   </p>
                   <p>
-                    Supplying globally recognized brands like <strong>Mitsubishi Electric, Stanley, Solo, and Kyoritsu</strong>, NHM ensures reliable products and solutions for homes, businesses, and industries across Cambodia.
+                    {language === 'kh' ? "ផ្គត់ផ្គង់ម៉ាកយីហោល្បីៗទូទាំងពិភពលោកដូចជា " : "Supplying globally recognized brands like "}<strong>Mitsubishi Electric, Stanley, Solo, {language === 'kh' ? "និង" : "and"} Kyoritsu</strong>{language === 'kh' ? ", NHM ធានាបាននូវផលិតផល និងដំណោះស្រាយដែលអាចទុកចិត្តបានសម្រាប់គេហដ្ឋាន អាជីវកម្ម និងឧស្សាហកម្មទូទាំងប្រទេសកម្ពុជា។" : ", NHM ensures reliable products and solutions for homes, businesses, and industries across Cambodia."}
                   </p>
                   <p>
-                    Our product portfolio includes power tools, welding machines, gardening and measurement tools, motors, pumps, breakers (MCB, MCCB, ACB), lamps, sockets, energy meters, fire extinguishers, home appliances, and more.
+                    {language === 'kh' ? "ផលប័ត្រផលិតផលរបស់យើងរួមមាន ឧបករណ៍អគ្គិសនី ម៉ាស៊ីនផ្សារ ឧបករណ៍ថែសួន និងឧបករណ៍វាស់វែង ម៉ូទ័រ ម៉ាស៊ីនបូមទឹក កុងតាក់ (MCB, MCCB, ACB) អំពូលភ្លើង ព្រីភ្លើង កុងទ័រភ្លើង បំពង់ពន្លត់អគ្គិភ័យ គ្រឿងប្រើប្រាស់ក្នុងផ្ទះ និងច្រើនទៀត។" : "Our product portfolio includes power tools, welding machines, gardening and measurement tools, motors, pumps, breakers (MCB, MCCB, ACB), lamps, sockets, energy meters, fire extinguishers, home appliances, and more."}
                   </p>
                 </div>
 
                 {/* Brands */}
                 <div>
-                  <h3 className="mb-4 text-lg font-semibold text-brand-navy">Our Partner Brands</h3>
+                  <h3 className="mb-4 text-lg font-semibold text-brand-navy">{language === 'kh' ? "ម៉ាកយីហោដៃគូរបស់យើង" : "Our Partner Brands"}</h3>
                   <div className="flex flex-wrap gap-2">
                     {brands.map((brand) => (
                       <span key={brand.name} className="rounded-full border-2 border-brand-navy/20 bg-white px-4 py-2 text-sm font-medium text-brand-navy shadow-sm">
@@ -216,7 +216,7 @@ export default function NicoleHomeMartDetailPage() {
 
                 {/* Locations */}
                 <div>
-                  <h3 className="mb-4 text-lg font-semibold text-brand-navy">Our Locations</h3>
+                  <h3 className="mb-4 text-lg font-semibold text-brand-navy">{language === 'kh' ? "ទីតាំងរបស់យើង" : "Our Locations"}</h3>
                   <div className="space-y-3">
                     {locations.map((location, index) => (
                       <div key={location.name} className="flex items-center justify-between rounded-xl bg-white p-4 shadow-md">
@@ -229,7 +229,7 @@ export default function NicoleHomeMartDetailPage() {
                         </div>
                         <a href={location.mapLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 rounded-lg bg-slate-100 px-3 py-2 text-xs font-medium text-brand-navy transition hover:bg-brand-navy hover:text-white">
                           <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                          Map
+                          {language === 'kh' ? "ផែនទី" : "Map"}
                         </a>
                       </div>
                     ))}
@@ -251,11 +251,9 @@ export default function NicoleHomeMartDetailPage() {
         {/* CTA Section */}
         <section className="bg-brand-navy py-16">
           <div className="mx-auto max-w-4xl px-6 text-center lg:px-8">
-            <h2 className="mb-4 text-2xl font-bold text-white lg:text-3xl">Need Tools or Equipment?</h2>
-            <p className="mb-8 text-white/80">Visit one of our locations or contact us for product inquiries.</p>
-            <Link href="/contact-us" className="inline-flex items-center gap-2 rounded-lg bg-brand-red px-8 py-4 text-base font-semibold text-white transition hover:bg-[#c91e21]">
-              Contact Us
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+            <h2 className="mb-4 text-2xl font-bold text-white lg:text-3xl">{language === 'kh' ? "ត្រូវការឧបករណ៍ ឬបរិក្ខារ?" : "Need Tools or Equipment?"}</h2>
+            <p className="mb-8 text-white/80">{language === 'kh' ? "ចូលមើលទីតាំងណាមួយរបស់យើង ឬទាក់ទងមកយើងសម្រាប់ការសាកសួរផលិតផល។" : "Visit one of our locations or contact us for product inquiries."}</p>
+            <Link href="/contact-us" className="inline-flex items-center gap-2 rounded-lg bg-brand-red px-8 py-4 text-base font-semibold text-white transition hover:bg-[#c91e21]">{t.nav.contact}<svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
             </Link>
           </div>
         </section>

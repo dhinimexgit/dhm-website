@@ -1,22 +1,19 @@
-import { productCategories } from "@/data/site-content";
+import { getProductCategories } from "@/data/site-content";
 import { ProductsPageClient } from "../products-client";
-import { notFound } from "next/navigation";
 
+// Pre-render the known static brands; brands added later via the admin
+// dashboard are rendered on demand (dynamicParams defaults to true).
 export async function generateStaticParams() {
-  return productCategories.map((category) => ({
+  return getProductCategories('en').map((category) => ({
     brand: category.slug,
   }));
 }
 
 export default async function BrandPage({ params }: { params: Promise<{ brand: string }> }) {
   const { brand } = await params;
-  const brandData = productCategories.find((c) => c.slug === brand);
 
-  if (!brandData) {
-    notFound();
-  }
-
-  // Data is now fetched client-side, just pass the initial brand filter
+  // Brands are managed in Firestore and loaded client-side, so we don't gate
+  // on the static list here — the client filters products for this brand.
   return <ProductsPageClient initialBrand={brand} />;
 }
 

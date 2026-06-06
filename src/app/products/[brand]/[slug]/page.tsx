@@ -1,12 +1,11 @@
 import { getProduct } from "@/lib/products";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { ProductGallery } from "@/components/product/product-gallery";
 import { RatingStars } from "@/components/product/rating-stars";
 import { SpecTable } from "@/components/product/spec-table";
 import { ContactModal } from "@/components/contact-modal";
-
-export const revalidate = 3600;
 
 type Props = {
   params: Promise<{ brand: string; slug: string }>;
@@ -14,13 +13,21 @@ type Props = {
 
 export default async function ProductDetailPage({ params }: Props) {
   const { brand, slug } = await params;
-  const data = await getProduct(brand, slug);
+  const cookieStore = await cookies();
+  const isKh = cookieStore.get("NEXT_LOCALE")?.value === "kh";
+  const lang = isKh ? 'kh' : 'en';
+
+  const data = await getProduct(brand, slug, lang);
 
   if (!data) {
     notFound();
   }
 
   const { product, category } = data;
+  const p = product as any;
+  const displayName = isKh && p.nameKh ? p.nameKh : product.name;
+  const displayHighlights =
+    isKh && p.featuredHighlightsKh?.length ? p.featuredHighlightsKh : product.featuredHighlights;
 
   return (
     <div className="min-h-screen pt-8">
@@ -28,7 +35,7 @@ export default async function ProductDetailPage({ params }: Props) {
         {/* Breadcrumb */}
         <nav className="mb-8 flex items-center gap-2 text-sm font-medium text-slate-500">
           <Link href="/products" className="hover:text-brand-navy">
-            Products
+            {isKh ? "ផលិតផល" : "Products"}
           </Link>
           <span>/</span>
           <Link href={`/products/${brand}`} className="hover:text-brand-navy">
@@ -52,21 +59,21 @@ export default async function ProductDetailPage({ params }: Props) {
           <div className="flex-1 w-full">
             <div className="flex items-center gap-3 mb-4">
               <span className="rounded-full bg-brand-red/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-red">
-                  New Arrival
+                  {isKh ? "ទំនិញថ្មី" : "New Arrival"}
               </span>
             </div>
             
             <h1 className="text-3xl font-bold leading-tight text-brand-navy sm:text-4xl mb-4">
-              {product.name}
+              {displayName}
             </h1>
             
             <div className="flex items-center gap-4 mb-6">
               <span className="uppercase tracking-wider">
-                Brand: <strong>{product.brand}</strong>
+                {isKh ? "ម៉ាក:" : "Brand:"} <strong>{product.brand}</strong>
               </span>
               <div className="h-4 w-px bg-slate-300" />
               <span className="uppercase tracking-wider">
-                  Model: <strong>{product.model}</strong>
+                  {isKh ? "ម៉ូដែល:" : "Model:"} <strong>{product.model}</strong>
               </span>
             </div>
 
@@ -83,9 +90,9 @@ export default async function ProductDetailPage({ params }: Props) {
 
             {/* Highlights */}
             <div className="mb-8">
-                <h3 className="font-semibold text-brand-navy mb-4">Key Highlights</h3>
+                <h3 className="font-semibold text-brand-navy mb-4">{isKh ? "លក្ខណៈពិសេស" : "Key Highlights"}</h3>
                 <ul className="space-y-2">
-                    {product.featuredHighlights.map((highlight) => (
+                    {displayHighlights.map((highlight: string) => (
                         <li key={highlight} className="flex items-start gap-3 text-slate-600">
                             <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-red" />
                             {highlight}
@@ -99,16 +106,19 @@ export default async function ProductDetailPage({ params }: Props) {
                 {/* Only show Request Quotation if NO price is available */}
                 {(!product.price || Number(product.price) === 0) && (
                   <ContactModal 
-                    productName={product.name}
-                    triggerText="Request Quotation"
+                    productName={displayName}
+                    triggerText={isKh ? "ស្នើសុំសម្រង់តម្លៃ" : "Request Quotation"}
                     triggerClassName="flex-1 rounded-full bg-brand-red px-8 py-4 text-center text-sm font-bold text-white shadow-lg transition hover:bg-[#b10f12]"
-                    initialQuestion={`I would like to request a quotation for ${product.name}.`}
+                    initialQuestion={isKh ? `ខ្ញុំចង់ស្នើសុំសម្រង់តម្លៃសម្រាប់ ${displayName}។` : `I would like to request a quotation for ${displayName}.`}
+                    language={lang}
                   />
                 )}
                 
                 <ContactModal 
-                  productName={product.name} 
+                  productName={displayName} 
+                  triggerText={isKh ? "ទំនាក់ទំនងយើង" : "Contact Us"}
                   triggerClassName="flex-1 rounded-full bg-brand-navy px-8 py-4 text-center text-sm font-bold text-white shadow-lg transition hover:bg-[#252f6e]"
+                  language={lang}
                 />
             </div>
           </div>
@@ -116,9 +126,9 @@ export default async function ProductDetailPage({ params }: Props) {
 
         {/* Specifications (Full Width below the two columns) */}
         <div className="mt-16 space-y-6">
-            <h3 className="text-2xl font-bold text-brand-navy">Specifications</h3>
+            <h3 className="text-2xl font-bold text-brand-navy">{isKh ? "លក្ខណៈបច្ចេកទេស" : "Specifications"}</h3>
             <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-6">
-                <SpecTable product={product} />
+                <SpecTable product={product} language={lang} />
             </div>
         </div>
       </div>

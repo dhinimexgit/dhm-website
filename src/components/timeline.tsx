@@ -1,10 +1,15 @@
 import type { TimelineEvent } from "@/data/site-content";
+import { getTimeline } from "@/data/site-content";
+import { useLanguage } from "@/lib/i18n";
 
 type Props = {
-  events: TimelineEvent[];
+  events?: TimelineEvent[];
 };
 
-export function Timeline({ events }: Props) {
+export function Timeline({ events: propEvents }: Props) {
+  const { language } = useLanguage();
+  const events = propEvents || getTimeline(language);
+
   return (
     <ol className="space-y-6 border-l-2 border-brand-sky pl-6">
       {events.map((event) => (

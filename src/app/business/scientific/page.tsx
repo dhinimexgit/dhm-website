@@ -17,20 +17,20 @@ const heroImage = "https://images.unsplash.com/photo-1532094349884-543bc11b234d?
 
 const companies = [
   {
-    name: "CamRad Diagnostic Center",
-    description: "CamRad Diagnostic Center in Phnom Penh offers reliable, high-quality imaging and laboratory services, specializing in CT scans and radiology to support accurate and trusted healthcare diagnostics.",
+    name: language === 'kh' ? "មជ្ឈមណ្ឌលរោគវិនិច្ឆ័យ ខេមរ៉ាដ" : "CamRad Diagnostic Center",
+    description: language === 'kh' ? "មជ្ឈមណ្ឌលរោគវិនិច្ឆ័យ ខេមរ៉ាដ នៅរាជធានីភ្នំពេញ ផ្តល់នូវសេវាកម្មរូបភាពវេជ្ជសាស្ត្រ និងមន្ទីរពិសោធន៍ដែលមានគុណភាពខ្ពស់ និងអាចទុកចិត្តបាន ដោយមានជំនាញលើការថត CT ស្កេន និងកាំរស្មីអ៊ិច ដើម្បីគាំទ្រដល់ការធ្វើរោគវិនិច្ឆ័យថែទាំសុខភាពដែលត្រឹមត្រូវ និងគួរឱ្យទុកចិត្ត។" : "CamRad Diagnostic Center in Phnom Penh offers reliable, high-quality imaging and laboratory services, specializing in CT scans and radiology to support accurate and trusted healthcare diagnostics.",
     link: "/business/scientific/camrad",
     image: "/camrad.jpg",
     logo: "/brands/Camrad Logo-01.png",
-    specialty: "Medical Imaging & Diagnostics"
+    specialty: language === 'kh' ? "រូបភាពវេជ្ជសាស្ត្រ និងរោគវិនិច្ឆ័យ" : "Medical Imaging & Diagnostics"
   },
   {
-    name: "Camirrad – Electron Beam Irradiation Facility",
-    description: "Camirrad Diagnostic & Irradiation Center is Cambodia's first state-of-the-art electron beam facility, ensuring food and agricultural products meet international safety and export standards.",
+    name: language === 'kh' ? "ខេមអុីរ៉ាដ – រោងចក្របញ្ចេញកាំរស្មីអេឡិចត្រុង" : "Camirrad – Electron Beam Irradiation Facility",
+    description: language === 'kh' ? "មជ្ឈមណ្ឌលរោគវិនិច្ឆ័យ និងបញ្ចេញកាំរស្មី ខេមអុីរ៉ាដ គឺជារោងចក្របញ្ចេញកាំរស្មីអេឡិចត្រុងទំនើបដំបូងគេនៅកម្ពុជា ដែលធានាថាផលិតផលម្ហូបអាហារ និងកសិកម្មបំពេញតាមស្តង់ដារសុវត្ថិភាព និងការនាំចេញអន្តរជាតិ។" : "Camirrad Diagnostic & Irradiation Center is Cambodia's first state-of-the-art electron beam facility, ensuring food and agricultural products meet international safety and export standards.",
     link: "/business/scientific/camirrad",
     image: "/elect_distribute-1.png",
     logo: null,
-    specialty: "Food Safety & Irradiation"
+    specialty: language === 'kh' ? "សុវត្ថិភាពចំណីអាហារ និងការបញ្ចេញកាំរស្មី" : "Food Safety & Irradiation"
   },
 ];
 
@@ -102,30 +102,26 @@ export default function ScientificPage() {
                     <Image src="/brands/DHM-WHITE.png" alt="Dhinimex logo" width={160} height={46} priority className="h-auto w-[160px]" />
                   </Link>
                   <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
-                    <Link href="/about" className="group relative transition hover:text-white/80">
-                      About Us
-                      <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                    <Link href="/about" className="group relative transition hover:text-white/80">{t.nav.about}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
                     <div className="group relative">
-                      <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">
-                        Business Portfolio
-                        <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">{t.nav.business}<svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                         </svg>
                       </Link>
                       <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" />
                       <div className="invisible absolute left-0 top-full mt-3 w-56 rounded-xl bg-white p-2 opacity-0 shadow-2xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
-                        <Link href="/business/trading" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Trading</Link>
-                        <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Manufacturing</Link>
-                        <Link href="/business/electricity" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Electricity Distribution</Link>
-                        <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Water Supply</Link>
-                        <Link href="/business/scientific" className="block rounded-lg bg-slate-100 px-4 py-2.5 text-sm font-medium text-brand-red">Scientific</Link>
+                        <Link href="/business/trading" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.trading}</Link>
+                        <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.manufacturing}</Link>
+                        <Link href="/business/electricity" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.electricity}</Link>
+                        <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.water}</Link>
+                        <Link href="/business/scientific" className="block rounded-lg bg-slate-100 px-4 py-2.5 text-sm font-medium text-brand-red">{t.business.scientific}</Link>
                       </div>
                     </div>
-                    <Link href="/services" className="group relative transition hover:text-white/80">Services<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/products" className="group relative transition hover:text-white/80">Products<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/news" className="group relative transition hover:text-white/80">News<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/careers" className="group relative transition hover:text-white/80">Careers<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/services" className="group relative transition hover:text-white/80">{t.nav.services}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/products" className="group relative transition hover:text-white/80">{t.nav.products}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/news" className="group relative transition hover:text-white/80">{t.nav.blog}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/careers" className="group relative transition hover:text-white/80">{t.nav.careers}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                   </nav>
                   <div className="flex items-center gap-3">
                     <NavUtilityCluster>
@@ -155,7 +151,7 @@ export default function ScientificPage() {
                     <NavUtilityDivider />
                     <NavAdminLoginLink />
                   </NavUtilityCluster>
-                    <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">Contact Us</Link>
+                    <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">{t.nav.contact}</Link>
                   </div>
                 </div>
                 {searchOpen && (
@@ -164,10 +160,10 @@ export default function ScientificPage() {
                       <form onSubmit={handleSearchSubmit} className="flex items-center gap-4">
                         <div className="relative flex-1">
                           <svg className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                          <input ref={searchInputRef} type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search for services, products, careers..." className="w-full rounded-lg bg-slate-100 py-3 pl-12 pr-4 text-slate-900 placeholder-slate-500 outline-none transition focus:bg-white focus:shadow-inner" />
+                          <input ref={searchInputRef} type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder={t.nav.searchPlaceholder} className="w-full rounded-lg bg-slate-100 py-3 pl-12 pr-4 text-slate-900 placeholder-slate-500 outline-none transition focus:bg-white focus:shadow-inner" />
                         </div>
-                        <button type="submit" className="rounded-lg bg-brand-navy px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-navy/90">Search</button>
-                        <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} className="rounded-lg px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100">Cancel</button>
+                        <button type="submit" className="rounded-lg bg-brand-navy px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-navy/90">{t.nav.searchBtn}</button>
+                        <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} className="rounded-lg px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100">{t.nav.cancel}</button>
                       </form>
                     </div>
                   </div>
@@ -181,18 +177,13 @@ export default function ScientificPage() {
             <div className="flex min-h-[calc(60vh-120px)] items-center py-16 lg:min-h-[calc(70vh-120px)] lg:py-0">
               <div className="max-w-2xl space-y-6">
                 <div className="flex items-center gap-3">
-                  <Link href="/business" className="text-sm font-medium text-white/70 transition hover:text-white">
-                    Business Portfolio
-                  </Link>
+                  <Link href="/business" className="text-sm font-medium text-white/70 transition hover:text-white">{t.nav.business}</Link>
                   <span className="text-white/40">/</span>
-                  <span className="text-sm font-medium text-brand-red">Scientific</span>
+                  <span className="text-sm font-medium text-brand-red">{t.business.scientific}</span>
                 </div>
-                <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
-                  Scientific
-                </h1>
+                <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">{t.business.scientific}</h1>
                 <p className="max-w-xl text-lg text-white/80">
-                  Advancing healthcare and food safety in Cambodia through cutting-edge 
-                  diagnostic imaging and electron beam irradiation technology.
+                  {language === 'kh' ? "ជំរុញការថែទាំសុខភាព និងសុវត្ថិភាពចំណីអាហារនៅកម្ពុជា តាមរយៈបច្ចេកវិទ្យារូបភាពរោគវិនិច្ឆ័យដ៏ទំនើប និងបច្ចេកវិទ្យាបញ្ចេញកាំរស្មីអេឡិចត្រុង។" : "Advancing healthcare and food safety in Cambodia through cutting-edge diagnostic imaging and electron beam irradiation technology."}
                 </p>
                 <div className="flex items-center gap-6 pt-4">
                   <div className="flex items-center gap-2">
@@ -203,7 +194,7 @@ export default function ScientificPage() {
                     </div>
                     <div>
                       <p className="text-2xl font-bold text-white">{companies.length}</p>
-                      <p className="text-sm text-white/60">Facilities</p>
+                      <p className="text-sm text-white/60">{language === 'kh' ? "មជ្ឈមណ្ឌល" : "Facilities"}</p>
                     </div>
                   </div>
                   <div className="h-12 w-px bg-white/20" />
@@ -214,8 +205,8 @@ export default function ScientificPage() {
                       </svg>
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-white">First</p>
-                      <p className="text-sm text-white/60">In Cambodia</p>
+                      <p className="text-2xl font-bold text-white">{language === 'kh' ? "ដំបូងគេ" : "First"}</p>
+                      <p className="text-sm text-white/60">{language === 'kh' ? "នៅកម្ពុជា" : "In Cambodia"}</p>
                     </div>
                   </div>
                 </div>
@@ -230,13 +221,13 @@ export default function ScientificPage() {
             {/* Section Header */}
             <div className="mb-16 text-center">
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-brand-red">
-                Our Facilities
+                {language === 'kh' ? "មជ្ឈមណ្ឌលរបស់យើង" : "Our Facilities"}
               </p>
               <h2 className="text-3xl font-bold text-brand-navy lg:text-4xl">
-                Scientific Division
+                {language === 'kh' ? "ផ្នែកវិទ្យាសាស្ត្រ" : "Scientific Division"}
               </h2>
               <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
-                Pioneering advanced scientific solutions for healthcare and food safety
+                {language === 'kh' ? "ត្រួសត្រាយដំណោះស្រាយវិទ្យាសាស្ត្រកម្រិតខ្ពស់សម្រាប់ការថែទាំសុខភាព និងសុវត្ថិភាពចំណីអាហារ" : "Pioneering advanced scientific solutions for healthcare and food safety"}
               </p>
             </div>
 
@@ -296,7 +287,7 @@ export default function ScientificPage() {
                       href={company.link}
                       className="inline-flex items-center gap-3 text-base font-semibold text-brand-navy transition-all group-hover:gap-4 group-hover:text-brand-red"
                     >
-                      Learn More
+                      {language === 'kh' ? "ស្វែងយល់បន្ថែម" : "Learn More"}
                       <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
@@ -313,7 +304,7 @@ export default function ScientificPage() {
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mb-12 text-center">
               <h2 className="text-3xl font-bold text-white lg:text-4xl">
-                Why Choose Our Scientific Services?
+                {language === 'kh' ? "ហេតុអ្វីជ្រើសរើសសេវាកម្មវិទ្យាសាស្ត្ររបស់យើង?" : "Why Choose Our Scientific Services?"}
               </h2>
             </div>
             <div className="grid gap-8 md:grid-cols-3">
@@ -323,9 +314,9 @@ export default function ScientificPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                 </div>
-                <h3 className="mb-2 text-xl font-bold text-white">International Standards</h3>
+                <h3 className="mb-2 text-xl font-bold text-white">{language === 'kh' ? "ស្តង់ដារអន្តរជាតិ" : "International Standards"}</h3>
                 <p className="text-white/70">
-                  Our facilities meet rigorous international quality and safety standards for healthcare and food safety.
+                  {language === 'kh' ? "មជ្ឈមណ្ឌលរបស់យើងបំពេញតាមស្តង់ដារគុណភាព និងសុវត្ថិភាពអន្តរជាតិដ៏តឹងរ៉ឹងសម្រាប់ការថែទាំសុខភាព និងសុវត្ថិភាពចំណីអាហារ។" : "Our facilities meet rigorous international quality and safety standards for healthcare and food safety."}
                 </p>
               </div>
               <div className="rounded-2xl bg-white/10 p-8 backdrop-blur-sm">
@@ -334,9 +325,9 @@ export default function ScientificPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
-                <h3 className="mb-2 text-xl font-bold text-white">Cutting-Edge Technology</h3>
+                <h3 className="mb-2 text-xl font-bold text-white">{language === 'kh' ? "បច្ចេកវិទ្យាទំនើបចុងក្រោយ" : "Cutting-Edge Technology"}</h3>
                 <p className="text-white/70">
-                  State-of-the-art equipment including CT scanners and electron beam irradiation systems.
+                  {language === 'kh' ? "បរិក្ខារទំនើបៗរួមមានម៉ាស៊ីន CT ស្កេន និងប្រព័ន្ធបញ្ចេញកាំរស្មីអេឡិចត្រុង។" : "State-of-the-art equipment including CT scanners and electron beam irradiation systems."}
                 </p>
               </div>
               <div className="rounded-2xl bg-white/10 p-8 backdrop-blur-sm">
@@ -345,9 +336,9 @@ export default function ScientificPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                 </div>
-                <h3 className="mb-2 text-xl font-bold text-white">Expert Team</h3>
+                <h3 className="mb-2 text-xl font-bold text-white">{language === 'kh' ? "ក្រុមអ្នកជំនាញ" : "Expert Team"}</h3>
                 <p className="text-white/70">
-                  Highly trained professionals with expertise in medical diagnostics and food safety technology.
+                  {language === 'kh' ? "អ្នកជំនាញដែលទទួលបានការបណ្តុះបណ្តាលកម្រិតខ្ពស់ ជាមួយនឹងជំនាញក្នុងការធ្វើរោគវិនិច្ឆ័យវេជ្ជសាស្ត្រ និងបច្ចេកវិទ្យាសុវត្ថិភាពចំណីអាហារ។" : "Highly trained professionals with expertise in medical diagnostics and food safety technology."}
                 </p>
               </div>
             </div>
@@ -361,18 +352,16 @@ export default function ScientificPage() {
           </div>
           <div className="relative mx-auto max-w-4xl px-6 text-center lg:px-8">
             <h2 className="mb-4 text-3xl font-bold text-white lg:text-4xl">
-              Questions About Our Services?
+              {language === 'kh' ? "មានសំណួរអំពីសេវាកម្មរបស់យើង?" : "Questions About Our Services?"}
             </h2>
             <p className="mb-8 text-lg text-white/80">
-              Contact us to learn more about our diagnostic and irradiation solutions.
+              {language === 'kh' ? "ទាក់ទងមកយើងដើម្បីស្វែងយល់បន្ថែមអំពីដំណោះស្រាយរោគវិនិច្ឆ័យ និងការបញ្ចេញកាំរស្មីរបស់យើង។" : "Contact us to learn more about our diagnostic and irradiation solutions."}
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/contact-us"
                 className="inline-flex items-center gap-2 rounded-lg bg-brand-red px-8 py-4 text-base font-semibold text-white transition hover:bg-[#c91e21]"
-              >
-                Contact Us
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              >{t.nav.contact}<svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </Link>
@@ -380,7 +369,7 @@ export default function ScientificPage() {
                 href="/services"
                 className="inline-flex items-center gap-2 rounded-lg border-2 border-white/30 px-8 py-4 text-base font-semibold text-white transition hover:bg-white/10"
               >
-                View All Services
+                {language === 'kh' ? "មើលសេវាកម្មទាំងអស់" : "View All Services"}
               </Link>
             </div>
           </div>

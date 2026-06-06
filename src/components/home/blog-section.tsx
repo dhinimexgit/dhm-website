@@ -26,7 +26,7 @@ const tagColors = {
 };
 
 export function BlogSection({ posts }: Props) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   return (
     <section className="relative overflow-hidden bg-slate-50 py-24">
       {/* Background Pattern */}
@@ -103,7 +103,7 @@ export function BlogSection({ posts }: Props) {
 
                 {/* Date */}
                 <p className="mb-3 text-sm text-slate-500">
-                  {new Date(post.date).toLocaleDateString("en-US", {
+                  {new Date(post.date).toLocaleDateString(language === 'kh' ? "km-KH" : "en-US", {
                     year: "numeric",
                     month: "short",
                     day: "numeric",

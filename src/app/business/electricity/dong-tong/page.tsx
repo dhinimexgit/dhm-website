@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { StickyHeader } from "@/components/home/sticky-header";
 import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
 import {
+import { useLanguage } from '@/lib/i18n';
   NavUtilityCluster,
   NavUtilityDivider,
   NAV_UTILITY_ICON_CLASS,
@@ -14,6 +15,7 @@ import {
 const heroImage = "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=1920&q=80";
 
 export default function DongTongPage() {
+  const { t, language, setLanguage } = useLanguage();
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -43,31 +45,29 @@ export default function DongTongPage() {
                     <Image src="/brands/DHM-WHITE.png" alt="Dhinimex logo" width={160} height={46} priority className="h-auto w-[160px]" />
                   </Link>
                   <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
-                    <Link href="/about" className="group relative transition hover:text-white/80">About Us<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/about" className="group relative transition hover:text-white/80">{t.nav.about}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                     <div className="group relative">
-                      <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">
-                        Business Portfolio
-                        <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                      <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">{t.nav.business}<svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
                       </Link>
                       <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" />
                       <div className="invisible absolute left-0 top-full mt-3 w-56 rounded-xl bg-white p-2 opacity-0 shadow-2xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
-                        <Link href="/business/trading" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Trading</Link>
-                        <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Manufacturing</Link>
-                        <Link href="/business/electricity" className="block rounded-lg bg-slate-100 px-4 py-2.5 text-sm font-medium text-brand-red">Electricity Distribution</Link>
-                        <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Water Supply</Link>
-                        <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Scientific</Link>
+                        <Link href="/business/trading" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.trading}</Link>
+                        <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.manufacturing}</Link>
+                        <Link href="/business/electricity" className="block rounded-lg bg-slate-100 px-4 py-2.5 text-sm font-medium text-brand-red">{t.business.electricity}</Link>
+                        <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.water}</Link>
+                        <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.scientific}</Link>
                       </div>
                     </div>
-                    <Link href="/services" className="group relative transition hover:text-white/80">Services<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/products" className="group relative transition hover:text-white/80">Products<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/news" className="group relative transition hover:text-white/80">News<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
-                    <Link href="/careers" className="group relative transition hover:text-white/80">Careers<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/services" className="group relative transition hover:text-white/80">{t.nav.services}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/products" className="group relative transition hover:text-white/80">{t.nav.products}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/news" className="group relative transition hover:text-white/80">{t.nav.blog}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
+                    <Link href="/careers" className="group relative transition hover:text-white/80">{t.nav.careers}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" /></Link>
                   </nav>
                   <div className="flex items-center gap-3">
                     <NavUtilityCluster>
                     <NavAdminLoginLink />
                   </NavUtilityCluster>
-                  <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">Contact Us</Link>
+                  <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">{t.nav.contact}</Link>
                   </div>
                 </div>
               </div>
@@ -79,17 +79,17 @@ export default function DongTongPage() {
             <div className="flex min-h-[calc(50vh-120px)] items-center py-16 lg:min-h-[calc(60vh-120px)] lg:py-0">
               <div className="max-w-2xl space-y-4">
                 <div className="flex items-center gap-3 text-sm">
-                  <Link href="/business" className="font-medium text-white/70 transition hover:text-white">Business Portfolio</Link>
+                  <Link href="/business" className="font-medium text-white/70 transition hover:text-white">{t.nav.business}</Link>
                   <span className="text-white/40">/</span>
-                  <Link href="/business/electricity" className="font-medium text-white/70 transition hover:text-white">Electricity Distribution</Link>
+                  <Link href="/business/electricity" className="font-medium text-white/70 transition hover:text-white">{t.business.electricity}</Link>
                   <span className="text-white/40">/</span>
-                  <span className="font-medium text-brand-red">Dong Tong</span>
+                  <span className="font-medium text-brand-red">{language === 'kh' ? "ដងទង់" : "Dong Tong"}</span>
                 </div>
                 <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
-                  Akissni Dong Tong (DTE)
+                  {language === 'kh' ? "អគ្គិសនីដងទង់ (DTE)" : "Akissni Dong Tong (DTE)"}
                 </h1>
                 <p className="max-w-xl text-lg text-white/80">
-                  Supporting vital communities with reliable electricity distribution.
+                  {language === 'kh' ? "គាំទ្រសហគមន៍សំខាន់ៗជាមួយនឹងការចែកចាយអគ្គិសនីដែលអាចទុកចិត្តបាន។" : "Supporting vital communities with reliable electricity distribution."}
                 </p>
               </div>
             </div>
@@ -111,30 +111,28 @@ export default function DongTongPage() {
               {/* Content Side */}
               <div className="space-y-8">
                 <div>
-                  <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-brand-red">Electricity Distribution</p>
-                  <h2 className="text-3xl font-bold text-brand-navy lg:text-4xl">About Dong Tong License</h2>
+                  <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-brand-red">{t.business.electricity}</p>
+                  <h2 className="text-3xl font-bold text-brand-navy lg:text-4xl">{language === 'kh' ? "អំពីអាជ្ញាប័ណ្ណដងទង់" : "About Dong Tong License"}</h2>
                 </div>
                 
                 <div className="space-y-4 text-base leading-relaxed text-slate-600">
                   <p>
-                    This license supports smaller but vital communities in Dong Tong with reliable electricity distribution.
+                    {language === 'kh' ? "អាជ្ញាប័ណ្ណនេះគាំទ្រសហគមន៍តូចៗប៉ុន្តែសំខាន់ៗនៅក្នុងស្រុកដងទង់ ជាមួយនឹងការចែកចាយអគ្គិសនីដែលអាចទុកចិត្តបាន។" : "This license supports smaller but vital communities in Dong Tong with reliable electricity distribution."}
                   </p>
                   <p>
-                    Our operations here focus on accessibility, reliability, and continuous improvement in service delivery to ensure every household and business has access to stable power.
+                    {language === 'kh' ? "ប្រតិបត្តិការរបស់យើងនៅទីនេះផ្តោតលើភាពងាយស្រួល ភាពជឿជាក់ និងការកែលម្អជាបន្តបន្ទាប់ក្នុងការផ្តល់សេវា ដើម្បីធានាថាគ្រប់គ្រួសារ និងអាជីវកម្មទទួលបានថាមពលមានស្ថេរភាព។" : "Our operations here focus on accessibility, reliability, and continuous improvement in service delivery to ensure every household and business has access to stable power."}
                   </p>
                 </div>
 
                 {/* Actions */}
                 <div className="flex flex-wrap items-center gap-4 pt-4">
-                  <Link href="/contact-us" className="inline-flex items-center gap-2 rounded-lg bg-brand-red px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#c91e21]">
-                    Contact Us
-                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                  <Link href="/contact-us" className="inline-flex items-center gap-2 rounded-lg bg-brand-red px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#c91e21]">{t.nav.contact}<svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                   </Link>
                 </div>
 
                 {/* Social Media */}
                 <div className="flex items-center gap-3 pt-4">
-                  <span className="text-sm font-medium text-slate-500">Follow us:</span>
+                  <span className="text-sm font-medium text-slate-500">{language === 'kh' ? "តាមដានពួកយើង៖" : "Follow us:"}</span>
                   <a href="https://facebook.com/dhinimex" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-navy text-white transition hover:bg-brand-navy/80" aria-label="Facebook">
                     <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                   </a>
@@ -147,10 +145,10 @@ export default function DongTongPage() {
         {/* CTA Section */}
         <section className="bg-brand-navy py-16">
           <div className="mx-auto max-w-4xl px-6 text-center lg:px-8">
-            <h2 className="mb-4 text-2xl font-bold text-white lg:text-3xl">Questions About Electricity Service?</h2>
-            <p className="mb-8 text-white/80">Contact us for service inquiries in the Dong Tong area.</p>
+            <h2 className="mb-4 text-2xl font-bold text-white lg:text-3xl">{language === 'kh' ? "មានសំណួរអំពីសេវាកម្មអគ្គិសនី?" : "Questions About Electricity Service?"}</h2>
+            <p className="mb-8 text-white/80">{language === 'kh' ? "ទាក់ទងមកយើងសម្រាប់ការសាកសួរសេវាកម្មនៅក្នុងតំបន់ដងទង់។" : "Contact us for service inquiries in the Dong Tong area."}</p>
             <Link href="/contact-us" className="inline-flex items-center gap-2 rounded-lg bg-brand-red px-8 py-4 text-base font-semibold text-white transition hover:bg-[#c91e21]">
-              Get in Touch
+              {language === 'kh' ? "ទំនាក់ទំនងមកយើង" : "Get in Touch"}
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
             </Link>
           </div>

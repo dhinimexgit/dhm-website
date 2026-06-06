@@ -2,9 +2,10 @@ import type { Product } from "@/data/site-content";
 
 type Props = {
   product: Product;
+  language?: 'en' | 'kh';
 };
 
-export function SpecTable({ product }: Props) {
+export function SpecTable({ product, language = 'en' }: Props) {
   const entries = Object.entries(product.specs);
   return (
     <table className="w-full table-auto border-collapse overflow-hidden rounded-lg bg-white text-sm shadow-sm">

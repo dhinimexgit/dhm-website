@@ -1,9 +1,9 @@
 import { db } from "@/lib/firebase";
 import { collection, getDocs, query, where, getDoc, limit } from "firebase/firestore";
-import { productCategories, type Product, type ProductCategory } from "@/data/site-content";
+import { getProductCategories, type Product, type ProductCategory } from "@/data/site-content";
 
 // Helper to convert Firestore data to Product type
-const docToProduct = (doc: any): Product => {
+const docToProduct = (doc: any, lang: 'en' | 'kh' = 'en'): Product => {
   const data = doc.data();
   
   // Clean and filter images array - remove null, undefined, empty strings, and invalid values
@@ -34,21 +34,28 @@ const docToProduct = (doc: any): Product => {
     slug: data.slug,
     brand: data.brand,
     model: data.model,
-    name: data.name,
+    name: lang === 'kh' && data.nameKh ? data.nameKh : data.name,
+    nameKh: data.nameKh || "",
+    summary: lang === 'kh' && data.summaryKh ? data.summaryKh : data.summary || "",
+    summaryKh: data.summaryKh || "",
+    description: lang === 'kh' && data.descriptionKh ? data.descriptionKh : data.description || "",
+    descriptionKh: data.descriptionKh || "",
     price: data.price,
     categories: data.categories || [],
     subCategories: data.subCategories || [],
-    featuredHighlights: data.featuredHighlights || [],
+    // Prefer explicit highlights (saved by the admin form); fall back to legacy featuredHighlights.
+    featuredHighlights: lang === 'kh' && data.highlightsKh && data.highlightsKh.length > 0 ? data.highlightsKh : (data.highlights || data.featuredHighlights || []),
+    featuredHighlightsKh: data.highlightsKh || [],
     specs: data.specs || {},
     images: cleanedImages,
     createdAt: data.createdAt?.toDate?.().toISOString() || data.createdAt || null,
     createdBy: data.createdBy,
     updatedAt: data.updatedAt?.toDate?.().toISOString() || data.updatedAt || null,
     updatedBy: data.updatedBy,
-  };
+  } as Product;
 };
 
-export async function getAllProducts(): Promise<ProductCategory[]> {
+export async function getAllProducts(lang: 'en' | 'kh' = 'en'): Promise<ProductCategory[]> {
   try {
     const productsRef = collection(db, "products");
     const snapshot = await getDocs(productsRef);
@@ -56,14 +63,14 @@ export async function getAllProducts(): Promise<ProductCategory[]> {
     if (snapshot.empty) {
       // Fallback to static data if DB is empty (for safety/initial load)
       console.warn("No products in Firestore, falling back to static data.");
-      return productCategories;
+      return getProductCategories(lang);
     }
 
-    const products = snapshot.docs.map(docToProduct);
+    const products = snapshot.docs.map(doc => docToProduct(doc, lang));
 
     // Reconstruct the category structure expected by the UI
     // We clone the static categories structure but replace the products array
-    const categories = productCategories.map(cat => ({
+    const categories = getProductCategories(lang).map(cat => ({
       ...cat,
       products: products.filter(p => p.brand === cat.slug)
     }));
@@ -71,11 +78,11 @@ export async function getAllProducts(): Promise<ProductCategory[]> {
     return categories;
   } catch (error) {
     console.error("Error fetching products:", error);
-    return productCategories; // Fallback on error
+    return getProductCategories(lang); // Fallback on error
   }
 }
 
-export async function getProduct(brandSlug: string, productSlug: string): Promise<{ category: ProductCategory; product: Product } | undefined> {
+export async function getProduct(brandSlug: string, productSlug: string, lang: 'en' | 'kh' = 'en'): Promise<{ category: ProductCategory; product: Product } | undefined> {
   try {
     const productsRef = collection(db, "products");
     const q = query(
@@ -88,16 +95,16 @@ export async function getProduct(brandSlug: string, productSlug: string): Promis
 
     if (snapshot.empty) {
        // Try static data fallback
-       const cat = productCategories.find(c => c.slug === brandSlug);
+       const cat = getProductCategories(lang).find(c => c.slug === brandSlug);
        const prod = cat?.products.find(p => p.slug === productSlug);
        if (cat && prod) return { category: cat, product: prod };
        return undefined;
     }
 
-    const product = docToProduct(snapshot.docs[0]);
+    const product = docToProduct(snapshot.docs[0], lang);
     
     // Find the category metadata (we still need static metadata for colors/descriptions of brands)
-    const category = productCategories.find(c => c.slug === brandSlug) || {
+    const category = getProductCategories(lang).find(c => c.slug === brandSlug) || {
       slug: brandSlug,
       name: brandSlug.toUpperCase(),
       tagline: "",

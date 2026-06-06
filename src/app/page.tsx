@@ -1,5 +1,6 @@
-import { services } from "@/data/site-content";
+import { getServices } from "@/data/site-content";
 import { getLatestPosts } from "@/lib/posts";
+import { getTranslation } from "@/lib/i18n-server";
 import { HomeHero } from "@/components/home/home-hero";
 import { StatsSection } from "@/components/home/stats-section";
 import { BusinessPortfolio } from "@/components/home/business-portfolio";
@@ -7,7 +8,9 @@ import { ServicesCarousel } from "@/components/home/services-carousel";
 import { BlogSection } from "@/components/home/blog-section";
 
 export default async function Home() {
-  const latestPosts = await getLatestPosts(3);
+  const { lang } = await getTranslation();
+  const services = getServices(lang);
+  const latestPosts = await getLatestPosts(3, lang);
 
   return (
     <div className="relative">

@@ -80,14 +80,14 @@ export default function BlogDetailPage({ params }: Props) {
     async function fetchData() {
       try {
         const { getPost, getAllPosts } = await import("@/lib/posts");
-        const fetchedPost = await getPost(slug);
+        const fetchedPost = await getPost(slug, language as 'en' | 'kh');
         if (!fetchedPost) {
           notFound();
         }
         setPost(fetchedPost);
         
         // Fetch related posts
-        const allPosts = await getAllPosts();
+        const allPosts = await getAllPosts(language as 'en' | 'kh');
         const related = allPosts
           .filter(p => p.slug !== slug)
           .slice(0, 3);
@@ -100,7 +100,7 @@ export default function BlogDetailPage({ params }: Props) {
       }
     }
     fetchData();
-  }, [slug]);
+  }, [slug, language]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -165,7 +165,7 @@ export default function BlogDetailPage({ params }: Props) {
       <div className="flex min-h-screen items-center justify-center bg-white">
         <div className="flex flex-col items-center gap-4">
           <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-brand-navy" />
-          <p className="text-sm text-slate-500">Loading article...</p>
+          <p className="text-sm text-slate-500">{language === 'kh' ? "កំពុងផ្ទុកអត្ថបទ..." : "Loading article..."}</p>
         </div>
       </div>
     );
@@ -199,42 +199,30 @@ export default function BlogDetailPage({ params }: Props) {
                     />
                   </Link>
                   <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
-                    <Link href="/about" className="group relative transition hover:text-white/80">
-                      About Us
-                      <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                    <Link href="/about" className="group relative transition hover:text-white/80">{t.nav.about}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
                     <div className="group relative">
-                      <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">
-                        Business Portfolio
-                        <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <Link href="/business" className="flex items-center gap-1.5 transition hover:text-white/80">{t.nav.business}<svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                         </svg>
                       </Link>
                       <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                       <div className="invisible absolute left-0 top-full mt-3 w-56 rounded-xl bg-white p-2 opacity-0 shadow-2xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
-                        <Link href="/business/trading" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Trading</Link>
-                        <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Manufacturing</Link>
-                        <Link href="/business/electricity" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Electricity Distribution</Link>
-                        <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Water Supply</Link>
-                        <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">Scientific</Link>
+                        <Link href="/business/trading" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.trading}</Link>
+                        <Link href="/business/manufacturing" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.manufacturing}</Link>
+                        <Link href="/business/electricity" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.electricity}</Link>
+                        <Link href="/business/water-supply" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.water}</Link>
+                        <Link href="/business/scientific" className="block rounded-lg px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-100">{t.business.scientific}</Link>
                       </div>
                     </div>
-                    <Link href="/services" className="group relative transition hover:text-white/80">
-                      Services
-                      <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                    <Link href="/services" className="group relative transition hover:text-white/80">{t.nav.services}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
-                    <Link href="/products" className="group relative transition hover:text-white/80">
-                      Products
-                      <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                    <Link href="/products" className="group relative transition hover:text-white/80">{t.nav.products}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
                     {/* News - Active */}
-                    <Link href="/news" className="group relative transition hover:text-white/80">
-                      News
-                      <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" />
+                    <Link href="/news" className="group relative transition hover:text-white/80">{t.nav.blog}<span className="absolute -bottom-1 left-0 h-0.5 w-full bg-brand-red" />
                     </Link>
-                    <Link href="/careers" className="group relative transition hover:text-white/80">
-                      Careers
-                      <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
+                    <Link href="/careers" className="group relative transition hover:text-white/80">{t.nav.careers}<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-red transition-all group-hover:w-full" />
                     </Link>
                   </nav>
                   <div className="flex items-center gap-3">
@@ -267,9 +255,7 @@ export default function BlogDetailPage({ params }: Props) {
                     <NavUtilityDivider />
                     <NavAdminLoginLink />
                   </NavUtilityCluster>
-                    <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">
-                      Contact Us
-                    </Link>
+                    <Link href="/contact-us" className="rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c91e21]">{t.nav.contact}</Link>
                   </div>
                 </div>
 
@@ -290,12 +276,12 @@ export default function BlogDetailPage({ params }: Props) {
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Search for services, products, careers..."
+                            placeholder={t.nav.searchPlaceholder}
                             className="w-full rounded-lg bg-slate-100 py-3 pl-12 pr-4 text-slate-900 placeholder-slate-500 outline-none transition focus:bg-white focus:shadow-inner"
                           />
                         </div>
-                        <button type="submit" className="rounded-lg bg-brand-navy px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-navy/90">Search</button>
-                        <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} className="rounded-lg px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100">Cancel</button>
+                        <button type="submit" className="rounded-lg bg-brand-navy px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-navy/90">{t.nav.searchBtn}</button>
+                        <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} className="rounded-lg px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100">{t.nav.cancel}</button>
                       </form>
                     </div>
                   </div>
@@ -310,7 +296,7 @@ export default function BlogDetailPage({ params }: Props) {
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
             {/* Breadcrumb */}
             <nav className="mb-6 flex items-center gap-2 text-sm">
-              <Link href="/news" className="text-slate-500 transition hover:text-brand-navy">News</Link>
+              <Link href="/news" className="text-slate-500 transition hover:text-brand-navy">{t.nav.blog}</Link>
               <span className="text-slate-300">/</span>
               <span className="text-slate-400">{post.tag || "Article"}</span>
             </nav>
@@ -321,7 +307,7 @@ export default function BlogDetailPage({ params }: Props) {
                 {post.tag || "News"}
               </span>
               <span className="text-sm text-slate-400">
-                {new Date(post.date).toLocaleDateString("en-US", {
+                {new Date(post.date).toLocaleDateString(language === 'kh' ? "km-KH" : "en-US", {
                   month: "long",
                   day: "numeric",
                   year: "numeric",
@@ -385,7 +371,7 @@ export default function BlogDetailPage({ params }: Props) {
                 ))
               ) : (
                 <div className="rounded-xl bg-slate-50 p-8 text-center">
-                  <p className="italic text-slate-500">Content coming soon.</p>
+                  <p className="italic text-slate-500">{language === 'kh' ? "ខ្លឹមសារនឹងមានក្នុងពេលឆាប់ៗនេះ។" : "Content coming soon."}</p>
                 </div>
               )}
             </div>
@@ -394,7 +380,7 @@ export default function BlogDetailPage({ params }: Props) {
             {post.tag && (
               <div className="mt-12 border-t border-slate-200 pt-8">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-sm font-medium text-slate-500">Tags:</span>
+                  <span className="text-sm font-medium text-slate-500">{language === 'kh' ? "ស្លាក:" : "Tags:"}</span>
                   <span className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-600">
                     {post.tag}
                   </span>
@@ -412,12 +398,12 @@ export default function BlogDetailPage({ params }: Props) {
                 <svg className="h-4 w-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
                 </svg>
-                Back to all news
+                {language === 'kh' ? "ត្រឡប់ទៅកាន់ព័ត៌មានទាំងអស់" : "Back to all news"}
               </Link>
 
               {/* Share Buttons */}
               <div className="flex items-center gap-3">
-                <span className="text-sm text-slate-500">Share:</span>
+                <span className="text-sm text-slate-500">{language === 'kh' ? "ចែករំលែក:" : "Share:"}</span>
                 <button 
                   onClick={() => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(post.title)}`, '_blank')}
                   className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-500 shadow-sm transition hover:bg-brand-navy hover:text-white"
@@ -469,17 +455,17 @@ export default function BlogDetailPage({ params }: Props) {
               <div className="mb-10 flex items-center justify-between">
                 <div>
                   <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-brand-red">
-                    Keep Reading
+                    {language === 'kh' ? "បន្តការអាន" : "Keep Reading"}
                   </p>
                   <h2 className="text-2xl font-bold text-brand-navy lg:text-3xl">
-                    More Stories
+                    {language === 'kh' ? "រឿងរ៉ាវបន្ថែម" : "More Stories"}
                   </h2>
                 </div>
                 <Link 
                   href="/news" 
                   className="group hidden items-center gap-2 rounded-full border border-brand-navy px-5 py-2 text-sm font-semibold text-brand-navy transition hover:bg-brand-navy hover:text-white sm:inline-flex"
                 >
-                  View all stories
+                  {language === 'kh' ? "មើលរឿងរ៉ាវទាំងអស់" : "View all stories"}
                   <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
@@ -507,7 +493,7 @@ export default function BlogDetailPage({ params }: Props) {
                           </span>
                           <span className="text-slate-300">•</span>
                           <span className="text-xs text-slate-400">
-                            {new Date(relatedPost.date).toLocaleDateString("en-US", {
+                            {new Date(relatedPost.date).toLocaleDateString(language === 'kh' ? "km-KH" : "en-US", {
                               month: "short",
                               day: "numeric",
                               year: "numeric",
@@ -532,7 +518,7 @@ export default function BlogDetailPage({ params }: Props) {
                   href="/news" 
                   className="inline-flex items-center gap-2 rounded-full border border-brand-navy px-6 py-3 text-sm font-semibold text-brand-navy transition hover:bg-brand-navy hover:text-white"
                 >
-                  View all stories
+                  {language === 'kh' ? "មើលរឿងរ៉ាវទាំងអស់" : "View all stories"}
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
