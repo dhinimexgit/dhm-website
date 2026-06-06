@@ -86,7 +86,8 @@ export function poBranchNamesMatch(a: string, b: string): boolean {
 
 /**
  * Users at a warehouse office (Kien Svay / Touk Meas) may only work with POs for branches in that group.
- * Head Office and PR/PO super-users see all branches. Head Office staff with no warehouse mapping see none.
+ * Head Office users (any title) and PR/PO super-users see all branches.
+ * Staff with no office mapping see none.
  */
 export function resolveViewPoBranchScope(
   user: Pick<SessionUser, "title" | "office"> | null,
@@ -95,7 +96,9 @@ export function resolveViewPoBranchScope(
   if (!user || isPrpoSuperUser) return { kind: "all" };
 
   const office = user.office;
-  if (!office || office === "Head Office") {
+  if (office === "Head Office") return { kind: "all" };
+
+  if (!office) {
     if (user.title === "Staff") return { kind: "none" };
     return { kind: "all" };
   }
