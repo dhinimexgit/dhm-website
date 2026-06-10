@@ -54,7 +54,7 @@ const serviceDescriptionsKh: Record<string, string> = {
   "manufacturing-and-repair": "យើងរចនា និងផលិតឧបករណ៍អគ្គិសនីដែលមានគុណភាពខ្ពស់ រួមមានខ្សែកាប ខ្សែចម្លង ម៉ាស៊ីនបំប្លែង ផ្ទាំងបញ្ជា និងបង្គោលបេតុង។",
   "construction-and-installation": "យើងផ្តល់ជូននូវដំណោះស្រាយហេដ្ឋារចនាសម្ព័ន្ធថាមពលពីដើមដល់ចប់—ចាប់ពីបង្គោល និងម៉ាស៊ីនបំប្លែង រហូតដល់អនុស្ថានីយ និងប្រព័ន្ធត្រួតពិនិត្យដែលបំពាក់យ៉ាងពេញលេញ។",
   "testing-and-engineering-consultation": "ចាប់ពីការកំណត់រ៉ឺឡែ និងការបន្សុទ្ធប្រេងម៉ាស៊ីនបំប្លែង រហូតដល់ការធ្វើរោគវិនិច្ឆ័យប្រព័ន្ធ សេវាកម្មធ្វើតេស្តរបស់យើងបង្កើនដំណើរការ និងពន្យារអាយុកាលទ្រព្យសកម្ម។",
-  "utilities-provider": "លើសពីឧបករណ៍ និងសេវាកម្ម ឌីនីម៉ិច គឺជាអ្នកផ្តល់សេវាទឹកភ្លើងដែលគួរឱ្យទុកចិត្ត ដោយផ្តល់ជូននូវហេដ្ឋារចនាសម្ព័ន្ធអគ្គិសនី និងទឹកនៅទូទាំងប្រទេសកម្ពុជា។",
+  "utilities-provider": "លើសពីឧបករណ៍ និងសេវាកម្ម ធិនីម៉ិចគឺជាអ្នកផ្តល់សេវាទឹកភ្លើងដែលគួរឱ្យទុកចិត្ត ដោយផ្តល់ជូននូវហេដ្ឋារចនាសម្ព័ន្ធអគ្គិសនី និងទឹកនៅទូទាំងប្រទេសកម្ពុជា។",
   "electrical-and-heavy-equipment-supply-services": "យើងផ្តល់ជូននូវជួរដ៏ទូលំទូលាយនៃដំណោះស្រាយឧបករណ៍អគ្គិសនី និងគ្រឿងចក្រធុនធ្ងន់ដែលមានគុណភាពខ្ពស់ ដើម្បីគាំទ្រដល់ការអភិវឌ្ឍន៍ហេដ្ឋារចនាសម្ព័ន្ធ។",
 };
 
@@ -93,7 +93,7 @@ export function ServicesCarousel({ services: propServices }: Props) {
         
         {/* Headline Row */}
         <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div>
+        <div>
             <p className="mb-4 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-brand-red">
               
               {t.home.servicesCarousel.sectionTitle}

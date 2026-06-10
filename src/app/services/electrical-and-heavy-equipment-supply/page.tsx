@@ -193,7 +193,7 @@ export default function ElectricalAndHeavyEquipmentSupplyDetailPage() {
                     {language === 'kh' ? 'យើងផ្តល់ជូននូវដំណោះស្រាយ' : 'We provide a comprehensive range of '} <strong className="text-brand-navy">{language === 'kh' ? 'ឧបករណ៍អគ្គិសនី និងគ្រឿងចក្រធុនធ្ងន់ដែលមានគុណភាពខ្ពស់' : 'high-quality electrical and heavy equipment'}</strong> {language === 'kh' ? 'យ៉ាងទូលំទូលាយដើម្បីគាំទ្រដល់គម្រោងចែកចាយ ដំឡើង និងថែទាំថាមពលអគ្គិសនី។' : 'solutions to support power distribution, installation, and maintenance projects.'}
                   </p>
                   <p>
-                    {language === 'kh' ? 'ចាប់ពីគ្រឿងបន្លាស់តង់ស្យុងមធ្យមរហូតដល់ផលិតផលប្រើប្រាស់ក្នុងផ្ទះ ឌីនីម៉ិច ប្រមូលផ្តុំសារពើភ័ណ្ឌម៉ាកចម្រុះសម្រាប់ការដាក់ពង្រាយយ៉ាងឆាប់រហ័ស ជាមួយនឹងការធានាផ្នែកបច្ចេកទេស និងការបំពេញតម្រូវការទូទាំងប្រទេស។' : 'From medium-voltage components to household-grade products, Dhinimex aggregates multi-brand inventory for rapid deployment with technical assurance and nationwide fulfilment.'}
+                    {language === 'kh' ? 'ចាប់ពីគ្រឿងបន្លាស់តង់ស្យុងមធ្យមរហូតដល់ផលិតផលប្រើប្រាស់ក្នុងផ្ទះ ធិនីម៉ិចប្រមូលផ្តុំសារពើភ័ណ្ឌម៉ាកចម្រុះសម្រាប់ការដាក់ពង្រាយយ៉ាងឆាប់រហ័ស ជាមួយនឹងការធានាផ្នែកបច្ចេកទេស និងការបំពេញតម្រូវការទូទាំងប្រទេស។' : 'From medium-voltage components to household-grade products, Dhinimex aggregates multi-brand inventory for rapid deployment with technical assurance and nationwide fulfilment.'}
                   </p>
                 </div>
 

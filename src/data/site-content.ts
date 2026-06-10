@@ -142,7 +142,7 @@ export const getHeroContent = (language: 'en' | 'kh'): HeroContent => ({
   eyebrow: language === 'kh' ? "ដៃគូហេដ្ឋារចនាសម្ព័ន្ធតាំងពីឆ្នាំ 2003" : "Infrastructure partner since 2003",
   title: language === 'kh' ? "ជំរុញដោយគុណភាព ណែនាំដោយស្តង់ដារ។" : "Driven by quality, guided by standards.",
   description: language === 'kh'
-    ? "ឌីនីម៉ិច ផ្តល់ជូននូវដំណោះស្រាយអគ្គិសនី ការផ្គត់ផ្គង់ទឹក និងវិស្វកម្មដែលបានកសាងឡើងសម្រាប់ការរីកចម្រើនរបស់ប្រទេសកម្ពុជា។ យើងរួមបញ្ចូលគ្នានូវបទពិសោធន៍ 21 ឆ្នាំក្នុងវិស័យនេះ ជាមួយនឹងការធ្វើតេស្តដ៏ម៉ត់ចត់ និងសេវាកម្មរហ័ស។"
+    ? "ធិនីម៉ិចផ្តល់ជូននូវដំណោះស្រាយអគ្គិសនី ការផ្គត់ផ្គង់ទឹក និងវិស្វកម្មដែលបានកសាងឡើងសម្រាប់ការរីកចម្រើនរបស់ប្រទេសកម្ពុជា។ យើងរួមបញ្ចូលគ្នានូវបទពិសោធន៍ 21 ឆ្នាំក្នុងវិស័យនេះ ជាមួយនឹងការធ្វើតេស្តដ៏ម៉ត់ចត់ និងសេវាកម្មរហ័ស។"
     : "Dhinimex delivers electrical, water supply, and engineering solutions built for Cambodia’s growth. We combine 21 years of field expertise with rigorous testing and responsive service.",
   ctas: [
     { href: "/contact-us", label: language === 'kh' ? "ស្នើសុំសម្រង់តម្លៃ" : "Request a quote", variant: "primary" },
@@ -305,7 +305,7 @@ export const getServices = (language: 'en' | 'kh'): Service[] => [
     slug: "utilities-provider",
     name: language === 'kh' ? "អ្នកផ្តល់សេវាទឹកភ្លើង" : "Utilities Provider",
     description: language === 'kh'
-      ? "លើសពីឧបករណ៍ និងសេវាកម្ម ឌីនីម៉ិច គឺជាអ្នកផ្តល់សេវាទឹកភ្លើងដែលគួរឱ្យទុកចិត្ត ដោយផ្តល់នូវហេដ្ឋារចនាសម្ព័ន្ធអគ្គិសនី និងទឹកនៅទូទាំងខេត្តក្នុងប្រទេសកម្ពុជា។"
+      ? "លើសពីឧបករណ៍ និងសេវាកម្ម ធិនីម៉ិចគឺជាអ្នកផ្តល់សេវាទឹកភ្លើងដែលគួរឱ្យទុកចិត្ត ដោយផ្តល់នូវហេដ្ឋារចនាសម្ព័ន្ធអគ្គិសនី និងទឹកនៅទូទាំងខេត្តក្នុងប្រទេសកម្ពុជា។"
       : "Beyond equipment and services, Dhinimex is a trusted utilities provider, delivering both electrical and water infrastructure across provinces in Cambodia.",
     details: language === 'kh'
       ? "យើងវិនិយោគលើការផលិត ការចែកចាយ និងបណ្តាញទឹក ដោយដំណើរការជាមួយប្រព័ន្ធត្រួតពិនិត្យទំនើប និងការគាំទ្រពេញមួយម៉ោង។"
@@ -428,7 +428,7 @@ export const getTimeline = (language: 'en' | 'kh'): TimelineEvent[] => [
     year: "2003",
     title: language === 'kh' ? "ការចាប់ផ្តើមដ៏រាបទាប" : "Humble beginnings",
     description: language === 'kh'
-      ? "ឌីនីម៉ិច ចាប់ផ្តើមជាអ្នកផ្គត់ផ្គង់ផ្អែកលើពាណិជ្ជកម្មដែលផ្តោតលើឧបករណ៍អគ្គិសនី និងសមាសធាតុផ្គត់ផ្គង់ទឹក។"
+      ? "ធិនីម៉ិចចាប់ផ្តើមជាអ្នកផ្គត់ផ្គង់ផ្អែកលើពាណិជ្ជកម្មដែលផ្តោតលើឧបករណ៍អគ្គិសនី និងសមាសធាតុផ្គត់ផ្គង់ទឹក។"
       : "Dhinimex launches as a trade-based supplier focused on electrical appliances and water supply components.",
   },
   {
@@ -456,7 +456,7 @@ export const getTimeline = (language: 'en' | 'kh'): TimelineEvent[] => [
     year: language === 'kh' ? "ថ្ងៃនេះ" : "Today",
     title: language === 'kh' ? "ក្រុមហ៊ុន 18, សញ្ជាតិ 6" : "18 companies, 6 nationalities",
     description: language === 'kh'
-      ? "ឌីនីម៉ិច ជួលអ្នកជំនាញជាង 500 នាក់នៅទូទាំងវិស័យវិទ្យាសាស្ត្រ និងបច្ចេកវិទ្យាចំនួនប្រាំជាមួយនឹងទស្សនវិស័យសកល។"
+      ? "ធិនីម៉ិចជួលអ្នកជំនាញជាង 500 នាក់នៅទូទាំងវិស័យវិទ្យាសាស្ត្រ និងបច្ចេកវិទ្យាចំនួនប្រាំជាមួយនឹងទស្សនវិស័យសកល។"
       : "Dhinimex employs 500+ professionals across five scientific and technological sectors with a global outlook.",
   },
 ];
@@ -466,7 +466,7 @@ export const getLeadership = (language: 'en' | 'kh'): Leader[] => [
     name: language === 'kh' ? "វង្ស សោភ័ណ្ឌ" : "Vong Sorphorn",
     title: language === 'kh' ? "ប្រធានក្រុមប្រឹក្សាភិបាល" : "Chairwoman of the Board",
     bio: language === 'kh'
-      ? "បានបង្កើត ឌីនីម៉ិច ក្នុងឆ្នាំ 2003 ហើយបន្តដឹកនាំក្រុមហ៊ុនដោយផ្តោតលើក្រមសីលធម៌ តម្លាភាព និងគុណភាពសេវាកម្ម។"
+      ? "បានបង្កើត ធិនីម៉ិចក្នុងឆ្នាំ 2003 ហើយបន្តដឹកនាំក្រុមហ៊ុនដោយផ្តោតលើក្រមសីលធម៌ តម្លាភាព និងគុណភាពសេវាកម្ម។"
       : "Founded Dhinimex in 2003 and continues to guide the company with a focus on ethics, transparency, and service quality.",
     quote: language === 'kh'
       ? "យើងទទួលបានការជឿទុកចិត្តដោយការប្រកាន់ខ្ជាប់នូវស្តង់ដារសីលធម៌ដ៏រឹងមាំ និងផ្តល់នូវភាពល្អឥតខ្ចោះនៅក្នុងរាល់ការចូលរួម។"
@@ -502,8 +502,8 @@ export const getLeadership = (language: 'en' | 'kh'): Leader[] => [
       ? "ត្រួតពិនិត្យភាពល្អឥតខ្ចោះនៃប្រតិបត្តិការ និងការបង្កើនប្រសិទ្ធភាពដំណើរការនៅទូទាំងការផលិត សេវា និងការផ្តល់គម្រោង។"
       : "Oversees operational excellence and process optimization across manufacturing, utilities, and project delivery.",
     quote: language === 'kh'
-      ? "យើងទៅឆ្ងាយជាមួយគ្នា ដែលការទទួលខុសត្រូវបុគ្គលពង្រឹងភាពល្អឥតខ្ចោះរួម។"
-      : "We go farther together where individual responsibility strengthens collective excellence.",
+      ? "ការទទួលខុសត្រូវផ្ទាល់ខ្លួននឹងពង្រឹងភាពល្អឥតខ្ចោះជារួម ដែលនាំឲ្យយើងទៅកាន់តែឆ្ងាយជាមួយគ្នា។"
+      : "We go farther together when individual responsibility strengthens collective excellence.",
     portrait: "/dmdo.svg",
   },
 ];
@@ -552,9 +552,7 @@ export const getBrands = (language: 'en' | 'kh'): Brand[] => [
 ];
 
 const brandFiles = [
-  "01", "02", "03", "05", "06", "07", "08", "09", "10",
-  "11", "12", "13", "14", "15", "16", "17", "18", "19",
-  "20", "21", "22", "23", "26", "27"
+  "01", "02", "03", "05", "07", "10", "11", "12", "13", "14", "15", "16", "17", "27",
 ];
 
 export const homePageBrands = brandFiles.map((num) => ({
@@ -578,7 +576,7 @@ export const getPosts = (language: 'en' | 'kh'): Post[] => [
     content: language === 'kh'
       ? [
           "សមាជិកក្រុមមកពីទូទាំងប្រទេសកម្ពុជាបានធ្វើដំណើរទៅកាន់ខេត្តសៀមរាប ដើម្បីស្វែងយល់ពីតំបន់បេតិកភណ្ឌ ពង្រឹងកិច្ចសហការ និងអបអរសាទរវប្បធម៌ដែលជម្រុញសិល្បៈហត្ថកម្មរបស់យើង។",
-          "សិក្ខាសាលាផ្តោតលើភាពជាអ្នកដឹកនាំ សុវត្ថិភាព និងការច្នៃប្រឌិត—ពង្រឹងរបៀបដែល ឌីនីម៉ិច រួមបញ្ចូលប្រពៃណីជាមួយនឹងវិស្វកម្មដែលសម្លឹងទៅមុខ។",
+          "សិក្ខាសាលាផ្តោតលើភាពជាអ្នកដឹកនាំ សុវត្ថិភាព និងការច្នៃប្រឌិត—ពង្រឹងរបៀបដែល ធិនីម៉ិចរួមបញ្ចូលប្រពៃណីជាមួយនឹងវិស្វកម្មដែលសម្លឹងទៅមុខ។",
         ]
       : [
           "Team members from across Cambodia traveled to Siem Reap to explore heritage sites, strengthen collaboration, and celebrate the culture that inspires our craft.",
@@ -591,7 +589,7 @@ export const getPosts = (language: 'en' | 'kh'): Post[] => [
     date: "2025-10-04",
     tag: "News",
     excerpt: language === 'kh'
-      ? "ឌីនីម៉ិច សហការជាមួយអាជ្ញាធរខេត្តដើម្បីពង្រីកការចូលប្រើប្រាស់អគ្គិសនី និងទឹកដែលអាចទុកចិត្តបាន។"
+      ? "ធិនីម៉ិចសហការជាមួយអាជ្ញាធរខេត្តដើម្បីពង្រីកការចូលប្រើប្រាស់អគ្គិសនី និងទឹកដែលអាចទុកចិត្តបាន។"
       : "Dhinimex partners with provincial authorities to expand reliable electricity and water access.",
     cover: "https://www.dhinimex.com/wp-content/uploads/2025/08/img-post_1.png",
     content: language === 'kh'

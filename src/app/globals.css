@@ -50,7 +50,12 @@ body.lang-kh {
 /* Brand Marquee Animation */
 .brand-marquee {
   display: inline-flex;
+  align-items: center;
+  gap: 3rem;
   width: max-content;
+  flex-wrap: nowrap;
+  will-change: transform;
+  backface-visibility: hidden;
   animation: brand-marquee 60s linear infinite;
 }
 
@@ -59,19 +64,30 @@ body.lang-kh {
 }
 
 @keyframes brand-marquee {
-  0% {
-    transform: translateX(0);
+  from {
+    transform: translate3d(0, 0, 0);
   }
-  100% {
-    transform: translateX(-50%);
+  to {
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
 /* Portfolio Marquee Animation */
 .portfolio-marquee {
   display: inline-flex;
+  gap: 0;
   width: max-content;
-  animation: portfolio-marquee 40s linear infinite;
+  flex-wrap: nowrap;
+  will-change: transform;
+  backface-visibility: hidden;
+  animation: portfolio-marquee 50s linear infinite;
+}
+
+.portfolio-marquee-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4rem;
+  flex-shrink: 0;
 }
 
 .portfolio-marquee:hover {
@@ -79,11 +95,18 @@ body.lang-kh {
 }
 
 @keyframes portfolio-marquee {
-  0% {
-    transform: translateX(0);
+  from {
+    transform: translate3d(0, 0, 0);
   }
-  100% {
-    transform: translateX(-50%);
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-marquee,
+  .portfolio-marquee {
+    animation: none;
   }
 }
 

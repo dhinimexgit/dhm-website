@@ -3,12 +3,28 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n";
-import { getBrands } from "@/data/site-content";
+import { homePageBrands } from "@/data/site-content";
 
 export function BusinessPortfolio() {
-  const { t, language } = useLanguage();
-  const companyLogos = getBrands(language);
-  const items = [...companyLogos, ...companyLogos];
+  const { t } = useLanguage();
+  const companyLogos = homePageBrands;
+  const renderLogo = (company: (typeof homePageBrands)[number], index: number) => (
+    <Link
+      key={`${company.name}-${index}`}
+      href={"#"}
+      className="group relative flex h-20 w-40 shrink-0 items-center justify-center"
+    >
+      <Image
+        src={company.logo}
+        alt={`${company.name} logo`}
+        width={160}
+        height={80}
+        className="h-full w-full object-contain opacity-90 transition-opacity duration-300 group-hover:opacity-100"
+        unoptimized
+        priority={index < 14}
+      />
+    </Link>
+  );
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-brand-navy via-[#1a2066] to-brand-navy py-24">
@@ -40,23 +56,13 @@ export function BusinessPortfolio() {
           <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-24 bg-gradient-to-r from-white/95 to-transparent" />
           <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-24 bg-gradient-to-l from-white/95 to-transparent" />
           
-          <div className="portfolio-marquee flex items-center gap-16">
-            {items.map((company, index) => (
-              <Link
-                key={`${company.name}-${index}`}
-                href={"#"}
-                className="group relative flex h-20 w-40 flex-shrink-0 items-center justify-center transition-all duration-300 hover:scale-110"
-              >
-                <Image
-                  src={company.logo}
-                  alt={`${company.name} logo`}
-                  width={160}
-                  height={80}
-                  className="h-full w-full object-contain opacity-90 transition-opacity duration-300 group-hover:opacity-100"
-                  unoptimized
-                />
-              </Link>
-            ))}
+          <div className="portfolio-marquee gap-0">
+            <div className="portfolio-marquee-group inline-flex shrink-0 items-center gap-16">
+              {companyLogos.map((company, index) => renderLogo(company, index))}
+            </div>
+            <div className="portfolio-marquee-group inline-flex shrink-0 items-center gap-16" aria-hidden>
+              {companyLogos.map((company, index) => renderLogo(company, index + companyLogos.length))}
+            </div>
           </div>
         </div>
 

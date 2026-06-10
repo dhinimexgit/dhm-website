@@ -20,8 +20,8 @@ const heroImage = "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?
 // Placeholder images from Unsplash
 const placeholderImages = {
   teamPhoto: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80",
-  vision: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80",
-  mission: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&q=80",
+  vision: "/about-us-1.png",
+  mission: "/about-us-2.png",
   coreValues: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80",
   workCulture: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80",
   // Using avatar.iran.liara.run for team member avatars
@@ -414,8 +414,8 @@ export default function AboutPage() {
                   : "-translate-x-20 opacity-0"
               }`}
             >
-              <div className="grid items-center gap-8 lg:grid-cols-12">
-                <div className="lg:col-span-4">
+              <div className="grid items-center gap-6 lg:grid-cols-12 lg:gap-10">
+                <div className="lg:col-span-7">
                   <p className="mb-2 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
                     
                     {t.about.vision.sectionTitle}
@@ -423,20 +423,18 @@ export default function AboutPage() {
                   <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
                     {t.about.vision.title}
                   </h2>
-                  <p className="text-base leading-relaxed text-slate-600">
+                  <p className="max-w-none text-base leading-relaxed text-slate-600 lg:pr-4">
                     {t.about.vision.description}
                   </p>
                 </div>
-                <div className="lg:col-span-8">
-                  <div className="relative h-[300px] overflow-hidden rounded-2xl bg-gradient-to-br from-brand-navy/5 to-brand-red/5 shadow-lg lg:h-[350px]">
+                <div className="lg:col-span-5">
+                  <div className="relative ml-auto aspect-[4/3] w-full max-w-[260px] overflow-hidden rounded-2xl bg-gradient-to-br from-brand-navy/5 to-brand-red/5 shadow-lg sm:max-w-xs lg:max-w-sm">
                     <Image
                       src={placeholderImages.vision}
                       alt="Vision - Innovation and Technology"
                       fill
-                      className="object-cover"
+                      className="object-cover object-center"
                     />
-                    {/* Faded gradient overlay on left */}
-                    <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-slate-50 to-transparent" />
                   </div>
                 </div>
               </div>
@@ -451,20 +449,18 @@ export default function AboutPage() {
                   : "translate-x-20 opacity-0"
               }`}
             >
-              <div className="grid items-center gap-8 lg:grid-cols-12">
-                <div className="order-2 lg:order-1 lg:col-span-8">
-                  <div className="relative h-[300px] overflow-hidden rounded-2xl bg-gradient-to-bl from-brand-navy/5 to-brand-red/5 shadow-lg lg:h-[350px]">
+              <div className="grid items-center gap-6 lg:grid-cols-12 lg:gap-10">
+                <div className="order-2 lg:order-1 lg:col-span-5">
+                  <div className="relative mr-auto aspect-[4/3] w-full max-w-[260px] overflow-hidden rounded-2xl bg-gradient-to-bl from-brand-navy/5 to-brand-red/5 shadow-lg sm:max-w-xs lg:max-w-sm">
                     <Image
                       src={placeholderImages.mission}
                       alt="Mission - Empowering Communities"
                       fill
-                      className="object-cover"
+                      className="object-cover object-center"
                     />
-                    {/* Faded gradient overlay on right */}
-                    <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-slate-50 to-transparent" />
                   </div>
                 </div>
-                <div className="order-1 lg:order-2 lg:col-span-4">
+                <div className="order-1 lg:order-2 lg:col-span-7">
                   <p className="mb-2 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
                     
                     {t.about.mission.sectionTitle}
@@ -472,7 +468,7 @@ export default function AboutPage() {
                   <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
                     {t.about.mission.title}
                   </h2>
-                  <p className="text-base leading-relaxed text-slate-600">
+                  <p className="max-w-none text-base leading-relaxed text-slate-600 lg:pl-4">
                     {t.about.mission.description}
                   </p>
                 </div>
@@ -711,7 +707,7 @@ export default function AboutPage() {
                 { name: language === 'kh' ? "ណែម ភិរុណ" : "Nem Phyrun", title: language === 'kh' ? "ប្រធានផ្នែករដ្ឋបាល និងធនធានមនុស្ស" : "Admin & HR Manager", photo: "/hr.jpg" },
                 { name: language === 'kh' ? "ភួង ម៉ាលែន" : "Phuong Malen", title: language === 'kh' ? "ប្រធានផ្នែកគណនេយ្យ (សាខា)" : "Accounting Manager (Branch)", photo: "/acct-br.jpg" },
                 { name: language === 'kh' ? "ចាន់ រស្មី" : "Chan Reaksmey", title: language === 'kh' ? "ប្រធានផ្នែកទិញ និងភស្តុភារ" : "Purchasing & Logistics Manager", photo: "/lm.jpg" },
-                { name: language === 'kh' ? "វិចទ័រ ខូវ" : "Victor Khov", title: language === 'kh' ? "ប្រធានផ្នែកបច្ចេកវិទ្យា" : "Technology Manager", photo: "/tm.jpg" },
+                { name: language === 'kh' ? "ខូវ ទី វិកទ័រ" : "Victor Khov", title: language === 'kh' ? "ប្រធានផ្នែកបច្ចេកវិទ្យា" : "Technology Manager", photo: "/tm.jpg" },
               ].map((manager) => (
                 <div key={manager.name} className="flex flex-col items-center text-center mb-8">
                   <div className="relative mb-4 h-[220px] w-[160px] overflow-hidden rounded-2xl shadow-lg sm:h-[240px] sm:w-[180px]">

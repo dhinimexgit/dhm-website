@@ -109,7 +109,7 @@ export function HomeHero() {
           aria-hidden="true"
         />
       )}
-      <section ref={heroRef} className="relative min-h-screen overflow-hidden">
+      <section ref={heroRef} className="relative flex min-h-screen flex-col overflow-hidden">
         {/* Background Video with Glassmorphism Dark Overlay */}
         <div className="absolute inset-0 z-0">
           <video
@@ -270,11 +270,12 @@ export function HomeHero() {
         </div>
 
         {/* Hero Content */}
-        <div className="relative z-20 mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="grid min-h-[calc(100vh-160px)] items-start gap-12 py-12 lg:grid-cols-2 lg:gap-16 lg:pb-0 lg:pt-10">
+        <div className="relative z-20 flex flex-1 items-center justify-center px-6 py-12 lg:px-8">
+          <div className="mx-auto w-full max-w-7xl">
+            <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
             {/* Left Side - Text Content */}
             <div
-              className={`flex flex-col justify-center space-y-8 pt-16 transition-all duration-1000 ease-out lg:pt-0 ${
+              className={`flex flex-col items-center justify-center space-y-8 text-center transition-all duration-1000 ease-out lg:items-start lg:text-left ${
                 contentVisible ? "translate-x-0 opacity-100" : "translate-x-16 opacity-0 lg:translate-x-32"
               }`}
             >
@@ -286,11 +287,11 @@ export function HomeHero() {
                 <h1 className="text-3xl font-bold leading-tight text-white sm:text-3xl lg:text-6xl xl:text-[62px] xl:leading-[1.1]">
                   {heroContent.title}
                 </h1>
-                <p className="max-w-xl text-lg leading-relaxed text-white/80 lg:text-xl">
+                <p className="mx-auto max-w-xl text-lg leading-relaxed text-white/80 lg:mx-0 lg:text-xl">
                   {heroContent.description}
                 </p>
               </div>
-              <div className="flex flex-wrap items-center gap-4">
+              <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
                 <Link
                   href="/about"
                   className="group inline-flex items-center gap-3 rounded-full bg-white px-8 py-4 text-sm font-semibold text-brand-navy shadow-lg transition-all hover:bg-brand-navy hover:text-white"
@@ -305,7 +306,7 @@ export function HomeHero() {
 
             {/* Right Side - Image/Video Carousel */}
             <div
-              className={`relative block transition-all duration-1000 ease-out ${
+              className={`relative mx-auto w-full max-w-xl transition-all duration-1000 ease-out lg:mx-0 lg:max-w-none ${
                 contentVisible ? "translate-x-0 opacity-100" : "-translate-x-32 opacity-0"
               }`}
             >
@@ -347,6 +348,7 @@ export function HomeHero() {
               {/* Decorative elements */}
               <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-brand-red/20 blur-3xl" />
               <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/10 blur-3xl" />
+            </div>
             </div>
           </div>
         </div>
