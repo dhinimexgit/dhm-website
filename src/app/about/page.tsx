@@ -17,11 +17,14 @@ import { StickyHeader } from "@/components/home/sticky-header";
 // Hero background image
 const heroImage = "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=1920&q=80";
 
+// Bump when replacing images in /public to bust browser and optimizer cache
+const ABOUT_IMAGE_VERSION = "20250610";
+
 // Placeholder images from Unsplash
 const placeholderImages = {
   teamPhoto: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80",
-  vision: "/about-us-1.png",
-  mission: "/about-us-2.png",
+  vision: `/about-us-1.png?v=${ABOUT_IMAGE_VERSION}`,
+  mission: `/about-us-2.png?v=${ABOUT_IMAGE_VERSION}`,
   coreValues: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80",
   workCulture: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80",
   // Using avatar.iran.liara.run for team member avatars
@@ -414,25 +417,25 @@ export default function AboutPage() {
                   : "-translate-x-20 opacity-0"
               }`}
             >
-              <div className="grid items-center gap-6 lg:grid-cols-12 lg:gap-10">
-                <div className="lg:col-span-7">
-                  <p className="mb-2 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
-                    
+              <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-10">
+                <div className="flex flex-col justify-center text-left lg:col-span-7">
+                  <p className="mb-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
                     {t.about.vision.sectionTitle}
                   </p>
                   <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
                     {t.about.vision.title}
                   </h2>
-                  <p className="max-w-none text-base leading-relaxed text-slate-600 lg:pr-4">
+                  <p className="text-base leading-relaxed text-slate-600">
                     {t.about.vision.description}
                   </p>
                 </div>
-                <div className="lg:col-span-5">
-                  <div className="relative ml-auto aspect-[4/3] w-full max-w-[260px] overflow-hidden rounded-2xl bg-gradient-to-br from-brand-navy/5 to-brand-red/5 shadow-lg sm:max-w-xs lg:max-w-sm">
+                <div className="flex items-center justify-start lg:col-span-5">
+                  <div className="relative aspect-[4/3] w-full max-w-[340px] overflow-hidden rounded-2xl bg-gradient-to-br from-brand-navy/5 to-brand-red/5 shadow-lg sm:max-w-md lg:max-w-lg">
                     <Image
                       src={placeholderImages.vision}
                       alt="Vision - Innovation and Technology"
                       fill
+                      unoptimized
                       className="object-cover object-center"
                     />
                   </div>
@@ -449,26 +452,26 @@ export default function AboutPage() {
                   : "translate-x-20 opacity-0"
               }`}
             >
-              <div className="grid items-center gap-6 lg:grid-cols-12 lg:gap-10">
-                <div className="order-2 lg:order-1 lg:col-span-5">
-                  <div className="relative mr-auto aspect-[4/3] w-full max-w-[260px] overflow-hidden rounded-2xl bg-gradient-to-bl from-brand-navy/5 to-brand-red/5 shadow-lg sm:max-w-xs lg:max-w-sm">
+              <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-10">
+                <div className="order-2 flex items-center justify-end lg:order-1 lg:col-span-5">
+                  <div className="relative aspect-[4/3] w-full max-w-[340px] overflow-hidden rounded-2xl bg-gradient-to-bl from-brand-navy/5 to-brand-red/5 shadow-lg sm:max-w-md lg:max-w-lg">
                     <Image
                       src={placeholderImages.mission}
                       alt="Mission - Empowering Communities"
                       fill
+                      unoptimized
                       className="object-cover object-center"
                     />
                   </div>
                 </div>
-                <div className="order-1 lg:order-2 lg:col-span-7">
-                  <p className="mb-2 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
-                    
+                <div className="order-1 flex flex-col justify-center text-left lg:order-2 lg:col-span-7">
+                  <p className="mb-2 text-sm font-semibold uppercase tracking-[0.3em] text-brand-red">
                     {t.about.mission.sectionTitle}
                   </p>
                   <h2 className="mb-4 text-3xl font-bold text-brand-navy lg:text-4xl">
                     {t.about.mission.title}
                   </h2>
-                  <p className="max-w-none text-base leading-relaxed text-slate-600 lg:pl-4">
+                  <p className="text-base leading-relaxed text-slate-600">
                     {t.about.mission.description}
                   </p>
                 </div>
