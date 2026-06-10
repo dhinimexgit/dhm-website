@@ -712,12 +712,14 @@ export default function AboutPage() {
                 { name: language === 'kh' ? "ចាន់ រស្មី" : "Chan Reaksmey", title: language === 'kh' ? "ប្រធានផ្នែកទិញ និងភស្តុភារ" : "Purchasing & Logistics Manager", photo: "/lm.jpg" },
                 { name: language === 'kh' ? "ខូវ ទី វិកទ័រ" : "Victor Khov", title: language === 'kh' ? "ប្រធានផ្នែកបច្ចេកវិទ្យា" : "Technology Manager", photo: "/tm.jpg" },
               ].map((manager) => (
-                <div key={manager.name} className="flex flex-col items-center text-center mb-8">
-                  <div className="relative mb-4 h-[220px] w-[160px] overflow-hidden rounded-2xl shadow-lg sm:h-[240px] sm:w-[180px]">
+                <div key={manager.name} className="mb-8 flex flex-col items-center text-center">
+                  <div className="relative mb-4 aspect-[3/4] w-full max-w-[160px] overflow-hidden rounded-2xl shadow-lg sm:max-w-[180px] md:max-w-[200px] lg:max-w-[220px]">
                     <Image
                       src={manager.photo}
                       alt={manager.name}
                       fill
+                      sizes="(min-width: 1024px) 220px, (min-width: 768px) 200px, (min-width: 640px) 180px, 160px"
+                      unoptimized
                       className="object-cover object-top"
                     />
                   </div>
