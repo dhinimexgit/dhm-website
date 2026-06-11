@@ -93,7 +93,7 @@ export default function SaekarajTransfoDetailPage() {
                   <span className="font-medium text-brand-red">{language === 'kh' ? "សេករាជ ត្រង់ស្វូ" : "Saekaraj Transfo"}</span>
                 </div>
                 <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
-                  {language === 'kh' ? "ក្រុមហ៊ុន សេករាជ ត្រង់ស្វូ ចំកាត់" : "Saekaraj Transfo Co., LTD"}
+                  {language === 'kh' ? "ក្រុមហ៊ុន សេករាជ ត្រង់ស្វូ " : "Saekaraj Transfo Co., LTD"}
                 </h1>
                 <p className="max-w-xl text-lg text-white/80">
                   {language === 'kh' ? "រោងចក្រផលិតត្រង់ស្វូម៉ាទ័រដំបូងគេនៅកម្ពុជា ដែលផ្តល់នូវគុណភាពតាំងពីឆ្នាំ 2014។" : "Cambodia's first transformer manufacturing factory, delivering quality since 2014."}
@@ -124,7 +124,7 @@ export default function SaekarajTransfoDetailPage() {
                 
                 <div className="space-y-4 text-base leading-relaxed text-slate-600">
                   <p>
-                    <strong className="text-brand-navy">{language === 'kh' ? "ក្រុមហ៊ុន សេករាជ ត្រង់ស្វូ ចំកាត់" : "Saekaraj Transfo Co., Ltd."}</strong>{language === 'kh' ? " ដែលត្រូវបានបង្កើតឡើងក្នុងឆ្នាំ 2014 មានមោទនភាពជា " : ", established in 2014, is proud to be the "}<strong>{language === 'kh' ? "រោងចក្រផលិតត្រង់ស្វូម៉ាទ័រដំបូងគេនៅកម្ពុជា" : "first transformer manufacturing factory in Cambodia"}</strong>{language === 'kh' ? "។ ប្រតិបត្តិការក្រោមម៉ាកយីហោ " : ". Operating under the brand name "}<strong>&quot;RAJ&quot;</strong>{language === 'kh' ? " ក្រុមហ៊ុនមានជំនាញក្នុងការផលិតត្រង់ស្វូម៉ាទ័រចែកចាយប្រភេទត្រាំប្រេងដែលមានគុណភាពខ្ពស់។" : ", the company specializes in producing high-quality oil-immersed distribution transformers."}
+                    <strong className="text-brand-navy">{language === 'kh' ? "ក្រុមហ៊ុន សេករាជ ត្រង់ស្វូ " : "Saekaraj Transfo Co., Ltd."}</strong>{language === 'kh' ? " ដែលត្រូវបានបង្កើតឡើងក្នុងឆ្នាំ 2014 មានមោទនភាពជា " : ", established in 2014, is proud to be the "}<strong>{language === 'kh' ? "រោងចក្រផលិតត្រង់ស្វូម៉ាទ័រដំបូងគេនៅកម្ពុជា" : "first transformer manufacturing factory in Cambodia"}</strong>{language === 'kh' ? "។ ប្រតិបត្តិការក្រោមម៉ាកយីហោ " : ". Operating under the brand name "}<strong>&quot;RAJ&quot;</strong>{language === 'kh' ? " ក្រុមហ៊ុនមានជំនាញក្នុងការផលិតត្រង់ស្វូម៉ាទ័រចែកចាយប្រភេទត្រាំប្រេងដែលមានគុណភាពខ្ពស់។" : ", the company specializes in producing high-quality oil-immersed distribution transformers."}
                   </p>
                   <p>
                     {language === 'kh' ? "ក្រៅពីការផលិត សេករាជ ត្រង់ស្វូ ផ្តល់នូវ " : "Beyond manufacturing, Saekaraj Transfo provides "}<strong>{language === 'kh' ? "សេវាកម្មជួសជុល និងថែទាំគ្រប់ជ្រុងជ្រោយ" : "comprehensive repair and maintenance services"}</strong>{language === 'kh' ? " សម្រាប់គ្រប់ម៉ាកនៃត្រង់ស្វូម៉ាទ័រថាមពល និងចែកចាយ ដោយធានាបាននូវដំណើរការដែលអាចទុកចិត្តបានទាំងនៅក្នុងរោងចក្រ និងនៅនឹងកន្លែង។" : " for all brands of power and distribution transformers, ensuring reliable performance both in-factory and on-site."}

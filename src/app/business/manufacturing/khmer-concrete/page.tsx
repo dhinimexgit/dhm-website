@@ -96,7 +96,7 @@ export default function KhmerConcreteDetailPage() {
                   <span className="font-medium text-brand-red">{language === 'kh' ? "ខ្មែរខនគ្រីត" : "Khmer Concrete"}</span>
                 </div>
                 <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
-                  {language === 'kh' ? "ក្រុមហ៊ុន ខ្មែរខនគ្រីត ចំកាត់" : "Khmer Concrete Co., LTD"}
+                  {language === 'kh' ? "ក្រុមហ៊ុន ខ្មែរខនគ្រីត " : "Khmer Concrete Co., LTD"}
                 </h1>
                 <p className="max-w-xl text-lg text-white/80">
                   {language === 'kh' ? "ក្រុមហ៊ុនផលិតផលិតផលបេតុងដ៏រឹងមាំ និងមានគុណភាពខ្ពស់ឈានមុខគេនៅខេត្តកណ្តាល។" : "Leading manufacturer of durable and high-quality concrete products in Kandal Province."}

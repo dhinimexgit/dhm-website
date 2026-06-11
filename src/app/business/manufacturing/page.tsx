@@ -17,7 +17,7 @@ const heroImage = "/business-manufacturing-hero.jpg";
 
 const getCompanies = (language: string) => [
   {
-    name: language === 'kh' ? "ក្រុមហ៊ុន ខ្មែរខនគ្រីត ចំកាត់" : "Khmer Concrete Co., LTD",
+    name: language === 'kh' ? "ក្រុមហ៊ុន ខ្មែរខនគ្រីត " : "Khmer Concrete Co., LTD",
     description: language === 'kh' ? "រោងចក្រ ខ្មែរខនគ្រីត (KCC) ដែលមានមូលដ្ឋាននៅខេត្តកណ្តាល គឺជាក្រុមហ៊ុនផលិតផលិតផលបេតុងដ៏រឹងមាំ និងមានគុណភាពខ្ពស់ឈានមុខគេ។ គ្រឿងបរិក្ខារទំនើបរបស់យើងផលិតបង្គោលបេតុង បំពង់ និងសមាសភាគហេដ្ឋារចនាសម្ព័ន្ធផ្សេងទៀត។" : "Khmer Concrete Factory (KCC), based in Kandal Province, is a leading manufacturer of durable and high-quality concrete products. Our state-of-the-art facility produces concrete poles, pipes, and other infrastructure components.",
     link: "/business/manufacturing/khmer-concrete",
     image: "/kcc.jpg",
@@ -25,7 +25,7 @@ const getCompanies = (language: string) => [
     specialty: language === 'kh' ? "ផលិតផលបេតុង" : "Concrete Products"
   },
   {
-    name: language === 'kh' ? "ក្រុមហ៊ុន វង្ស ចាន់ ខេបល ចំកាត់" : "Vong Chan Cable Co., LTD",
+    name: language === 'kh' ? "ក្រុមហ៊ុន វង្ស ចាន់ ខេបល " : "Vong Chan Cable Co., LTD",
     description: language === 'kh' ? "វង្ស ចាន់ ខេបល គឺជាក្រុមហ៊ុនផលិតខ្សែភ្លើង LV/MV គុណភាពខ្ពស់ដែលបំពេញតាមស្តង់ដារអន្តរជាតិ។ ខ្សែភ្លើងរបស់យើងត្រូវបានប្រើប្រាស់នៅក្នុងបណ្តាញចែកចាយថាមពលទូទាំងប្រទេសកម្ពុជា។" : "Vong Chan Cable is a manufacturer of high-quality LV/MV cables that meet international standards. Our cables are used in power distribution networks across Cambodia.",
     link: "/business/manufacturing/vong-chan-cable",
     image: "/vcc.jpg",
@@ -33,7 +33,7 @@ const getCompanies = (language: string) => [
     specialty: language === 'kh' ? "ខ្សែភ្លើង LV/MV" : "LV/MV Cables"
   },
   {
-    name: language === 'kh' ? "ក្រុមហ៊ុន សេករាជ ត្រង់ស្វូ ចំកាត់" : "Saekaraj Transfo Co., LTD",
+    name: language === 'kh' ? "ក្រុមហ៊ុន សេករាជ ត្រង់ស្វូ " : "Saekaraj Transfo Co., LTD",
     description: language === 'kh' ? "សេករាជ ត្រង់ស្វូ ដែលជាក្រុមហ៊ុនផលិតត្រង់ស្វូម៉ាទ័រដំបូងគេនៅកម្ពុជា ផ្តល់នូវត្រង់ស្វូម៉ាទ័រគុណភាពខ្ពស់ និងសេវាកម្មថែទាំទូទាំងប្រទេស ដើម្បីគាំទ្រដល់ហេដ្ឋារចនាសម្ព័ន្ធថាមពលដែលអាចទុកចិត្តបាន។" : "Saekaraj Transfo, Cambodia's first transformer manufacturer, delivers high-quality transformers and nationwide maintenance services to support reliable power infrastructure.",
     link: "/business/manufacturing/saekaraj-transfo",
     image: "/saekaraj.jpg",

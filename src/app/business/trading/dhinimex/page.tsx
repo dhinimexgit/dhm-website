@@ -146,7 +146,7 @@ export default function DhinimexDetailPage() {
                   <span className="font-medium text-brand-red">{language === 'kh' ? "ឌីនីម៉ិច" : "Dhinimex"}</span>
                 </div>
                 <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
-                  {language === 'kh' ? "ក្រុមហ៊ុន ធិនីម៉ិចចំកាត់" : "Dhinimex Co., LTD"}
+                  {language === 'kh' ? "ក្រុមហ៊ុន ធិនីម៉ិច" : "Dhinimex Co., LTD"}
                 </h1>
                 <p className="max-w-xl text-lg text-white/80">
                   {language === 'kh' ? "ក្រុមហ៊ុនឈានមុខគេនៅកម្ពុជាក្នុងការផ្គត់ផ្គង់ឧបករណ៍អគ្គិសនី គ្រឿងប្រើប្រាស់ និងដំណោះស្រាយថាមពលព្រះអាទិត្យតាំងពីឆ្នាំ 2003។" : "Cambodia's leading provider of electrical equipment, appliances, and solar solutions since 2003."}

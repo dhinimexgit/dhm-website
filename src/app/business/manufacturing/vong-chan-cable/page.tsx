@@ -93,7 +93,7 @@ export default function VongChanCableDetailPage() {
                   <span className="font-medium text-brand-red">{language === 'kh' ? "វង្ស ចាន់ ខេបល" : "Vong Chan Cable"}</span>
                 </div>
                 <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
-                  {language === 'kh' ? "ក្រុមហ៊ុន វង្ស ចាន់ ខេបល ចំកាត់" : "Vong Chan Cable Co., LTD"}
+                  {language === 'kh' ? "ក្រុមហ៊ុន វង្ស ចាន់ ខេបល " : "Vong Chan Cable Co., LTD"}
                 </h1>
                 <p className="max-w-xl text-lg text-white/80">
                   {language === 'kh' ? "ក្រុមហ៊ុនផលិតខ្សែភ្លើង LV/MV គុណភាពខ្ពស់ដែលបំពេញតាមស្តង់ដារអន្តរជាតិ។" : "Manufacturer of high-quality LV/MV cables meeting international standards."}
@@ -124,13 +124,13 @@ export default function VongChanCableDetailPage() {
                 
                 <div className="space-y-4 text-base leading-relaxed text-slate-600">
                   <p>
-                    <strong className="text-brand-navy">{language === 'kh' ? "ក្រុមហ៊ុន វង្ស ចាន់ ខេបល ចំកាត់" : "Vong Chan Cable Co., Ltd."}</strong>{language === 'kh' ? " ដែលមានទីតាំងនៅភូមិស្រែអំបិល ឃុំឈើទាល ស្រុកកៀនស្វាយ ខេត្តកណ្តាល ប្រទេសកម្ពុជា គឺផ្តោតលើការផលិត និងចែកចាយខ្សែអគ្គិសនីដែលមានគុណភាពខ្ពស់។" : ", located in Sre Ampil Village, Chher Teal Commune, Kean Svay District, Kandal Province, Cambodia, is dedicated to the production and distribution of high-quality electrical cables."}
+                    <strong className="text-brand-navy">{language === 'kh' ? "ក្រុមហ៊ុន វង្ស ចាន់ ខេបល " : "Vong Chan Cable Co., Ltd."}</strong>{language === 'kh' ? " ដែលមានទីតាំងនៅភូមិស្រែអំបិល ឃុំឈើទាល ស្រុកកៀនស្វាយ ខេត្តកណ្តាល ប្រទេសកម្ពុជា គឺផ្តោតលើការផលិត និងចែកចាយខ្សែអគ្គិសនីដែលមានគុណភាពខ្ពស់។" : ", located in Sre Ampil Village, Chher Teal Commune, Kean Svay District, Kandal Province, Cambodia, is dedicated to the production and distribution of high-quality electrical cables."}
                   </p>
                   <p>
                     {language === 'kh' ? "ខ្សែសង្វាក់ផលិតផលរបស់យើងរួមមាន " : "Our product line includes "}<strong>{language === 'kh' ? "ខ្សែភ្លើងសម្រាប់អគារ ខ្សែភ្លើងតង់ស្យុងទាប និងខ្សែភ្លើងតង់ស្យុងមធ្យម" : "building cables, low voltage cables, and medium voltage cables"}</strong>{language === 'kh' ? " ដែលទាំងអស់ត្រូវបានផលិតដោយអនុលោមតាមយ៉ាងតឹងរ៉ឹងជាមួយនឹង " : ", all manufactured in strict compliance with "}<strong>{language === 'kh' ? "ស្តង់ដារបច្ចេកទេស TCVN របស់វៀតណាម" : "Vietnam TCVN technical standards"}</strong>{language === 'kh' ? "។" : "."}
                   </p>
                   <p>
-                    {language === 'kh' ? "ដោយផ្តោតលើសុវត្ថិភាព ភាពជឿជាក់ និងដំណើរការ ក្រុមហ៊ុន វង្ស ចាន់ ខេបល ចំកាត់ ប្តេជ្ញាគាំទ្រដល់ហេដ្ឋារចនាសម្ព័ន្ធ និងតម្រូវការថាមពលដែលកំពុងកើនឡើងរបស់កម្ពុជា។" : "With a focus on safety, reliability, and performance, Vong Chan Cable Co., Ltd. is committed to supporting Cambodia's growing infrastructure and energy needs."}
+                    {language === 'kh' ? "ដោយផ្តោតលើសុវត្ថិភាព ភាពជឿជាក់ និងដំណើរការ ក្រុមហ៊ុន វង្ស ចាន់ ខេបល  ប្តេជ្ញាគាំទ្រដល់ហេដ្ឋារចនាសម្ព័ន្ធ និងតម្រូវការថាមពលដែលកំពុងកើនឡើងរបស់កម្ពុជា។" : "With a focus on safety, reliability, and performance, Vong Chan Cable Co., Ltd. is committed to supporting Cambodia's growing infrastructure and energy needs."}
                   </p>
                 </div>
 
