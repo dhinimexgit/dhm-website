@@ -18,7 +18,7 @@ import { StickyHeader } from "@/components/home/sticky-header";
 const heroImage = "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=1920&q=80";
 
 // Bump when replacing images in /public to bust browser and optimizer cache
-const ABOUT_IMAGE_VERSION = "20250610";
+const ABOUT_IMAGE_VERSION = "20250611";
 
 // Placeholder images from Unsplash
 const placeholderImages = {
