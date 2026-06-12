@@ -39,7 +39,11 @@ export const translations = {
     },
     about: {
       hero: {
-        title: "Building Cambodia's Future Through Innovation and Excellence"
+        title: [
+          "Powering Progress.",
+          "Connecting Communities.",
+          "Serving Cambodia.",
+        ],
       },
       whoWeAre: {
         sectionTitle: "Who We Are",
@@ -840,7 +844,11 @@ export const translations = {
     },
     about: {
       hero: {
-        title: "ការកសាងអនាគតរបស់ប្រទេសកម្ពុជាតាមរយៈនវានុវត្តន៍ និងឧត្តមភាព"
+        title: [
+          "ជំរុញវឌ្ឍនភាព",
+          "បណ្តុះចំណងសហគមន៍",
+          "បម្រើជូនប្រទេសកម្ពុជា",
+        ],
       },
       whoWeAre: {
         sectionTitle: "អំពីយើង",

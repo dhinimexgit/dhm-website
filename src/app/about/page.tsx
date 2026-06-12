@@ -320,13 +320,23 @@ export default function AboutPage() {
           {/* Hero Content - Left aligned like home-hero */}
           <div className="relative z-20 mx-auto max-w-7xl px-6 lg:px-8">
             <div className="flex min-h-[calc(70vh-120px)] items-center py-16 lg:min-h-[calc(80vh-120px)] lg:py-0">
-              <div className="max-w-2xl space-y-6">
+              <div className="max-w-4xl space-y-6">
                 <p className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-white/90">
                   
                   {t.nav.about}
                 </p>
-                <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-[64px] xl:leading-[1.1]">
-                  {t.about.hero.title}
+                <h1
+                  className={`text-4xl font-bold text-white sm:text-5xl lg:text-6xl xl:text-[64px] ${
+                    language === "kh"
+                      ? "flex flex-col leading-[1.6] xl:leading-[1.7]"
+                      : "leading-tight xl:leading-[1.1]"
+                  }`}
+                >
+                  {t.about.hero.title.map((line, index) => (
+                    <span key={index} className="block whitespace-nowrap">
+                      {line}
+                    </span>
+                  ))}
                 </h1>
               </div>
             </div>
