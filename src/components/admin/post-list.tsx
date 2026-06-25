@@ -45,10 +45,13 @@ export function PostList({ onEdit }: Props) {
 
   // Filter posts
   const filteredPosts = posts.filter((post) => {
+    const q = searchQuery.toLowerCase();
     const matchesSearch =
       !searchQuery ||
-      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+      post.title.toLowerCase().includes(q) ||
+      post.excerpt.toLowerCase().includes(q) ||
+      (post.titleKh?.toLowerCase().includes(q) ?? false) ||
+      (post.excerptKh?.toLowerCase().includes(q) ?? false);
     return matchesSearch;
   });
 

@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { db } from "@/lib/firebase";
+import { db, storage } from "@/lib/firebase";
 import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { subscribeBrands, FALLBACK_BRANDS, type Brand } from "@/lib/taxonomy";
 
 const slugify = (s: string) =>
@@ -25,8 +26,13 @@ export function BrandManager() {
   const [brands, setBrands] = useState<Brand[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Brand | null>(null);
+  const [newHeroImage, setNewHeroImage] = useState<File | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [importing, setImporting] = useState(false);
+
+  useEffect(() => {
+    if (editing) setNewHeroImage(null);
+  }, [editing?.id, editing?.slug]);
 
   useEffect(() => {
     const unsub = subscribeBrands((items) => {
@@ -72,6 +78,13 @@ export function BrandManager() {
     const slug = (editing.slug || slugify(name)).trim();
     setIsSaving(true);
     try {
+      let heroImageUrl = editing.heroImage?.trim() || "";
+      if (newHeroImage) {
+        const storageRef = ref(storage, `brands/${slug}/hero-${Date.now()}-${newHeroImage.name}`);
+        const snapshot = await uploadBytes(storageRef, newHeroImage);
+        heroImageUrl = await getDownloadURL(snapshot.ref);
+      }
+
       const payload = {
         slug,
         name,
@@ -80,7 +93,7 @@ export function BrandManager() {
         description: editing.description?.trim() || "",
         focus: editing.focus?.trim() || "",
         brandColor: editing.brandColor?.trim() || "#1e2a78",
-        heroImage: editing.heroImage?.trim() || "",
+        heroImage: heroImageUrl,
         order: Number.isFinite(editing.order) ? Number(editing.order) : brands.length,
         hidden: !!editing.hidden,
       };
@@ -209,14 +222,40 @@ export function BrandManager() {
             />
           </div>
           <div className="sm:col-span-2">
-            <label className="mb-2 block text-sm font-semibold text-slate-700">Hero Image URL</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-700">Hero Image</label>
+            {(editing.heroImage || newHeroImage) && (
+              <div className="mb-3">
+                <div className="relative h-40 w-full max-w-md overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
+                  {newHeroImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={URL.createObjectURL(newHeroImage)}
+                      alt="Hero preview"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : editing.heroImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={editing.heroImage} alt="Current hero" className="h-full w-full object-cover" />
+                  ) : null}
+                </div>
+                {editing.heroImage && !newHeroImage && (
+                  <button
+                    type="button"
+                    onClick={() => setEditing({ ...editing, heroImage: "" })}
+                    className="mt-2 text-xs font-medium text-red-600 hover:text-red-700"
+                  >
+                    Remove current image
+                  </button>
+                )}
+              </div>
+            )}
             <input
-              type="text"
-              value={editing.heroImage || ""}
-              onChange={(e) => setEditing({ ...editing, heroImage: e.target.value })}
-              placeholder="https://..."
-              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm focus:border-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-navy/20"
+              type="file"
+              accept="image/*"
+              onChange={(e) => setNewHeroImage(e.target.files?.[0] || null)}
+              className="block w-full text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-navy file:px-4 file:py-2.5 file:text-sm file:font-semibold file:text-white file:transition hover:file:bg-brand-navy/90"
             />
+            <p className="mt-2 text-xs text-slate-500">Upload a hero image from your device</p>
           </div>
           <div className="sm:col-span-2">
             <label className="flex items-center gap-2 text-sm font-medium text-slate-700">

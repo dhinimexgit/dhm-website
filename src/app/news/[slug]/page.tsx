@@ -56,6 +56,7 @@ interface Post {
   excerpt: string;
   cover: string;
   content: string[];
+  images?: string[];
 }
 
 type Props = {
@@ -375,6 +376,26 @@ export default function BlogDetailPage({ params }: Props) {
                 </div>
               )}
             </div>
+
+            {/* Additional Images Gallery */}
+            {post.images && post.images.length > 0 && (
+              <div className="mt-10 grid gap-4 sm:grid-cols-2">
+                {post.images.map((imageUrl, index) => (
+                  <div
+                    key={index}
+                    className="relative aspect-[4/3] overflow-hidden rounded-xl shadow-md"
+                  >
+                    <Image
+                      src={imageUrl}
+                      alt={`${post.title} - image ${index + 1}`}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 100vw, 50vw"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Tags */}
             {post.tag && (

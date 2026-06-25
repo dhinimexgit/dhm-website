@@ -92,10 +92,14 @@ export type ProductCategory = {
 export type Post = {
   slug: string;
   title: string;
+  titleKh?: string;
   date: string;
   excerpt: string;
+  excerptKh?: string;
   cover: string;
   content: string[];
+  contentKh?: string[];
+  images?: string[];
   tag: "News" | "Event" | "Insight";
 };
 

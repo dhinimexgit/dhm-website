@@ -7,11 +7,15 @@ const docToPost = (doc: any, lang: 'en' | 'kh' = 'en'): Post => {
   return {
     slug: data.slug || doc.id, // Use slug from data if available, otherwise use doc ID
     title: lang === 'kh' && data.titleKh ? data.titleKh : data.title || "",
+    titleKh: data.titleKh,
     date: data.date || "",
     tag: data.tag || "News",
     excerpt: lang === 'kh' && data.excerptKh ? data.excerptKh : data.excerpt || "",
+    excerptKh: data.excerptKh,
     cover: data.cover || "",
     content: lang === 'kh' && data.contentKh ? data.contentKh : data.content || [],
+    contentKh: data.contentKh,
+    images: data.images || [],
   };
 };
 

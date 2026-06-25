@@ -19,6 +19,7 @@ import {
   type CategoryNode,
 } from "@/lib/taxonomy";
 import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
+import { BrandShowcaseCarousel } from "@/components/products/brand-showcase-carousel";
 import {
   NavUtilityCluster,
   NavUtilityDivider,
@@ -508,30 +509,14 @@ export function ProductsPageClient({ initialBrand }: Props) {
                 </p>
               </div>
 
-              <div className="grid gap-6 md:grid-cols-3">
-                {categories.map((brand) => (
-                  <div key={brand.slug} className="group relative aspect-[3/4] overflow-hidden rounded-2xl">
-                    <Image 
-                      src={brand.heroImage} 
-                      alt={brand.name}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                    <div className="absolute bottom-0 left-0 w-full p-8 text-center">
-                      <div className="mb-4 h-12 w-full relative flex items-center justify-center">
-                        <h3 className="text-2xl font-bold text-white">{brand.name}</h3>
-                      </div>
-                      <Link
-                        href={`/products/${brand.slug}`}
-                        className="inline-block rounded-lg bg-brand-red px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-brand-navy"
-                      >
-                        {t.productsPage.brands.shopBrand}
-                      </Link>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <BrandShowcaseCarousel
+                brands={categories.map((brand) => ({
+                  slug: brand.slug,
+                  name: brand.name,
+                  heroImage: brand.heroImage,
+                }))}
+                shopLabel={t.productsPage.brands.shopBrand}
+              />
             </div>
           </section>
         </>
