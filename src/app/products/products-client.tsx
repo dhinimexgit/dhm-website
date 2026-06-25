@@ -20,6 +20,7 @@ import {
 } from "@/lib/taxonomy";
 import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
 import { BrandShowcaseCarousel } from "@/components/products/brand-showcase-carousel";
+import { getCategoryIconSrc } from "@/lib/category-icons";
 import {
   NavUtilityCluster,
   NavUtilityDivider,
@@ -454,14 +455,14 @@ export function ProductsPageClient({ initialBrand }: Props) {
                 </p>
               </div>
             
-              <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
                 {displayCategories.map((cat) => (
                   <button
                     key={cat.id}
                     onClick={() => handleCategoryClick(cat.id)}
                     className="group flex flex-col items-center justify-center gap-4 rounded-xl border border-slate-200 bg-white py-8 transition-all hover:border-brand-navy hover:shadow-lg"
                   >
-                    <CategoryIcon id={cat.id} className="h-10 w-10 text-slate-400 transition-colors group-hover:text-brand-navy" />
+                    <CategoryIcon id={cat.id} className="h-[85px] w-[85px] transition-transform group-hover:scale-105" />
                     <div className="text-center">
                       <span className="block text-sm font-semibold text-slate-700 group-hover:text-brand-navy">{cat.label}</span>
                     </div>
@@ -925,28 +926,34 @@ function FeaturedProductCard({ product, categorySlug }: { product: any, category
   );
 }
 
-function CategoryIcon({ id, className }: { id: string, className?: string }) {
-  // Updated icons for the specific categories requested
-  const icons: Record<string, React.ReactNode> = {
-    "automotive-tools": <path d="M19 17h2l.64-2.54c.24-.959.24-1.96 0-2.92l-1.07-4.27A2.99 2.99 0 0 0 17.66 5H6.34a2.99 2.99 0 0 0-2.91 2.27L2.36 11.54a3.99 3.99 0 0 0 0 2.92L3 17h2m9-6h-6" />,
-    "cleaning-drainage": <path d="M3 3v18h18V3H3zm9 4l2 2-2 2-2-2 2-2zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" />, // Broom/Bucket concept
-    "decorating-tiling": <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" />, // Brush/Roller concept
-    "detectors-testing": <path d="M9 3L5 6.99h3V14h2V6.99h3L9 3zm7 14.01V10h-2v7.01h-3L15 21l4-3.99h-3z" />, // Meter/Detector concept
-    "electrical": <path d="M13 2L3 14h7v8l10-12h-7l7-8z" />,
-    "engineering-tools": <path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z" />, // Wrench/Caliper
-    "hand-tools": <path d="M21 13v-2a2 2 0 0 0-2-2h-2V7a2 2 0 0 0-2-2h-2V3a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v2H1a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h1v2a2 2 0 0 0 2 2h2v2a2 2 0 0 0 2 2h2v-2h2v-2h2v-2h2v-2h2z" />, // Hammer/Pliers
-    "power-tool-accessories": <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />, // Drill Bit/Blade
-    "power-tools": <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.9 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />,
-    "tool-boxes-storage": <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zM10 4h4v2h-4V4zm10 15H4V8h16v11z" />,
-    "tool-kits": <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z" />,
-    "workwear": <path d="M20 6h-3V4c0-1.1-.9-2-2-2H9c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM9 4h6v2H9V4zm11 15H4v-2h16v2zm0-4H4V8h16v7z" />, // Vest/Jacket
-  };
+function CategoryIcon({ id, className }: { id: string; className?: string }) {
+  const src = getCategoryIconSrc(id);
 
-  const path = icons[id] || <path d="M3 3h18v18H3z" />;
+  if (src) {
+    return (
+      <Image
+        src={src}
+        alt=""
+        width={85}
+        height={85}
+        className={`object-contain ${className ?? ""}`}
+      />
+    );
+  }
 
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      {path}
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={`text-slate-400 ${className ?? ""}`}
+      aria-hidden
+    >
+      <path d="M3 3h18v18H3z" />
     </svg>
   );
 }
