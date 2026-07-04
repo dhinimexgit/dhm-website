@@ -40,6 +40,15 @@ service cloud.firestore {
       allow write: if true;
     }
 
+    // Item master (Item Code) — one shared code per item across the Group.
+    // Read is open (staff look up / duplicate-check codes); same write posture
+    // as the rest of this project. Obsolete items are marked inactive in-app,
+    // never deleted.
+    match /itemCodes/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+
     // Allow public read access to posts
     match /posts/{document=**} {
       allow read: if true;

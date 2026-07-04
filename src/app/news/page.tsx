@@ -14,7 +14,7 @@ import {
 import { StickyHeader } from "@/components/home/sticky-header";
 
 // Hero background image - High resolution corporate/infrastructure themed
-const heroImage = "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1920&q=90";
+const heroImage = "/new-hero-banner.jpg";
 
 // Fallback images for posts without covers - high-resolution, diverse images
 const postFallbackImages = [
@@ -286,7 +286,7 @@ export default function BlogPage() {
 
           {/* Hero Content */}
           <div className="relative z-20 mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="flex min-h-[calc(60vh-120px)] items-end pb-16 pt-24 lg:min-h-[calc(70vh-120px)] lg:pb-20 lg:pt-0 lg:pt-4">
+            <div className="flex min-h-[calc(60vh-120px)] items-center py-16 lg:min-h-[calc(70vh-120px)] lg:py-20">
               <div className="max-w-3xl space-y-6">
                 <p className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-white/90">
                   

@@ -182,7 +182,7 @@ export default function BlogDetailPage({ params }: Props) {
 
       <div className="bg-white">
         {/* Header Section with Navbar */}
-        <section className="relative overflow-hidden bg-brand-navy">
+        <section className="relative bg-brand-navy">
           {/* Header - Desktop Only */}
           <div className="relative z-30 hidden lg:block">
             <div className="mx-auto max-w-7xl px-8 py-6">

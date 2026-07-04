@@ -12,10 +12,11 @@ import { CareerForm } from "@/components/admin/career-form";
 import { InquiryList } from "@/components/admin/inquiry-list";
 import { InquiryBadge } from "@/components/admin/inquiry-badge";
 import { QRCodeManager } from "@/components/admin/qr-code-manager";
+import { ItemCodeManager } from "@/components/admin/item-code-manager";
 import { useLanguage } from "@/lib/i18n";
 import type { CareerRole, Post } from "@/data/site-content";
 
-type TabType = "products" | "brands" | "categories" | "posts" | "careers" | "inquiries" | "qrcode";
+type TabType = "products" | "itemcodes" | "brands" | "categories" | "posts" | "careers" | "inquiries" | "qrcode";
 type UserRole = "admin" | "marketing";
 
 export default function AdminDashboard() {
@@ -46,6 +47,7 @@ export default function AdminDashboard() {
   const isTabAccessible = (tab: TabType): boolean => {
     const map: Record<TabType, string> = {
       products: "admin.products",
+      itemcodes: "admin.products",
       brands: "admin.products",
       categories: "admin.products",
       posts: "admin.posts",
@@ -119,6 +121,7 @@ export default function AdminDashboard() {
     <div className="space-y-8">
       <div className="-mx-1 flex gap-4 overflow-x-auto border-b border-slate-200 px-1 pb-px [-webkit-overflow-scrolling:touch] sm:gap-8">
         <TabButton tab="products" label={t.admin.dashboard.products} />
+        <TabButton tab="itemcodes" label="Item Code" />
         <TabButton tab="brands" label="Brands" />
         <TabButton tab="categories" label="Categories" />
         <TabButton tab="posts" label={t.admin.dashboard.posts} />
@@ -127,7 +130,9 @@ export default function AdminDashboard() {
         <TabButton tab="qrcode" label={t.admin.dashboard.qrcode} />
       </div>
 
-      {activeTab === "products" ? (
+      {activeTab === "itemcodes" ? (
+        <ItemCodeManager />
+      ): activeTab === "products" ? (
         <>
           <div className="flex flex-col gap-6 border-b border-slate-200 pb-6 sm:flex-row sm:items-end sm:justify-between sm:pb-8">
             <div className="min-w-0 space-y-2">
