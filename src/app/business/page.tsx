@@ -45,7 +45,7 @@ const milestones = [
     events: [
       { year: "2006", description: "Electricity of Kiensvay (Elek)", image: `${TL}/2006-elek.webp` },
       { year: "2008", description: "Dangtong Electricity", image: `${TL}/2008-dangtong.webp` },
-      { year: "2009", description: "Eastern Power Supply Enterprise (Epose)", image: `${TL}/2009-epose.webp` },
+      { year: "2009", description: "Eastern Power Supply Enterprise (Epose)", image: `${TL}/2009-epose-v2.webp` },
       { year: "2009", description: "Chhouk & Chumkiri Water — first potable water concession", image: `${TL}/2009-chhouk.webp` },
       { year: "2010", description: "Toukmeas Water", image: `${TL}/2010-toukmeas-water.webp` },
     ],
