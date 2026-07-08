@@ -76,11 +76,7 @@ export function SiteFooter() {
   ];
 
   return (
-    <footer className="relative overflow-hidden bg-gradient-to-br from-brand-navy via-[#111a73] to-[#090f3c] text-white">
-      {/* Decorative elements */}
-      <div className="absolute -left-40 top-20 h-80 w-80 rounded-full bg-brand-red/10 blur-3xl" />
-      <div className="absolute -right-40 bottom-20 h-80 w-80 rounded-full bg-white/5 blur-3xl" />
-
+    <footer className="relative overflow-hidden bg-brand-navy text-white">
       <div className="relative mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-12">
           {/* Company Info */}

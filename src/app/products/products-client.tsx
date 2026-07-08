@@ -980,7 +980,7 @@ function HeroSection({
   handleSearchSubmit
 }: HeroSectionProps) {
   const { t, language, setLanguage } = useLanguage();
-  const heroImage = "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=1920&q=80";
+  const heroImage = "/product-hero.png";
 
   return (
     <section className="relative min-h-[70vh] overflow-hidden lg:min-h-[80vh]">

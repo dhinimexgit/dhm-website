@@ -13,20 +13,13 @@ import {
 } from "@/components/layout/nav-utility-cluster";
 import { StickyHeader } from "@/components/home/sticky-header";
 
-// Hero background image
-const heroImage = "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&q=80";
-
-// Era images
-const eraImages = {
-  founding: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80",
-  utilities: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=800&q=80",
-  manufacturing: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80",
-  investment: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
-};
+// Optimized timeline photos (WebP) labelled by year + company name.
+const TL = "/biz-portfolio-timeline/optimized";
 
 // Company milestones data.
 // Displayed text (title/subtitle/description/events) is pulled from translations
 // (t.businessPage.milestones); the events array length here MUST stay in sync with it.
+// Events without a supplied photo fall back to a generic era image.
 const milestones = [
   {
     id: "founding",
@@ -35,10 +28,10 @@ const milestones = [
     subtitle: "First Steps to Create Tomorrow",
     description:
       "Dhinimex Co., Ltd. was founded in 2003 as a trade-based supplier of electrical equipment and water-supply components, and as the headquarters of the group. Within a year it secured its first rural electricity distribution concession, laying the foundation for a diversified infrastructure group.",
-    image: eraImages.founding,
+    image: `${TL}/2003-2004-start.webp`,
     events: [
-      { year: "2003", description: "Dhinimex Co., Ltd (DHM) founded as trading company and group HQ", image: eraImages.founding },
-      { year: "2004", description: "Toukmeas Electricity — first rural electricity distribution concession", image: eraImages.utilities },
+      { year: "2003", description: "Dhinimex Co., Ltd (DHM) founded as trading company and group HQ", image: `${TL}/2003-dhm.webp` },
+      { year: "2004", description: "Toukmeas Electricity — first rural electricity distribution concession", image: `${TL}/2004-toukmeas.webp` },
     ],
   },
   {
@@ -48,13 +41,13 @@ const milestones = [
     subtitle: "Electricity and Water for the Provinces",
     description:
       "The group expanded into provincial electricity and potable water concessions, growing its electricity distribution network across Kiensvay, Dangtong and eastern Cambodia and launching its first potable water supplies. This period transformed Dhinimex from a trader into an integrated utilities provider.",
-    image: eraImages.utilities,
+    image: `${TL}/2006-2010-powering-communities.webp`,
     events: [
-      { year: "2006", description: "Electricity of Kiensvay (Elek)", image: eraImages.utilities },
-      { year: "2008", description: "Dangtong Electricity", image: eraImages.utilities },
-      { year: "2009", description: "Eastern Power Supply Enterprise (Epose)", image: eraImages.utilities },
-      { year: "2009", description: "Chhouk & Chumkiri Water — first potable water concession", image: eraImages.utilities },
-      { year: "2010", description: "Toukmeas Water", image: eraImages.utilities },
+      { year: "2006", description: "Electricity of Kiensvay (Elek)", image: `${TL}/2006-elek.webp` },
+      { year: "2008", description: "Dangtong Electricity", image: `${TL}/2008-dangtong.webp` },
+      { year: "2009", description: "Eastern Power Supply Enterprise (Epose)", image: `${TL}/2009-epose.webp` },
+      { year: "2009", description: "Chhouk & Chumkiri Water — first potable water concession", image: `${TL}/2009-chhouk.webp` },
+      { year: "2010", description: "Toukmeas Water", image: `${TL}/2010-toukmeas-water.webp` },
     ],
   },
   {
@@ -64,13 +57,13 @@ const milestones = [
     subtitle: "Vertical Integration for Quality Control",
     description:
       "Dhinimex scaled up in-house fabrication and retail, opening the Khmer Concrete pole factory, Saekaraj transformer factory and Vong Chan cable factory, while launching the Nicole Home Mart retail business and adding new water operations. Vertical integration enabled end-to-end EPC delivery.",
-    image: eraImages.manufacturing,
+    image: `${TL}/2010-2018-building-manufacturing.webp`,
     events: [
-      { year: "2010", description: "Khmer Concrete Co., Ltd (KCC) — concrete pole factory", image: eraImages.manufacturing },
-      { year: "2011", description: "Nicole Home Mart — retail mart for tools and equipment", image: eraImages.manufacturing },
-      { year: "2013", description: "Saekaraj Transfo — distribution transformer factory", image: eraImages.manufacturing },
-      { year: "2015", description: "Tek Pong Traj — potable water supply", image: eraImages.utilities },
-      { year: "2018", description: "Vong Chan Cable Co., Ltd (VCC) — wire and cable factory", image: eraImages.manufacturing },
+      { year: "2010", description: "Khmer Concrete Co., Ltd (KCC) — concrete pole factory", image: `${TL}/2010-kcc.webp` },
+      { year: "2011", description: "Nicole Home Mart — retail mart for tools and equipment", image: `${TL}/2011-nicolehomemart.webp` },
+      { year: "2013", description: "Saekaraj Transfo — distribution transformer factory", image: `${TL}/2013-saekaraj.webp` },
+      { year: "2015", description: "Tek Pong Traj — potable water supply", image: `${TL}/2015-pong-traj.webp` },
+      { year: "2018", description: "Vong Chan Cable Co., Ltd (VCC) — wire and cable factory", image: `${TL}/2018-vcc.webp` },
     ],
   },
   {
@@ -80,12 +73,12 @@ const milestones = [
     subtitle: "Healthcare, Food-Tech and New Frontiers",
     description:
       "Today Dhinimex Group spans trading, manufacturing, electricity, water and scientific sectors. Recent years added the CamRad medical diagnostic center and the CamIrrad E-Beam food irradiation facility, alongside new potable water operations — reflecting the group's move into healthcare and food technology.",
-    image: eraImages.investment,
+    image: `${TL}/2019-present-v2.webp`,
     events: [
-      { year: "2019", description: "CamRad — medical diagnostic center", image: eraImages.investment },
-      { year: "2019", description: "Thpong Water — potable water supply", image: eraImages.utilities },
-      { year: "2020", description: "Tek Pong Teuk — potable water supply", image: eraImages.utilities },
-      { year: "2023", description: "CamIrrad Center Co., Ltd — E-Beam food irradiation", image: eraImages.investment },
+      { year: "2019", description: "CamRad — medical diagnostic center", image: `${TL}/2019-camrad.webp` },
+      { year: "2019", description: "Thpong Water — potable water supply", image: `${TL}/2019-thpong-water.webp` },
+      { year: "2020", description: "Tek Pong Teuk — potable water supply", image: `${TL}/202-tek-pong-teuk.webp` },
+      { year: "2023", description: "CamIrrad Center Co., Ltd — E-Beam food irradiation", image: `${TL}/2023-camirrad.webp` },
     ],
   },
 ];
@@ -208,9 +201,18 @@ export default function BusinessPortfolioPage() {
         {/* Hero Banner Section */}
         <section ref={heroRef} className="relative min-h-[70vh] overflow-hidden lg:min-h-[80vh]">
           <div className="absolute inset-0 z-0">
-            <Image src={heroImage} alt="Dhinimex Group" fill priority className="object-cover" sizes="100vw" />
-            <div className="absolute inset-0 bg-black/40" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
+            {/* Same hero banner asset as the home page */}
+            <video
+              src="/home-hero.mp4"
+              autoPlay
+              muted
+              playsInline
+              preload="metadata"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/10" />
+            {/* Slightly darker on the left to keep the hero text readable */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/15 to-transparent" />
           </div>
 
           {/* Header - Desktop Only */}
@@ -358,12 +360,12 @@ export default function BusinessPortfolioPage() {
               className="relative overflow-hidden"
             >
               {/* Full-width header band */}
-              <div className={`relative py-16 lg:py-24 ${isEven ? "bg-slate-700" : "bg-brand-navy"}`}>
-                <div className="mx-auto max-w-7xl px-6 lg:px-8">
+              <div className="relative overflow-hidden bg-brand-navy py-16 lg:py-24">
+                <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
                   <div className="grid items-center gap-8 lg:grid-cols-2">
                     {/* Text content */}
                     <div className={`text-white ${isEven ? "" : "lg:order-2"}`}>
-                      <p className="mb-2 text-sm font-medium italic text-white/60">
+                      <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-brand-red">
                         {localizedMilestone.subtitle}
                       </p>
                       <h2 className="mb-4 text-3xl font-bold lg:text-4xl xl:text-5xl">
@@ -376,12 +378,17 @@ export default function BusinessPortfolioPage() {
                     
                     {/* Large year + image */}
                     <div className={`relative ${isEven ? "" : "lg:order-1"}`}>
-                      <div className="relative aspect-[16/10] overflow-hidden rounded-2xl">
+                      <div className="relative aspect-[16/10] overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/10">
                         <Image src={milestone.image} alt={localizedMilestone.title} fill className="object-cover" />
-                        <div className="absolute inset-0 bg-black/20" />
+                        {/* Slight dark overlay so the white year text stays readable */}
+                        <div className="absolute inset-0 bg-black/35" />
                         {/* Large year overlay */}
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-5xl font-extralight tracking-wider text-white/90 sm:text-6xl lg:text-7xl xl:text-8xl">
+                          <span className={`font-extralight tracking-wider text-white/90 ${
+                            milestone.id === "investment"
+                              ? "text-4xl sm:text-5xl lg:text-6xl xl:text-7xl"
+                              : "text-5xl sm:text-6xl lg:text-7xl xl:text-8xl"
+                          }`}>
                             {milestone.yearRange}
                           </span>
                         </div>
@@ -393,7 +400,7 @@ export default function BusinessPortfolioPage() {
 
               {/* Timeline events section */}
               <div className="relative bg-gradient-to-b from-slate-50 to-white py-16 lg:py-24">
-                <div className="mx-auto max-w-5xl px-6 lg:px-8">
+                <div className="mx-auto max-w-7xl px-6 lg:px-8">
                   {/* Central timeline line */}
                   <div className="absolute left-1/2 top-16 bottom-16 hidden w-0.5 -translate-x-1/2 bg-slate-300 lg:block" />
                   
@@ -404,7 +411,7 @@ export default function BusinessPortfolioPage() {
                       const localizedEventDescription = localizedMilestone.events[eventIndex];
                       
                       return (
-                        <div key={`${milestone.id}-${eventIndex}`} className="relative lg:grid lg:grid-cols-2 lg:gap-12">
+                        <div key={`${milestone.id}-${eventIndex}`} className="relative lg:grid lg:grid-cols-2 lg:gap-10">
                           {/* Timeline dot - center */}
                           <div className="absolute left-1/2 top-8 z-10 hidden -translate-x-1/2 lg:block">
                             <div className="relative">
@@ -420,7 +427,7 @@ export default function BusinessPortfolioPage() {
                           </div>
                           
                           {/* Card - alternating sides */}
-                          <div className={`${isLeft ? "lg:pr-16" : "lg:col-start-2 lg:pl-16"}`}>
+                          <div className={`${isLeft ? "lg:pr-10" : "lg:col-start-2 lg:pl-10"}`}>
                             <div className="group relative overflow-hidden rounded-2xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
                               {/* Image */}
                               <div className="relative aspect-[16/9] overflow-hidden">
@@ -428,7 +435,8 @@ export default function BusinessPortfolioPage() {
                                   src={event.image}
                                   alt={event.year}
                                   fill
-                                  className="object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:scale-105"
+                                  sizes="(max-width: 1024px) 100vw, 620px"
+                                  className="object-cover transition-transform duration-500 group-hover:scale-105"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                                 

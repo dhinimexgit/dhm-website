@@ -111,9 +111,9 @@ export function HomeHero() {
             className="absolute inset-0 h-full w-full object-cover"
           />
           {/* Dark semi-transparent overlay for glassmorphism effect (lightened) */}
-          <div className="absolute inset-0 bg-black/20" />
+          <div className="absolute inset-0 bg-black/10" />
           {/* Gradient for depth and text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/30 via-black/10 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/20 via-black/5 to-transparent" />
         </div>
 
         {/* Header - Desktop Only */}
