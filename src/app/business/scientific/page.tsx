@@ -28,7 +28,7 @@ const getCompanies = (language: string) => [
     name: language === 'kh' ? "ខេមអុីរ៉ាដ – រោងចក្របញ្ចេញកាំរស្មីអេឡិចត្រុង" : "Camirrad – Electron Beam Irradiation Facility",
     description: language === 'kh' ? "មជ្ឈមណ្ឌលរោគវិនិច្ឆ័យ និងបញ្ចេញកាំរស្មី ខេមអុីរ៉ាដ គឺជារោងចក្របញ្ចេញកាំរស្មីអេឡិចត្រុងទំនើបដំបូងគេនៅកម្ពុជា ដែលធានាថាផលិតផលម្ហូបអាហារ និងកសិកម្មបំពេញតាមស្តង់ដារសុវត្ថិភាព និងការនាំចេញអន្តរជាតិ។" : "Camirrad Diagnostic & Irradiation Center is Cambodia's first state-of-the-art electron beam facility, ensuring food and agricultural products meet international safety and export standards.",
     link: "/business/scientific/camirrad",
-    image: "/elect_distribute-1.png",
+    image: "/biz-portfolio-timeline/optimized/2023-camirrad.webp",
     logo: null,
     specialty: language === 'kh' ? "សុវត្ថិភាពចំណីអាហារ និងការបញ្ចេញកាំរស្មី" : "Food Safety & Irradiation"
   },

@@ -13,7 +13,7 @@ import {
 } from "@/components/layout/nav-utility-cluster";
 import { StickyHeader } from "@/components/home/sticky-header";
 
-const heroImage = "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1920&q=80";
+const heroImage = "/product-hero.png";
 
 const getCompanies = (language: string) => [
   {
