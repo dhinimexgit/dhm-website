@@ -1,8 +1,10 @@
 import type { ProductCategory } from "./site-content";
 
-const stanleyImage = "https://stanleytools.mediaroom.com/download/STHT10479_A11_resized_3000_3000_300_rgb_jpg.jpg";
-const dewaltImage = "https://media.screwfix.com/is/image/ae235/Dewalt_Headers_powertools1?resMode=sharp2";
-const blackDeckerImage = "https://www.blackanddecker.com/cdn/shop/products/d4dba2cae81f2f340c2d06587b697616a5cb139d.jpg?v=1663101357";
+// Locally optimized brand hero images (compressed WebP in /public/brands).
+// Replaced large external third-party URLs that loaded slowly.
+const stanleyImage = "/brands/hero-stanley.webp";
+const dewaltImage = "/brands/hero-dewalt.webp";
+const blackDeckerImage = "/brands/hero-black-and-decker.webp";
 
 export const getProductCategories = (language: 'en' | 'kh'): ProductCategory[] => [
   {

@@ -5,6 +5,7 @@ import { db, storage } from "@/lib/firebase";
 import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { subscribeBrands, FALLBACK_BRANDS, type Brand } from "@/lib/taxonomy";
+import { compressImage } from "@/lib/image-compress";
 
 const slugify = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
@@ -80,8 +81,9 @@ export function BrandManager() {
     try {
       let heroImageUrl = editing.heroImage?.trim() || "";
       if (newHeroImage) {
-        const storageRef = ref(storage, `brands/${slug}/hero-${Date.now()}-${newHeroImage.name}`);
-        const snapshot = await uploadBytes(storageRef, newHeroImage);
+        const optimized = await compressImage(newHeroImage);
+        const storageRef = ref(storage, `brands/${slug}/hero-${Date.now()}-${optimized.name}`);
+        const snapshot = await uploadBytes(storageRef, optimized);
         heroImageUrl = await getDownloadURL(snapshot.ref);
       }
 

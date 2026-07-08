@@ -5,6 +5,7 @@ import { db, storage } from "@/lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import type { Post } from "@/data/site-content";
+import { compressImage } from "@/lib/image-compress";
 
 type Props = {
   initialData?: Post & { id?: string };
@@ -77,8 +78,9 @@ export function PostForm({ initialData, onSuccess, onCancel }: Props) {
   }, [initialData]);
 
   const uploadFile = async (file: File, path: string) => {
+    const optimized = await compressImage(file);
     const storageRef = ref(storage, path);
-    const snapshot = await uploadBytes(storageRef, file);
+    const snapshot = await uploadBytes(storageRef, optimized);
     return getDownloadURL(snapshot.ref);
   };
 

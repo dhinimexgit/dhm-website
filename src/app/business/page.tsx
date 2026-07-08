@@ -24,62 +24,68 @@ const eraImages = {
   investment: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
 };
 
-// Company milestones data
+// Company milestones data.
+// Displayed text (title/subtitle/description/events) is pulled from translations
+// (t.businessPage.milestones); the events array length here MUST stay in sync with it.
 const milestones = [
   {
     id: "founding",
-    yearRange: "2003",
+    yearRange: "2003 – 2004",
     title: "Where Dhinimex Started",
     subtitle: "First Steps to Create Tomorrow",
     description:
-      "Dhinimex Co., Ltd. was established as a trade-based supplier focused on electrical appliances and water supply components. From humble beginnings, the company laid the foundation for what would become a diversified group of companies serving Cambodia's infrastructure needs.",
+      "Dhinimex Co., Ltd. was founded in 2003 as a trade-based supplier of electrical equipment and water-supply components, and as the headquarters of the group. Within a year it secured its first rural electricity distribution concession, laying the foundation for a diversified infrastructure group.",
     image: eraImages.founding,
     events: [
-      { year: "2003", description: "Founded Dhinimex as an electrical equipment trading company", image: eraImages.founding },
-      { year: "2005", description: "Expanded product range to include water supply components", image: eraImages.founding },
+      { year: "2003", description: "Dhinimex Co., Ltd (DHM) founded as trading company and group HQ", image: eraImages.founding },
+      { year: "2004", description: "Toukmeas Electricity — first rural electricity distribution concession", image: eraImages.utilities },
     ],
   },
   {
     id: "utilities",
-    yearRange: "2006 – 2014",
-    title: "Diversifying into Utilities",
-    subtitle: "Building Infrastructure for Communities",
+    yearRange: "2006 – 2010",
+    title: "Powering & Supplying Communities",
+    subtitle: "Electricity and Water for the Provinces",
     description:
-      "The group expanded into utilities, investing in provincial electricity and water distribution concessions. This period marked the beginning of Dhinimex's transformation from a trading company into an integrated infrastructure provider.",
+      "The group expanded into provincial electricity and potable water concessions, growing its electricity distribution network across Kiensvay, Dangtong and eastern Cambodia and launching its first potable water supplies. This period transformed Dhinimex from a trader into an integrated utilities provider.",
     image: eraImages.utilities,
     events: [
-      { year: "2006", description: "Acquired first provincial electricity distribution license", image: eraImages.utilities },
-      { year: "2008", description: "Launched water supply infrastructure division", image: eraImages.utilities },
-      { year: "2010", description: "Expanded utilities coverage to multiple provinces", image: eraImages.utilities },
-      { year: "2013", description: "Implemented smart monitoring systems across network", image: eraImages.utilities },
+      { year: "2006", description: "Electricity of Kiensvay (Elek)", image: eraImages.utilities },
+      { year: "2008", description: "Dangtong Electricity", image: eraImages.utilities },
+      { year: "2009", description: "Eastern Power Supply Enterprise (Epose)", image: eraImages.utilities },
+      { year: "2009", description: "Chhouk & Chumkiri Water — first potable water concession", image: eraImages.utilities },
+      { year: "2010", description: "Toukmeas Water", image: eraImages.utilities },
     ],
   },
   {
     id: "manufacturing",
-    yearRange: "2015 – 2020",
-    title: "Expanding into Manufacturing",
+    yearRange: "2010 – 2018",
+    title: "Building & Manufacturing",
     subtitle: "Vertical Integration for Quality Control",
     description:
-      "Dhinimex scaled up in-house fabrication capabilities, establishing manufacturing facilities for transformers, conductors, cables, and concrete poles. This vertical integration enabled end-to-end EPC delivery.",
+      "Dhinimex scaled up in-house fabrication and retail, opening the Khmer Concrete pole factory, Saekaraj transformer factory and Vong Chan cable factory, while launching the Nicole Home Mart retail business and adding new water operations. Vertical integration enabled end-to-end EPC delivery.",
     image: eraImages.manufacturing,
     events: [
-      { year: "2015", description: "Established transformer manufacturing facility", image: eraImages.manufacturing },
-      { year: "2017", description: "Opened cable and conductor production plant", image: eraImages.manufacturing },
-      { year: "2020", description: "Achieved full vertical integration with testing labs", image: eraImages.manufacturing },
+      { year: "2010", description: "Khmer Concrete Co., Ltd (KCC) — concrete pole factory", image: eraImages.manufacturing },
+      { year: "2011", description: "Nicole Home Mart — retail mart for tools and equipment", image: eraImages.manufacturing },
+      { year: "2013", description: "Saekaraj Transfo — distribution transformer factory", image: eraImages.manufacturing },
+      { year: "2015", description: "Tek Pong Traj — potable water supply", image: eraImages.utilities },
+      { year: "2018", description: "Vong Chan Cable Co., Ltd (VCC) — wire and cable factory", image: eraImages.manufacturing },
     ],
   },
   {
     id: "investment",
-    yearRange: "2020 – Present",
-    title: "Investment Portfolio Diversification",
-    subtitle: "Strategic Growth and Partnerships",
+    yearRange: "2019 – Present",
+    title: "Diversification & Innovation",
+    subtitle: "Healthcare, Food-Tech and New Frontiers",
     description:
-      "Today, Dhinimex Group comprises 18 companies across five sectors, with strategic investments in various industries. The group continues to grow while maintaining its commitment to quality and innovation.",
+      "Today Dhinimex Group spans trading, manufacturing, electricity, water and scientific sectors. Recent years added the CamRad medical diagnostic center and the CamIrrad E-Beam food irradiation facility, alongside new potable water operations — reflecting the group's move into healthcare and food technology.",
     image: eraImages.investment,
     events: [
-      { year: "2020", description: "Restructured as Dhinimex Group with 18 companies", image: eraImages.investment },
-      { year: "2022", description: "Strategic investments in new technology ventures", image: eraImages.investment },
-      { year: "2024", description: "Launched innovation and testing laboratories", image: eraImages.investment },
+      { year: "2019", description: "CamRad — medical diagnostic center", image: eraImages.investment },
+      { year: "2019", description: "Thpong Water — potable water supply", image: eraImages.utilities },
+      { year: "2020", description: "Tek Pong Teuk — potable water supply", image: eraImages.utilities },
+      { year: "2023", description: "CamIrrad Center Co., Ltd — E-Beam food irradiation", image: eraImages.investment },
     ],
   },
 ];
@@ -398,7 +404,7 @@ export default function BusinessPortfolioPage() {
                       const localizedEventDescription = localizedMilestone.events[eventIndex];
                       
                       return (
-                        <div key={event.year} className="relative lg:grid lg:grid-cols-2 lg:gap-12">
+                        <div key={`${milestone.id}-${eventIndex}`} className="relative lg:grid lg:grid-cols-2 lg:gap-12">
                           {/* Timeline dot - center */}
                           <div className="absolute left-1/2 top-8 z-10 hidden -translate-x-1/2 lg:block">
                             <div className="relative">

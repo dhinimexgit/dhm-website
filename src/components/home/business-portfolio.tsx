@@ -19,9 +19,9 @@ export function BusinessPortfolio() {
         alt={`${company.name} logo`}
         width={160}
         height={80}
+        sizes="160px"
+        loading="lazy"
         className="h-full w-full object-contain opacity-90 transition-opacity duration-300 group-hover:opacity-100"
-        unoptimized
-        priority={index < 14}
       />
     </Link>
   );

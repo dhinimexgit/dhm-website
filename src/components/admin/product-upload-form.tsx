@@ -5,6 +5,7 @@ import { db } from "@/lib/firebase";
 import { collection, addDoc, Timestamp, updateDoc, doc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "@/lib/firebase";
+import { compressImage } from "@/lib/image-compress";
 import {
   subscribeBrands,
   subscribeCategories,
@@ -132,9 +133,9 @@ export function ProductUploadForm({ initialData, onSuccess, onCancel }: Props) {
       const uploadedImageUrls: string[] = [];
       if (newImages) {
         for (let i = 0; i < newImages.length; i++) {
-          const file = newImages[i];
-          const storageRef = ref(storage, `products/${brand}/${Date.now()}-${file.name}`);
-          const snapshot = await uploadBytes(storageRef, file);
+          const optimized = await compressImage(newImages[i]);
+          const storageRef = ref(storage, `products/${brand}/${Date.now()}-${optimized.name}`);
+          const snapshot = await uploadBytes(storageRef, optimized);
           const url = await getDownloadURL(snapshot.ref);
           uploadedImageUrls.push(url);
         }

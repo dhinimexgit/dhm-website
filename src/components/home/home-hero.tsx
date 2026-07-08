@@ -24,7 +24,6 @@ const heroImages = [
 export function HomeHero() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const [contentVisible, setContentVisible] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -45,8 +44,7 @@ export function HomeHero() {
   };
 
   useEffect(() => {
-    setMounted(true);
-    const timer = setTimeout(() => setContentVisible(true), 1500);
+    const timer = setTimeout(() => setContentVisible(true), 150);
     return () => clearTimeout(timer);
   }, []);
 
@@ -100,15 +98,7 @@ export function HomeHero() {
 
   return (
     <>
-      {mounted ? (
-        <StickyHeader isVisible={isScrolled} />
-      ) : (
-        <header 
-          suppressHydrationWarning
-          className="fixed inset-x-0 top-0 z-50 hidden lg:block transition-all duration-300 -translate-y-full opacity-0"
-          aria-hidden="true"
-        />
-      )}
+      <StickyHeader isVisible={isScrolled} />
       <section ref={heroRef} className="relative flex min-h-screen flex-col overflow-hidden">
         {/* Background Video with Glassmorphism Dark Overlay */}
         <div className="absolute inset-0 z-0">
@@ -117,13 +107,13 @@ export function HomeHero() {
             autoPlay
             muted
             playsInline
-            preload="auto"
+            preload="metadata"
             className="absolute inset-0 h-full w-full object-cover"
           />
-          {/* Dark semi-transparent overlay for glassmorphism effect */}
-          <div className="absolute inset-0 bg-black/40" />
+          {/* Dark semi-transparent overlay for glassmorphism effect (lightened) */}
+          <div className="absolute inset-0 bg-black/20" />
           {/* Gradient for depth and text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/50 via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/30 via-black/10 to-transparent" />
         </div>
 
         {/* Header - Desktop Only */}
@@ -284,10 +274,10 @@ export function HomeHero() {
                   <span className="h-px w-10 bg-brand-red" />
                     <strong className="text-lg text-brand-navy">Since 2003</strong>
                 </p> */}
-                <h1 className="text-3xl font-bold leading-tight text-white sm:text-3xl lg:text-6xl xl:text-[62px] xl:leading-[1.1]">
+                <h1 className="text-3xl font-bold leading-tight text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.6)] sm:text-3xl lg:text-6xl xl:text-[62px] xl:leading-[1.1]">
                   {heroContent.title}
                 </h1>
-                <p className="mx-auto max-w-xl text-lg leading-relaxed text-white/80 lg:mx-0 lg:text-xl">
+                <p className="mx-auto max-w-xl text-lg leading-relaxed text-white/90 [text-shadow:0_1px_8px_rgba(0,0,0,0.55)] lg:mx-0 lg:text-xl">
                   {heroContent.description}
                 </p>
               </div>
@@ -329,7 +319,7 @@ export function HomeHero() {
                     <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/30 via-transparent to-transparent" />
                   </div>
                 ))}
-                
+
                 {/* Carousel Indicators */}
                 <div className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 gap-2">
                   {heroImages.map((_, index) => (
@@ -344,7 +334,7 @@ export function HomeHero() {
                   ))}
                 </div>
               </div>
-              
+
               {/* Decorative elements */}
               <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-brand-red/20 blur-3xl" />
               <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/10 blur-3xl" />

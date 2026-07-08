@@ -132,41 +132,45 @@ export const translations = {
         {
           title: "Where Dhinimex Started",
           subtitle: "First Steps to Create Tomorrow",
-          description: "Dhinimex Co., Ltd. was established as a trade-based supplier focused on electrical appliances and water supply components. From humble beginnings, the company laid the foundation for what would become a diversified group of companies serving Cambodia's infrastructure needs.",
+          description: "Dhinimex Co., Ltd. was founded in 2003 as a trade-based supplier of electrical equipment and water-supply components, and as the headquarters of the group. Within a year it secured its first rural electricity distribution concession, laying the foundation for a diversified infrastructure group.",
           events: [
-            "Founded Dhinimex as an electrical equipment trading company",
-            "Expanded product range to include water supply components"
+            "Dhinimex Co., Ltd (DHM) founded as the trading company and headquarters of the DHM Group",
+            "Toukmeas Electricity established — the group's first rural electricity distribution concession"
           ]
         },
         {
-          title: "Diversifying into Utilities",
-          subtitle: "Building Infrastructure for Communities",
-          description: "The group expanded into utilities, investing in provincial electricity and water distribution concessions. This period marked the beginning of Dhinimex's transformation from a trading company into an integrated infrastructure provider.",
+          title: "Powering & Supplying Communities",
+          subtitle: "Electricity and Water for the Provinces",
+          description: "The group expanded into provincial electricity and potable water concessions, growing its electricity distribution network across Kiensvay, Dangtong and eastern Cambodia and launching its first potable water supplies. This period transformed Dhinimex from a trader into an integrated utilities provider.",
           events: [
-            "Acquired first provincial electricity distribution license",
-            "Launched water supply infrastructure division",
-            "Expanded utilities coverage to multiple provinces",
-            "Implemented smart monitoring systems across network"
+            "Electricity of Kiensvay (Elek) begins electricity distribution operations",
+            "Dangtong Electricity added to the group's electricity distribution network",
+            "Eastern Power Supply Enterprise (Epose) launched for electricity distribution",
+            "Chhouk & Chumkiri Water established — the group's first potable water supply concession",
+            "Toukmeas Water begins potable water supply operations"
           ]
         },
         {
-          title: "Expanding into Manufacturing",
+          title: "Building & Manufacturing",
           subtitle: "Vertical Integration for Quality Control",
-          description: "Dhinimex scaled up in-house fabrication capabilities, establishing manufacturing facilities for transformers, conductors, cables, and concrete poles. This vertical integration enabled end-to-end EPC delivery.",
+          description: "Dhinimex scaled up in-house fabrication and retail, opening the Khmer Concrete pole factory, Saekaraj transformer factory and Vong Chan cable factory, while launching the Nicole Home Mart retail business and adding new water operations. Vertical integration enabled end-to-end EPC delivery.",
           events: [
-            "Established transformer manufacturing facility",
-            "Opened cable and conductor production plant",
-            "Achieved full vertical integration with testing labs"
+            "Khmer Concrete Co., Ltd (KCC) opens as a concrete pole factory",
+            "Nicole Home Mart launched — retail mart for tools and equipment",
+            "Saekaraj Transfo established as a distribution transformer factory",
+            "Tek Pong Traj added to the group's potable water supply operations",
+            "Vong Chan Cable Co., Ltd (VCC) opens as a wire and cable factory"
           ]
         },
         {
-          title: "Investment Portfolio Diversification",
-          subtitle: "Strategic Growth and Partnerships",
-          description: "Today, Dhinimex Group comprises 18 companies across five sectors, with strategic investments in various industries. The group continues to grow while maintaining its commitment to quality and innovation.",
+          title: "Diversification & Innovation",
+          subtitle: "Healthcare, Food-Tech and New Frontiers",
+          description: "Today Dhinimex Group spans trading, manufacturing, electricity, water and scientific sectors. Recent years added the CamRad medical diagnostic center and the CamIrrad E-Beam food irradiation facility, alongside new potable water operations — reflecting the group's move into healthcare and food technology.",
           events: [
-            "Restructured as Dhinimex Group with 18 companies",
-            "Strategic investments in new technology ventures",
-            "Launched innovation and testing laboratories"
+            "CamRad opens as a medical diagnostic center",
+            "Thpong Water begins potable water supply operations",
+            "Tek Pong Teuk added to the group's potable water supply network",
+            "CamIrrad Center Co., Ltd launched — E-Beam food irradiation facility"
           ]
         }
       ]
@@ -937,41 +941,45 @@ export const translations = {
         {
           title: "កន្លែងដែល ធិនីម៉ិចចាប់ផ្តើម",
           subtitle: "ជំហានដំបូងដើម្បីបង្កើតអនាគត",
-          description: "ក្រុមហ៊ុន ធិនីម៉ិចឯ.ក ត្រូវបានបង្កើតឡើងជាអ្នកផ្គត់ផ្គង់ផ្អែកលើពាណិជ្ជកម្មដែលផ្តោតលើឧបករណ៍អគ្គិសនី និងសមាសធាតុផ្គត់ផ្គង់ទឹក។ ពីការចាប់ផ្តើមដ៏តូចតាច ក្រុមហ៊ុនបានចាក់គ្រឹះសម្រាប់អ្វីដែលនឹងក្លាយជាសម្ព័ន្ធក្រុមហ៊ុនចម្រុះដែលបម្រើតម្រូវការហេដ្ឋារចនាសម្ព័ន្ធរបស់ប្រទេសកម្ពុជា។",
+          description: "ក្រុមហ៊ុន ធិនីម៉ិចឯ.ក ត្រូវបានបង្កើតឡើងក្នុងឆ្នាំ ២០០៣ ជាអ្នកផ្គត់ផ្គង់ផ្អែកលើពាណិជ្ជកម្មឧបករណ៍អគ្គិសនី និងសមាសធាតុផ្គត់ផ្គង់ទឹក ព្រមទាំងជាទីស្នាក់ការកណ្តាលនៃសម្ព័ន្ធក្រុមហ៊ុន។ ក្នុងរយៈពេលមួយឆ្នាំ ក្រុមហ៊ុនបានទទួលបានសម្បទានចែកចាយអគ្គិសនីជនបទដំបូង ដោយចាក់គ្រឹះសម្រាប់សម្ព័ន្ធក្រុមហ៊ុនហេដ្ឋារចនាសម្ព័ន្ធចម្រុះ។",
           events: [
-            "បង្កើត ធិនីម៉ិចជាក្រុមហ៊ុនពាណិជ្ជកម្មឧបករណ៍អគ្គិសនី",
-            "ពង្រីកជួរផលិតផលដើម្បីរួមបញ្ចូលសមាសធាតុផ្គត់ផ្គង់ទឹក"
+            "បង្កើតក្រុមហ៊ុន ធិនីម៉ិចឯ.ក (DHM) ជាក្រុមហ៊ុនពាណិជ្ជកម្ម និងជាទីស្នាក់ការកណ្តាលនៃសម្ព័ន្ធក្រុមហ៊ុន",
+            "បង្កើត Toukmeas Electricity — សម្បទានចែកចាយអគ្គិសនីជនបទដំបូងរបស់សម្ព័ន្ធក្រុមហ៊ុន"
           ]
         },
         {
-          title: "ការធ្វើពិពិធកម្មទៅក្នុងសេវាកម្មទឹកភ្លើង",
-          subtitle: "ការកសាងហេដ្ឋារចនាសម្ព័ន្ធសម្រាប់សហគមន៍",
-          description: "សម្ព័ន្ធក្រុមហ៊ុនបានពង្រីកទៅក្នុងសេវាកម្មទឹកភ្លើង ដោយវិនិយោគលើសម្បទានចែកចាយអគ្គិសនី និងទឹកតាមខេត្ត។ រយៈពេលនេះបានកត់សម្គាល់ការចាប់ផ្តើមនៃការផ្លាស់ប្តូររបស់ ធិនីម៉ិចពីក្រុមហ៊ុនពាណិជ្ជកម្មទៅជាអ្នកផ្តល់ហេដ្ឋារចនាសម្ព័ន្ធរួមបញ្ចូលគ្នា។",
+          title: "ផ្តល់ថាមពល និងទឹកដល់សហគមន៍",
+          subtitle: "អគ្គិសនី និងទឹកសម្រាប់ខេត្ត",
+          description: "សម្ព័ន្ធក្រុមហ៊ុនបានពង្រីកទៅក្នុងសម្បទានអគ្គិសនី និងទឹកស្អាតតាមខេត្ត ដោយពង្រីកបណ្តាញចែកចាយអគ្គិសនីនៅ កៀនស្វាយ ដងទង់ និងភាគខាងកើតកម្ពុជា ព្រមទាំងបើកដំណើរការផ្គត់ផ្គង់ទឹកស្អាតដំបូង។ រយៈពេលនេះបានផ្លាស់ប្តូរ ធិនីម៉ិចពីក្រុមហ៊ុនពាណិជ្ជកម្មទៅជាអ្នកផ្តល់សេវាកម្មទឹកភ្លើងរួមបញ្ចូលគ្នា។",
           events: [
-            "ទទួលបានអាជ្ញាប័ណ្ណចែកចាយអគ្គិសនីខេត្តដំបូង",
-            "បើកដំណើរការផ្នែកហេដ្ឋារចនាសម្ព័ន្ធផ្គត់ផ្គង់ទឹក",
-            "ពង្រីកការគ្របដណ្តប់សេវាកម្មទឹកភ្លើងទៅកាន់ខេត្តជាច្រើន",
-            "អនុវត្តប្រព័ន្ធត្រួតពិនិត្យឆ្លាតវៃនៅទូទាំងបណ្តាញ"
+            "Electricity of Kiensvay (Elek) ចាប់ផ្តើមប្រតិបត្តិការចែកចាយអគ្គិសនី",
+            "Dangtong Electricity ត្រូវបានបន្ថែមទៅក្នុងបណ្តាញចែកចាយអគ្គិសនី",
+            "បង្កើត Eastern Power Supply Enterprise (Epose) សម្រាប់ការចែកចាយអគ្គិសនី",
+            "បង្កើត Chhouk & Chumkiri Water — សម្បទានផ្គត់ផ្គង់ទឹកស្អាតដំបូងរបស់សម្ព័ន្ធក្រុមហ៊ុន",
+            "Toukmeas Water ចាប់ផ្តើមប្រតិបត្តិការផ្គត់ផ្គង់ទឹកស្អាត"
           ]
         },
         {
-          title: "ការពង្រីកចូលទៅក្នុងផលិតកម្ម",
+          title: "ការសាងសង់ និងផលិតកម្ម",
           subtitle: "សមាហរណកម្មបញ្ឈរសម្រាប់ការត្រួតពិនិត្យគុណភាព",
-          description: "ធិនីម៉ិចបានបង្កើនសមត្ថភាពផលិតក្នុងស្រុក ដោយបង្កើតរោងចក្រផលិតសម្រាប់ម៉ាស៊ីនបំប្លែង ខ្សែចម្លង ខ្សែកាប និងបង្គោលបេតុង។ សមាហរណកម្មបញ្ឈរនេះបានអនុញ្ញាតឱ្យមានការផ្តល់ជូន EPC ពីដើមដល់ចប់។",
+          description: "ធិនីម៉ិចបានពង្រីកសមត្ថភាពផលិតក្នុងស្រុក និងអាជីវកម្មលក់រាយ ដោយបើករោងចក្រផលិតបង្គោលបេតុង Khmer Concrete រោងចក្រម៉ាស៊ីនបំប្លែង Saekaraj និងរោងចក្រខ្សែកាប Vong Chan ព្រមទាំងបើកអាជីវកម្មលក់រាយ Nicole Home Mart និងបន្ថែមប្រតិបត្តិការទឹកថ្មី។ សមាហរណកម្មបញ្ឈរនេះបានអនុញ្ញាតឱ្យមានការផ្តល់ជូន EPC ពីដើមដល់ចប់។",
           events: [
-            "បង្កើតរោងចក្រផលិតម៉ាស៊ីនបំប្លែង",
-            "បើករោងចក្រផលិតខ្សែកាប និងខ្សែចម្លង",
-            "សម្រេចបានសមាហរណកម្មបញ្ឈរពេញលេញជាមួយមន្ទីរពិសោធន៍"
+            "Khmer Concrete Co., Ltd (KCC) បើកដំណើរការជារោងចក្រផលិតបង្គោលបេតុង",
+            "បើកដំណើរការ Nicole Home Mart — ផ្សារលក់រាយឧបករណ៍ និងសម្ភារៈ",
+            "បង្កើត Saekaraj Transfo ជារោងចក្រផលិតម៉ាស៊ីនបំប្លែងចែកចាយ",
+            "Tek Pong Traj ត្រូវបានបន្ថែមទៅក្នុងប្រតិបត្តិការផ្គត់ផ្គង់ទឹកស្អាត",
+            "Vong Chan Cable Co., Ltd (VCC) បើកដំណើរការជារោងចក្រផលិតខ្សែ និងខ្សែកាប"
           ]
         },
         {
-          title: "ការធ្វើពិពិធកម្មផលប័ត្រវិនិយោគ",
-          subtitle: "កំណើនយុទ្ធសាស្ត្រ និងភាពជាដៃគូ",
-          description: "សព្វថ្ងៃនេះ ធិនីម៉ិចគ្រុប រួមមានក្រុមហ៊ុនចំនួន ១៨ ក្នុងវិស័យចំនួន ៥ ជាមួយនឹងការវិនិយោគជាយុទ្ធសាស្ត្រក្នុងឧស្សាហកម្មផ្សេងៗ។ សម្ព័ន្ធក្រុមហ៊ុនបន្តរីកចម្រើន ខណៈពេលដែលរក្សាការប្តេជ្ញាចិត្តរបស់ខ្លួនចំពោះគុណភាព និងនវានុវត្តន៍។",
+          title: "ការធ្វើពិពិធកម្ម និងនវានុវត្តន៍",
+          subtitle: "សុខាភិបាល បច្ចេកវិទ្យាអាហារ និងវិស័យថ្មី",
+          description: "សព្វថ្ងៃនេះ ធិនីម៉ិចគ្រុប គ្របដណ្តប់វិស័យពាណិជ្ជកម្ម ផលិតកម្ម អគ្គិសនី ទឹក និងវិទ្យាសាស្ត្រ។ ក្នុងប៉ុន្មានឆ្នាំថ្មីៗនេះ សម្ព័ន្ធក្រុមហ៊ុនបានបន្ថែមមជ្ឈមណ្ឌលវិនិច្ឆ័យរោគ CamRad និងមជ្ឈមណ្ឌលបំបាំងកាំរស្មីអាហារ E-Beam របស់ CamIrrad ព្រមទាំងប្រតិបត្តិការទឹកស្អាតថ្មី ដែលឆ្លុះបញ្ចាំងពីការឈានចូលទៅក្នុងវិស័យសុខាភិបាល និងបច្ចេកវិទ្យាអាហារ។",
           events: [
-            "រៀបចំរចនាសម្ព័ន្ធឡើងវិញជា ធិនីម៉ិចគ្រុប ដែលមានក្រុមហ៊ុនចំនួន ១៨",
-            "ការវិនិយោគជាយុទ្ធសាស្ត្រក្នុងអាជីវកម្មបច្ចេកវិទ្យាថ្មីៗ",
-            "បើកដំណើរការមន្ទីរពិសោធន៍នវានុវត្តន៍ និងធ្វើតេស្ត"
+            "CamRad បើកដំណើរការជាមជ្ឈមណ្ឌលវិនិច្ឆ័យរោគវេជ្ជសាស្ត្រ",
+            "Thpong Water ចាប់ផ្តើមប្រតិបត្តិការផ្គត់ផ្គង់ទឹកស្អាត",
+            "Tek Pong Teuk ត្រូវបានបន្ថែមទៅក្នុងបណ្តាញផ្គត់ផ្គង់ទឹកស្អាត",
+            "បង្កើត CamIrrad Center Co., Ltd — មជ្ឈមណ្ឌលបំបាំងកាំរស្មីអាហារ E-Beam"
           ]
         }
       ]
