@@ -33,7 +33,7 @@ const INPUT =
   "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm focus:border-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-navy/20";
 const LABEL = "mb-1.5 block text-sm font-semibold text-slate-700";
 
-type SubTab = "register" | "new" | "reference";
+type SubTab = "register" | "new";
 
 export function ItemCodeManager() {
   const [items, setItems] = useState<ItemCodeRecord[]>([]);
@@ -48,47 +48,59 @@ export function ItemCodeManager() {
     return () => unsub();
   }, []);
 
+  // Break out of the dashboard's max-w-6xl container to span the full viewport.
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-6 border-b border-slate-200 pb-6 sm:pb-8">
-        <div className="min-w-0 space-y-2">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-red sm:text-sm">Database</p>
-          <h1 className="text-2xl font-semibold leading-tight text-brand-navy sm:text-3xl md:text-4xl">Item Code</h1>
-          <p className="max-w-2xl text-base text-slate-600 sm:text-lg">
-            One item, one code — for the whole DHM Group. Build policy-compliant codes, check for
-            duplicates, and keep the item master clean.
-          </p>
+    <div className="mx-[calc(50%-50vw)] px-4 sm:px-6 lg:px-8">
+      <div className="space-y-6">
+        <div className="border-b border-slate-200 pb-6 sm:pb-8">
+          <div className="min-w-0 space-y-2">
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-red sm:text-sm">Database</p>
+            <h1 className="text-2xl font-semibold leading-tight text-brand-navy sm:text-3xl md:text-4xl">Item Code</h1>
+            <p className="max-w-2xl text-base text-slate-600 sm:text-lg">
+              One item, one code — for the whole DHM Group. Build policy-compliant codes, check for
+              duplicates, and keep the item master clean.
+            </p>
+          </div>
         </div>
-        <div className="flex flex-wrap gap-2">
-          {([
-            ["register", "Item Register"],
-            ["new", "New Item Code"],
-            ["reference", "Code Reference"],
-          ] as [SubTab, string][]).map(([id, label]) => (
-            <button
-              key={id}
-              onClick={() => setSub(id)}
-              className={`rounded-full px-5 py-2 text-sm font-semibold transition ${
-                sub === id
-                  ? "bg-brand-navy text-white shadow"
-                  : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
+
+        <div className="grid gap-8 lg:grid-cols-2">
+          {/* Left: policy reference — always visible */}
+          <aside className="order-2 min-w-0 lg:order-1 lg:sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto lg:pr-1">
+            <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-slate-500">Item Code Reference</h2>
+            <CodeReference />
+          </aside>
+
+          {/* Right: toggle between the register and the new-code builder */}
+          <div className="order-1 min-w-0 lg:order-2">
+            <div className="mb-5 flex flex-wrap gap-2">
+              {([
+                ["register", "Item Code Register"],
+                ["new", "New Item Code"],
+              ] as [SubTab, string][]).map(([id, label]) => (
+                <button
+                  key={id}
+                  onClick={() => setSub(id)}
+                  className={`rounded-full px-5 py-2 text-sm font-semibold transition ${
+                    sub === id
+                      ? "bg-brand-navy text-white shadow"
+                      : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            {loading ? (
+              <div className="flex items-center justify-center py-12 text-slate-500">Loading item codes...</div>
+            ) : sub === "register" ? (
+              <ItemRegister items={items} />
+            ) : (
+              <NewItemCode items={items} onCreated={() => setSub("register")} />
+            )}
+          </div>
         </div>
       </div>
-
-      {loading ? (
-        <div className="flex items-center justify-center py-12 text-slate-500">Loading item codes...</div>
-      ) : sub === "register" ? (
-        <ItemRegister items={items} />
-      ) : sub === "new" ? (
-        <NewItemCode items={items} onCreated={() => setSub("register")} />
-      ) : (
-        <CodeReference />
-      )}
     </div>
   );
 }
@@ -255,6 +267,9 @@ function NewItemCode({ items, onCreated }: { items: ItemCodeRecord[]; onCreated:
   const [notes, setNotes] = useState("");
   const [saving, setSaving] = useState(false);
   const [created, setCreated] = useState<string | null>(null);
+  // The green "no duplicates found" confirmation only appears as a check when
+  // the user attempts to create — not persistently while typing.
+  const [justChecked, setJustChecked] = useState(false);
 
   const dom = getDomain(domain);
   const isTools = !!dom?.tools;
@@ -277,6 +292,11 @@ function NewItemCode({ items, onCreated }: { items: ItemCodeRecord[]; onCreated:
   );
   const blocked = dupes.some((d) => d.blocking);
 
+  // Reset the create-time duplicate confirmation whenever the inputs change.
+  useEffect(() => {
+    setJustChecked(false);
+  }, [code, model, barcode, supplierPartNumber, effectiveDesc]);
+
   const canCreate =
     !!stem && isValidCode(code) && !!effectiveDesc.trim() && !!effectiveUom && !!companyCode && !blocked && !saving;
 
@@ -291,6 +311,7 @@ function NewItemCode({ items, onCreated }: { items: ItemCodeRecord[]; onCreated:
 
   async function onCreate() {
     if (!canCreate) return;
+    setJustChecked(true); // record that the duplicate check has run
     setSaving(true);
     try {
       const ref = doc(db, "itemCodes", code); // code IS the id → unique
@@ -339,7 +360,7 @@ function NewItemCode({ items, onCreated }: { items: ItemCodeRecord[]; onCreated:
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_20rem]">
+    <div className="grid gap-6 2xl:grid-cols-[minmax(0,1fr)_18rem]">
       {/* form */}
       <div className="space-y-5">
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -448,7 +469,7 @@ function NewItemCode({ items, onCreated }: { items: ItemCodeRecord[]; onCreated:
       </div>
 
       {/* preview + duplicates */}
-      <aside className="space-y-4 lg:sticky lg:top-4 lg:self-start">
+      <aside className="space-y-4 2xl:sticky 2xl:top-4 2xl:self-start">
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Generated item code</p>
           <div className="mt-2 flex items-center gap-2">
@@ -464,9 +485,17 @@ function NewItemCode({ items, onCreated }: { items: ItemCodeRecord[]; onCreated:
           {effectiveDesc && <p className="mt-2 text-xs text-slate-500">{effectiveDesc}</p>}
         </div>
 
-        <DuplicatePanel dupes={dupes} blocked={blocked} />
+        {/* Live: warn about duplicates while typing. The all-clear "no duplicates
+            found" only appears once the user runs the check by creating. */}
+        {dupes.length > 0 && <DuplicatePanel dupes={dupes} blocked={blocked} />}
+        {justChecked && dupes.length === 0 && (
+          <div className="flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 p-3 text-sm text-green-800">
+            <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+            No duplicates found — item is unique.
+          </div>
+        )}
 
-        <button onClick={onCreate} disabled={!canCreate} className="w-full rounded-lg bg-brand-red px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-brand-red/90 disabled:cursor-not-allowed disabled:opacity-50">
+        <button onClick={onCreate} disabled={!canCreate} className="w-full rounded-lg bg-brand-navy px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-brand-navy/90 disabled:cursor-not-allowed disabled:opacity-50">
           {saving ? "Creating..." : "Create item code"}
         </button>
         {blocked && <p className="text-center text-xs font-medium text-red-600">Resolve the duplicate item code before creating.</p>}
@@ -484,14 +513,7 @@ function NewItemCode({ items, onCreated }: { items: ItemCodeRecord[]; onCreated:
 }
 
 function DuplicatePanel({ dupes, blocked }: { dupes: DuplicateHit[]; blocked: boolean }) {
-  if (dupes.length === 0) {
-    return (
-      <div className="flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 p-3 text-sm text-green-800">
-        <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-        No duplicates found.
-      </div>
-    );
-  }
+  if (dupes.length === 0) return null;
   return (
     <div className={`rounded-xl border p-3 ${blocked ? "border-red-200 bg-red-50" : "border-amber-200 bg-amber-50"}`}>
       <p className={`text-sm font-semibold ${blocked ? "text-red-700" : "text-amber-800"}`}>
@@ -573,11 +595,11 @@ function RefBlock({ title, rows, note }: { title: string; rows: CodeRow[]; note?
 
 function CodeGrid({ rows }: { rows: CodeRow[] }) {
   return (
-    <div className="grid gap-1.5 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-1.5 sm:grid-cols-2">
       {rows.map((r) => (
-        <div key={r.code + r.labelEn} className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
-          <code className="rounded bg-brand-navy px-1.5 py-0.5 font-mono text-xs text-white">{r.code}</code>
-          <span className="min-w-0 truncate text-slate-600">{r.labelEn}</span>
+        <div key={r.code + r.labelEn} className="flex items-start gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
+          <code className="shrink-0 rounded bg-brand-navy px-1.5 py-0.5 font-mono text-xs text-white">{r.code}</code>
+          <span className="min-w-0 break-words leading-snug text-slate-600">{r.labelEn}</span>
         </div>
       ))}
     </div>
