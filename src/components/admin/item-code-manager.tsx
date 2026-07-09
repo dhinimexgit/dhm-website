@@ -12,6 +12,8 @@ import {
   matchesSearch,
   normalizeSegment,
   isValidCode,
+  padSeq,
+  familyLabel,
   getDomain,
   DOMAINS,
   COMPANIES,
@@ -118,6 +120,8 @@ function ItemRegister({ items }: { items: ItemCodeRecord[] }) {
   const [term, setTerm] = useState("");
   const [domainFilter, setDomainFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState<ItemStatus | "all">("active");
+  const [editing, setEditing] = useState<ItemCodeRecord | null>(null);
+  const [viewing, setViewing] = useState<ItemCodeRecord | null>(null);
 
   const filtered = useMemo(
     () =>
@@ -142,6 +146,23 @@ function ItemRegister({ items }: { items: ItemCodeRecord[] }) {
       alert("Failed to update status.");
     }
   };
+
+  if (viewing) {
+    const current = items.find((i) => i.id === viewing.id) ?? viewing;
+    return (
+      <ViewItem
+        item={current}
+        onEdit={() => { setViewing(null); setEditing(current); }}
+        onDone={() => setViewing(null)}
+      />
+    );
+  }
+
+  if (editing) {
+    // Keep the edit form bound to the latest data if the subscription refreshes.
+    const current = items.find((i) => i.id === editing.id) ?? editing;
+    return <EditItemForm item={current} onDone={() => setEditing(null)} />;
+  }
 
   return (
     <div className="space-y-4">
@@ -203,6 +224,8 @@ function ItemRegister({ items }: { items: ItemCodeRecord[] }) {
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex justify-end gap-1.5">
+                    <button onClick={() => setViewing(it)} className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-600 transition hover:bg-slate-50">View</button>
+                    <button onClick={() => setEditing(it)} className="rounded-lg border border-brand-navy/20 bg-brand-navy/5 px-2.5 py-1 text-xs font-medium text-brand-navy transition hover:bg-brand-navy/10">Edit</button>
                     {it.status !== "active" && (
                       <button onClick={() => setStatus(it, "active")} className="rounded-lg border border-green-200 bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700 transition hover:bg-green-100">Activate</button>
                     )}
@@ -228,6 +251,230 @@ function ItemRegister({ items }: { items: ItemCodeRecord[] }) {
           </tbody>
         </table>
       </div>
+    </div>
+  );
+}
+
+// ===========================================================================
+//   VIEW ITEM (read-only detail)
+// ===========================================================================
+function fmtDate(v: unknown): string {
+  const d = (v as { toDate?: () => Date })?.toDate?.();
+  return d ? d.toLocaleString() : "—";
+}
+
+function ViewItem({ item, onEdit, onDone }: { item: ItemCodeRecord; onEdit: () => void; onDone: () => void }) {
+  const dom = getDomain(item.domain);
+  const brandLabel = dom?.tools ? TOOL_BRANDS.find((b) => b.code === item.brand)?.labelEn : undefined;
+  const catLabel = TOOL_CATEGORIES.find((c) => c.code === item.category)?.labelEn;
+  const company = COMPANIES.find((c) => c.code === item.companyCode);
+  const famLabel = familyLabel(item.domain, item.category, item.family);
+
+  const seg = (code: string, label?: string) => (code ? (label && label !== code ? `${code} — ${label}` : code) : "—");
+
+  return (
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Item details</p>
+          <code className="font-mono text-lg font-semibold text-brand-navy">{item.code}</code>
+        </div>
+        <div className="flex gap-2">
+          <button onClick={onEdit} className="rounded-lg bg-brand-navy px-4 py-2 text-sm font-bold text-white shadow transition hover:bg-brand-navy/90">Edit</button>
+          <button onClick={onDone} className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">Back to register</button>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3">
+        <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_STYLE[item.status]}`}>{item.status}</span>
+        <span className="text-sm text-slate-500">{item.description}</span>
+      </div>
+
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-slate-500">Code segments</h3>
+        <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
+          <Row label="Domain" value={seg(item.domain, dom?.labelEn)} />
+          <Row label={dom?.tools ? "Brand" : "Sub-type"} value={seg(item.brand, brandLabel)} />
+          {item.category ? <Row label="Category" value={seg(item.category, catLabel)} /> : null}
+          <Row label="Product family" value={seg(item.family, famLabel)} />
+          <Row label="Model / spec" value={item.model || "—"} mono />
+          <Row label="Sequence" value={padSeq(item.seq)} mono />
+        </dl>
+      </section>
+
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-slate-500">Master data</h3>
+        <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
+          <Row label="Base UOM" value={item.uom || "—"} />
+          <Row label="Holding / selling company" value={company ? `${company.code} — ${company.name}` : item.companyCode || "—"} />
+          <Row label="Supplier part number" value={item.supplierPartNumber || "—"} />
+          <Row label="Barcode" value={item.barcode || "—"} />
+          <Row label="Minimum stock level" value={item.minStockLevel == null ? "—" : String(item.minStockLevel)} />
+          <Row label="Reorder level" value={item.reorderLevel == null ? "—" : String(item.reorderLevel)} />
+          <Row label="Warranty period" value={item.warrantyPeriod || "—"} />
+          <Row label="Tax category" value={item.taxCategory || "—"} />
+          <Row label="Costing method" value={COSTING_METHODS.find((m) => m.code === item.costingMethod)?.labelEn ?? item.costingMethod ?? "—"} />
+          <Row label="HS code" value={item.hsCode || "—"} />
+          {item.category === "SP" ? <Row label="Compatible tool model" value={item.compatibleModel || "—"} mono /> : null}
+        </dl>
+        {item.notes ? (
+          <div className="mt-4 border-t border-slate-100 pt-4">
+            <dt className="text-xs font-semibold uppercase tracking-wide text-slate-400">Notes</dt>
+            <dd className="mt-1 whitespace-pre-wrap text-sm text-slate-700">{item.notes}</dd>
+          </div>
+        ) : null}
+        <div className="mt-4 flex flex-wrap gap-x-8 gap-y-1 border-t border-slate-100 pt-4 text-xs text-slate-400">
+          <span>Created by: {item.createdBy || "—"}</span>
+          <span>Created: {fmtDate(item.createdAt)}</span>
+          <span>Updated: {fmtDate(item.updatedAt)}</span>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function Row({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
+  return (
+    <div className="min-w-0">
+      <dt className="text-xs font-semibold uppercase tracking-wide text-slate-400">{label}</dt>
+      <dd className={`mt-0.5 break-words text-sm text-slate-700 ${mono ? "font-mono" : ""}`}>{value}</dd>
+    </div>
+  );
+}
+
+// ===========================================================================
+//   EDIT ITEM (master data only — the code & its segments are immutable)
+// ===========================================================================
+function EditItemForm({ item, onDone }: { item: ItemCodeRecord; onDone: () => void }) {
+  const [f, setF] = useState({
+    description: item.description ?? "",
+    uom: item.uom ?? "PCS",
+    companyCode: item.companyCode ?? "DHM",
+    supplierPartNumber: item.supplierPartNumber ?? "",
+    barcode: item.barcode ?? "",
+    minStockLevel: item.minStockLevel == null ? "" : String(item.minStockLevel),
+    reorderLevel: item.reorderLevel == null ? "" : String(item.reorderLevel),
+    warrantyPeriod: item.warrantyPeriod ?? "",
+    taxCategory: item.taxCategory ?? "",
+    costingMethod: item.costingMethod ?? "AVG",
+    compatibleModel: item.compatibleModel ?? "",
+    hsCode: item.hsCode ?? "",
+    status: (item.status ?? "active") as ItemStatus,
+    notes: item.notes ?? "",
+  });
+  const [saving, setSaving] = useState(false);
+  const set = <K extends keyof typeof f>(k: K, v: (typeof f)[K]) => setF((s) => ({ ...s, [k]: v }));
+
+  const save = async () => {
+    if (!f.description.trim()) {
+      alert("Item description is required.");
+      return;
+    }
+    setSaving(true);
+    try {
+      await updateDoc(doc(db, "itemCodes", item.id), {
+        description: f.description.trim(),
+        uom: f.uom,
+        companyCode: f.companyCode,
+        supplierPartNumber: f.supplierPartNumber.trim(),
+        barcode: f.barcode.trim(),
+        minStockLevel: f.minStockLevel === "" ? null : Number(f.minStockLevel),
+        reorderLevel: f.reorderLevel === "" ? null : Number(f.reorderLevel),
+        warrantyPeriod: f.warrantyPeriod.trim(),
+        taxCategory: f.taxCategory.trim(),
+        costingMethod: f.costingMethod,
+        compatibleModel: f.compatibleModel.trim(),
+        hsCode: f.hsCode.trim(),
+        status: f.status,
+        notes: f.notes.trim(),
+        updatedAt: serverTimestamp(),
+      });
+      onDone();
+    } catch (err) {
+      console.error("Failed to update item:", err);
+      alert("Failed to save changes.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Editing item</p>
+          <code className="font-mono text-lg font-semibold text-brand-navy">{item.code}</code>
+        </div>
+        <button onClick={onDone} className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">
+          Back to register
+        </button>
+      </div>
+
+      <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-500">
+        The item code and its segments are fixed — one item, one code. Edit the master-data fields below.
+        <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 font-mono text-slate-600">
+          <span>Domain: {item.domain}</span>
+          {item.brand ? <span>Brand/Sub: {item.brand}</span> : null}
+          {item.category ? <span>Category: {item.category}</span> : null}
+          {item.family ? <span>Family: {item.family}</span> : null}
+          {item.model ? <span>Model: {item.model}</span> : null}
+        </div>
+      </div>
+
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="mb-4">
+          <label className={LABEL}>Item description</label>
+          <input className={INPUT} value={f.description} onChange={(e) => set("description", e.target.value)} />
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="Base UOM">
+            <select className={INPUT} value={f.uom} onChange={(e) => set("uom", e.target.value)}>
+              {UOMS.map((u) => <option key={u.code} value={u.code}>{u.code} — {u.labelEn}</option>)}
+            </select>
+          </Field>
+          <Field label="Holding / selling company" hint="A field only — never part of the code.">
+            <select className={INPUT} value={f.companyCode} onChange={(e) => set("companyCode", e.target.value)}>
+              {COMPANIES.map((c) => <option key={c.code} value={c.code}>{c.code} — {c.name}</option>)}
+            </select>
+          </Field>
+          <Field label="Status">
+            <select className={INPUT} value={f.status} onChange={(e) => set("status", e.target.value as ItemStatus)}>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="obsolete">Obsolete</option>
+            </select>
+          </Field>
+          <Field label="Supplier part number"><input className={INPUT} value={f.supplierPartNumber} onChange={(e) => set("supplierPartNumber", e.target.value)} /></Field>
+          <Field label="Barcode"><input className={INPUT} value={f.barcode} onChange={(e) => set("barcode", e.target.value)} /></Field>
+          <Field label="Minimum stock level"><input type="number" className={INPUT} value={f.minStockLevel} onChange={(e) => set("minStockLevel", e.target.value)} /></Field>
+          <Field label="Reorder level"><input type="number" className={INPUT} value={f.reorderLevel} onChange={(e) => set("reorderLevel", e.target.value)} /></Field>
+          <Field label="Warranty period"><input className={INPUT} placeholder="e.g. 12 months" value={f.warrantyPeriod} onChange={(e) => set("warrantyPeriod", e.target.value)} /></Field>
+          <Field label="Tax category"><input className={INPUT} placeholder="e.g. VAT 10%" value={f.taxCategory} onChange={(e) => set("taxCategory", e.target.value)} /></Field>
+          <Field label="Costing method">
+            <select className={INPUT} value={f.costingMethod} onChange={(e) => set("costingMethod", e.target.value)}>
+              {COSTING_METHODS.map((m) => <option key={m.code} value={m.code}>{m.labelEn}</option>)}
+            </select>
+          </Field>
+          <Field label="HS code"><input className={INPUT} value={f.hsCode} onChange={(e) => set("hsCode", e.target.value)} /></Field>
+          {item.category === "SP" && (
+            <Field label="Compatible tool model">
+              <input className={`${INPUT} font-mono uppercase`} value={f.compatibleModel} onChange={(e) => set("compatibleModel", e.target.value)} />
+            </Field>
+          )}
+        </div>
+        <div className="mt-4">
+          <label className={LABEL}>Notes</label>
+          <textarea rows={2} className={`${INPUT} resize-none`} value={f.notes} onChange={(e) => set("notes", e.target.value)} />
+        </div>
+        <div className="mt-6 flex gap-3 border-t border-slate-200 pt-5">
+          <button onClick={save} disabled={saving} className="rounded-lg bg-brand-navy px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-brand-navy/90 disabled:cursor-not-allowed disabled:opacity-50">
+            {saving ? "Saving..." : "Save changes"}
+          </button>
+          <button onClick={onDone} className="rounded-lg border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
+            Cancel
+          </button>
+        </div>
+      </section>
     </div>
   );
 }
