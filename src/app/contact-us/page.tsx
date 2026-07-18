@@ -389,13 +389,14 @@ export default function ContactPage() {
                             <span className="text-lg">🇰🇭</span>
                             <span>+855</span>
                           </span>
-                          <input 
-                            type="tel" 
+                          <input
+                            type="tel"
                             name="phone"
                             value={formData.phone}
                             onChange={handleInputChange}
-                            className="w-full rounded-r-xl border border-slate-200 bg-slate-50/50 px-5 py-4 text-slate-700 transition placeholder:text-slate-400 focus:border-brand-navy focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-navy/10" 
-                            placeholder={t.contactPage.form.phonePlaceholder} 
+                            required
+                            className="w-full rounded-r-xl border border-slate-200 bg-slate-50/50 px-5 py-4 text-slate-700 transition placeholder:text-slate-400 focus:border-brand-navy focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-navy/10"
+                            placeholder={t.contactPage.form.phonePlaceholder}
                           />
                         </div>
                       </div>
