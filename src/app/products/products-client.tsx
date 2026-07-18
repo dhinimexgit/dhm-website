@@ -910,7 +910,7 @@ function FeaturedProductCard({ product, categorySlug }: { product: any, category
             productName={product.name}
             triggerText={t.productsPage.card.requestQuote}
             triggerClassName="inline-block rounded-md bg-slate-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-navy hover:bg-slate-200 transition-colors"
-            initialQuestion={language === 'kh' ? `ខ្ញុំចង់ស្នើសុំសម្រង់តម្លៃសម្រាប់ ${product.name}។` : `I would like to request a quotation for ${product.name}.`}
+            initialQuestion={language === 'kh' ? `ខ្ញុំចង់ស្នើសុំតម្លៃសម្រាប់ ${product.name}។` : `I would like to request a quotation for ${product.name}.`}
             language={language}
           />
         </div>

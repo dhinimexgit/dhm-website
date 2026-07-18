@@ -161,7 +161,7 @@ export default function VongChanCableDetailPage() {
                 {/* Actions */}
                 <div className="flex flex-wrap items-center gap-4 pt-4">
                   <Link href="/contact-us" className="inline-flex items-center gap-2 rounded-lg bg-brand-red px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#c91e21]">
-                    {language === 'kh' ? "ស្នើសុំសម្រង់តម្លៃ" : "Request Quote"}
+                    {language === 'kh' ? "ស្នើសុំតម្លៃ" : "Request Quote"}
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                   </Link>
                 </div>

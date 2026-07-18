@@ -107,9 +107,9 @@ export default async function ProductDetailPage({ params }: Props) {
                 {(!product.price || Number(product.price) === 0) && (
                   <ContactModal 
                     productName={displayName}
-                    triggerText={isKh ? "ស្នើសុំសម្រង់តម្លៃ" : "Request Quotation"}
+                    triggerText={isKh ? "ស្នើសុំតម្លៃ" : "Request Quotation"}
                     triggerClassName="flex-1 rounded-full bg-brand-red px-8 py-4 text-center text-sm font-bold text-white shadow-lg transition hover:bg-[#b10f12]"
-                    initialQuestion={isKh ? `ខ្ញុំចង់ស្នើសុំសម្រង់តម្លៃសម្រាប់ ${displayName}។` : `I would like to request a quotation for ${displayName}.`}
+                    initialQuestion={isKh ? `ខ្ញុំចង់ស្នើសុំតម្លៃសម្រាប់ ${displayName}។` : `I would like to request a quotation for ${displayName}.`}
                     language={lang}
                   />
                 )}

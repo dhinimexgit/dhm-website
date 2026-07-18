@@ -149,7 +149,7 @@ export const getHeroContent = (language: 'en' | 'kh'): HeroContent => ({
     ? "ធិនីម៉ិចផ្តល់ជូននូវដំណោះស្រាយអគ្គិសនី ការផ្គត់ផ្គង់ទឹក និងវិស្វកម្មដែលបានកសាងឡើងសម្រាប់ការរីកចម្រើនរបស់ប្រទេសកម្ពុជា។ យើងរួមបញ្ចូលគ្នានូវបទពិសោធន៍ 21 ឆ្នាំក្នុងវិស័យនេះ ជាមួយនឹងការធ្វើតេស្តដ៏ម៉ត់ចត់ និងសេវាកម្មរហ័ស។"
     : "Dhinimex delivers electrical, water supply, and engineering solutions built for Cambodia’s growth. We combine 21 years of field expertise with rigorous testing and responsive service.",
   ctas: [
-    { href: "/contact-us", label: language === 'kh' ? "ស្នើសុំសម្រង់តម្លៃ" : "Request a quote", variant: "primary" },
+    { href: "/contact-us", label: language === 'kh' ? "ស្នើសុំតម្លៃ" : "Request a quote", variant: "primary" },
     { href: "/about", label: language === 'kh' ? "រឿងរ៉ាវរបស់យើង" : "Our story", variant: "secondary" },
   ],
   media: "https://images.unsplash.com/photo-1509390968897-1a1d8d2dbf51",

@@ -13,6 +13,9 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const BRAND_NAVY = "#2e388c";
 const BRAND_RED = "#e8262a";
+// Absolute URL required for email clients. The navy is baked into this PNG, so
+// dark-mode clients can't recolor the emblem.
+const LOGO_URL = "https://dhinimex.com/brands/ALL-LOGO-25.png";
 
 type Payload = {
   name?: string;
@@ -91,15 +94,28 @@ function buildHtml(name: string, productName: string): string {
     : `Thank you for reaching out to Dhinimex. We've received your message and a member of our team will get back to you shortly.`;
 
   return `<!DOCTYPE html>
-<html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Tell dark-mode clients the email themes itself, so they don't remap the brand navy. -->
+    <meta name="color-scheme" content="light dark" />
+    <meta name="supported-color-schemes" content="light dark" />
+    <style>
+      :root { color-scheme: light dark; supported-color-schemes: light dark; }
+      /* Force the brand navy header to stay navy in dark mode (Outlook.com / supported clients). */
+      [data-ogsc] .dhm-header, [data-ogsb] .dhm-header { background-color: ${BRAND_NAVY} !important; }
+    </style>
+  </head>
   <body style="margin:0;padding:0;background:#f5f6fb;font-family:Arial,Helvetica,sans-serif;color:#1e1f2c;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f5f6fb;padding:24px 0;">
       <tr>
         <td align="center">
           <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 8px 30px rgba(46,56,140,0.08);">
             <tr>
-              <td style="background:${BRAND_NAVY};padding:28px 32px;">
-                <span style="color:#ffffff;font-size:22px;font-weight:bold;letter-spacing:0.5px;">DHINIMEX CO., LTD.</span>
+              <td class="dhm-header" bgcolor="${BRAND_NAVY}" style="background-color:${BRAND_NAVY};padding:24px 32px;text-align:center;">
+                <img src="${LOGO_URL}" width="64" height="64" alt="Dhinimex" style="display:block;margin:0 auto 12px auto;width:64px;height:64px;border:0;outline:none;text-decoration:none;" />
+                <span style="color:#ffffff;font-size:20px;font-weight:bold;letter-spacing:0.5px;">DHINIMEX CO., LTD.</span>
               </td>
             </tr>
             <tr>

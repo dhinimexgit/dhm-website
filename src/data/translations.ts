@@ -988,7 +988,7 @@ export const translations = {
       hero: {
         title: "ដំណោះស្រាយគ្រប់ជ្រុងជ្រោយសម្រាប់ហេដ្ឋារចនាសម្ព័ន្ធ",
         description: "ចាប់ពីការផលិត និងការដំឡើងរហូតដល់ការធ្វើតេស្ត និងការផ្តល់សេវាកម្មទឹកភ្លើង ធិនីម៉ិចផ្តល់ជូននូវសេវាកម្ម EPC ពីដើមដល់ចប់ ដែលគាំទ្រដោយជំនាញជាង ២១ ឆ្នាំ។",
-        requestQuote: "ស្នើសុំសម្រង់តម្លៃ",
+        requestQuote: "ស្នើសុំតម្លៃ",
         exploreServices: "ស្វែងយល់ពីសេវាកម្ម"
       },
       expertise: {
@@ -1060,7 +1060,7 @@ export const translations = {
         title: "ឧបករណ៍កម្រិតឧស្សាហកម្មសម្រាប់សេវាកម្មទឹកភ្លើង",
         description: "ស្វែងយល់ពីជម្រើសឧបករណ៍ និងបរិក្ខារវិជ្ជាជីវៈដែលបានជ្រើសរើសយ៉ាងយកចិត្តទុកដាក់ពីម៉ាកយីហោឈានមុខគេ ដែលត្រូវបានរចនាឡើងសម្រាប់ការសាងសង់ ការងារអគ្គិសនី និងកម្មវិធីឧស្សាហកម្ម។",
         viewAll: "មើលផលិតផលទាំងអស់",
-        requestQuote: "ស្នើសុំសម្រង់តម្លៃ"
+        requestQuote: "ស្នើសុំតម្លៃ"
       },
       browse: {
         sectionTitle: "ស្វែងរកបណ្តុំផលិតផល",
@@ -1102,7 +1102,7 @@ export const translations = {
         call: "ទូរស័ព្ទ៖ 011 753 940"
       },
       card: {
-        requestQuote: "ស្នើសុំសម្រង់តម្លៃ",
+        requestQuote: "ស្នើសុំតម្លៃ",
         viewProduct: "មើលផលិតផល",
         noImage: "គ្មានរូបភាព"
       }
@@ -1339,7 +1339,7 @@ export const translations = {
         remarks: "កំណត់ចំណាំ",
         fulfilled: "បានបំពេញ",
         addRemark: "បន្ថែមកំណត់ចំណាំ...",
-        submitRemarkPlaceholder: "កំណត់ចំណាំសម្រាប់ជួរនេះ (ស្រេចចិត្ត)…",
+        submitRemarkPlaceholder: "កំណត់ចំណាំសម្រាប់ជួរនេះ (តាមការស្ម័គ្រចិត្ត)…",
         selectBranch: "ជ្រើសរើសសាខា",
         uploadPrExcel: "បង្ហោះ PR Excel",
         uploadPoExcelPrimary: "បង្ហោះ PO Excel (DHM — ចម្បង)",
@@ -1505,7 +1505,7 @@ export const translations = {
         username: "ឈ្មោះអ្នកប្រើប្រាស់",
         firstName: "នាមខ្លួន",
         lastName: "នាមត្រកូល",
-        emailOpt: "អ៊ីមែល (ស្រេចចិត្ត)",
+        emailOpt: "អ៊ីមែល (តាមការស្ម័គ្រចិត្ត)",
         password: "ពាក្យសម្ងាត់",
         setPassword: "កំណត់ពាក្យសម្ងាត់",
         office: "ការិយាល័យ",

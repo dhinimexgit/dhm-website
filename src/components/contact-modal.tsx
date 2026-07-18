@@ -201,7 +201,7 @@ export function ContactModal({
 
             <div>
               <label htmlFor="email" className="mb-1 block text-sm font-medium text-slate-700">
-                {isKh ? "អ៊ីមែល (ស្រេចចិត្ត)" : "Email (optional)"}
+                {isKh ? "អ៊ីមែល (តាមការស្ម័គ្រចិត្ត)" : "Email (optional)"}
               </label>
               <input
                 type="email"
