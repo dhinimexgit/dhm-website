@@ -355,7 +355,7 @@ export default function ContactPage() {
                     {/* Name and Email Row */}
                     <div className="grid gap-6 md:grid-cols-2">
                       <div>
-                        <label className="mb-2 block text-sm font-semibold text-brand-navy">{t.contactPage.form.nameLabel}</label>
+                        <label className="mb-2 block text-sm font-semibold text-brand-navy">{t.contactPage.form.nameLabel} <span className="text-brand-red">*</span></label>
                         <input 
                           type="text" 
                           name="fullName"
@@ -367,7 +367,7 @@ export default function ContactPage() {
                         />
                       </div>
                       <div>
-                        <label className="mb-2 block text-sm font-semibold text-brand-navy">{t.contactPage.form.emailLabel}</label>
+                        <label className="mb-2 block text-sm font-semibold text-brand-navy">{t.contactPage.form.emailLabel} <span className="text-brand-red">*</span></label>
                         <input 
                           type="email" 
                           name="email"
@@ -383,7 +383,7 @@ export default function ContactPage() {
                     {/* Phone and Inquiry Type Row */}
                     <div className="grid gap-6 md:grid-cols-2">
                       <div>
-                        <label className="mb-2 block text-sm font-semibold text-brand-navy">{t.contactPage.form.phoneLabel}</label>
+                        <label className="mb-2 block text-sm font-semibold text-brand-navy">{t.contactPage.form.phoneLabel} <span className="text-brand-red">*</span></label>
                         <div className="flex">
                           <span className="flex items-center gap-2 rounded-l-xl border border-r-0 border-slate-200 bg-slate-100 px-4 text-sm text-slate-600">
                             <span className="text-lg">🇰🇭</span>
@@ -434,7 +434,7 @@ export default function ContactPage() {
 
                     {/* Message */}
                     <div>
-                      <label className="mb-2 block text-sm font-semibold text-brand-navy">{t.contactPage.form.messageLabel}</label>
+                      <label className="mb-2 block text-sm font-semibold text-brand-navy">{t.contactPage.form.messageLabel} <span className="text-brand-red">*</span></label>
                       <textarea 
                         name="message"
                         value={formData.message}
