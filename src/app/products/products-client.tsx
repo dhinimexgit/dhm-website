@@ -488,8 +488,8 @@ export function ProductsPageClient({ initialBrand }: Props) {
             </div>
             
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
-              {featuredProducts.map((product) => (
-                <FeaturedProductCard key={product.slug} product={product} categorySlug={categories.find(c => c.slug === product.brand)?.slug || 'stanley'} />
+              {featuredProducts.map((product, index) => (
+                <FeaturedProductCard key={`${product.slug}-${index}`} product={product} categorySlug={categories.find(c => c.slug === product.brand)?.slug || 'stanley'} />
               ))}
             </div>
           </section>
@@ -697,11 +697,11 @@ export function ProductsPageClient({ initialBrand }: Props) {
               {filteredProducts.length > 0 ? (
                 <>
                   <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-                    {paginatedProducts.map((product) => (
-                      <FeaturedProductCard 
-                        key={product.slug} 
-                        product={product} 
-                        categorySlug={categories.find(c => c.slug === product.brand)?.slug || 'stanley'} 
+                    {paginatedProducts.map((product, index) => (
+                      <FeaturedProductCard
+                        key={`${product.slug}-${index}`}
+                        product={product}
+                        categorySlug={categories.find(c => c.slug === product.brand)?.slug || 'stanley'}
                       />
                     ))}
                   </div>

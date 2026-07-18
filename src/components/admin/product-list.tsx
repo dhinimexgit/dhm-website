@@ -131,13 +131,14 @@ export function ProductList({ onEdit }: Props) {
     return products.filter((product) => {
       const categoryIds = productCategoryIds(product);
 
+      const q = searchQuery.toLowerCase();
       const matchesSearch =
         !searchQuery ||
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.model.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (product.name ?? "").toLowerCase().includes(q) ||
+        (product.model ?? "").toLowerCase().includes(q) ||
+        (product.brand ?? "").toLowerCase().includes(q) ||
         categoryIds.some((id) =>
-          (categoryLabelById.get(id) ?? id).toLowerCase().includes(searchQuery.toLowerCase())
+          (categoryLabelById.get(id) ?? id ?? "").toLowerCase().includes(q)
         );
 
       const matchesBrand = selectedBrand === "all" || product.brand === selectedBrand;

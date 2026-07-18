@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { isLikelySpam } from '@/lib/spam-filter';
+import { sendConfirmationEmail } from '@/lib/send-confirmation';
 
 type Props = {
   productName: string;
@@ -36,6 +38,8 @@ export function ContactModal({
     const formData = new FormData(e.currentTarget);
     const name = formData.get('name') as string;
     const inquiry = formData.get('inquiry') as string;
+    const email = ((formData.get('email') as string) || '').trim();
+    const honeypot = (formData.get('company_website') as string) || '';
 
     // Ensure phone number has +855 prefix (phoneValue is already numeric-only)
     let phone = phoneValue.trim();
@@ -45,16 +49,31 @@ export function ContactModal({
       phone = `+855${phone}`;
     }
 
+    // Silently drop bot spam: show the success state but don't save or email.
+    if (isLikelySpam({ name, email, message: inquiry, honeypot })) {
+      setSuccess(true);
+      setPhoneValue('');
+      setTimeout(() => {
+        setIsOpen(false);
+        setSuccess(false);
+      }, 3000);
+      setLoading(false);
+      return;
+    }
+
     try {
       await addDoc(collection(db, 'inquiries'), {
         name,
         phone,
+        ...(email ? { email } : {}),
         message: `Product Inquiry for: ${productName}\n\n${inquiry}`,
         createdAt: serverTimestamp(),
         status: 'new',
         type: 'product_inquiry',
         productName
       });
+      // Optional email confirmation to the customer (no-op if email is blank).
+      sendConfirmationEmail({ name, email, productName });
       setSuccess(true);
       setPhoneValue(''); // Reset phone input
       setTimeout(() => {
@@ -115,6 +134,15 @@ export function ContactModal({
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Honeypot: hidden from real users; bots that fill it get dropped. */}
+            <input
+              type="text"
+              name="company_website"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="hidden"
+            />
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-700">{isKh ? "ផលិតផល" : "Product"}</label>
               <input
@@ -169,6 +197,24 @@ export function ContactModal({
                   placeholder="12 345 6789"
                 />
               </div>
+            </div>
+
+            <div>
+              <label htmlFor="email" className="mb-1 block text-sm font-medium text-slate-700">
+                {isKh ? "អ៊ីមែល (ស្រេចចិត្ត)" : "Email (optional)"}
+              </label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                className="w-full rounded-lg border border-slate-200 px-4 py-2 focus:border-brand-navy focus:outline-none focus:ring-1 focus:ring-brand-navy"
+                placeholder={isKh ? "you@email.com" : "you@email.com"}
+              />
+              <p className="mt-1 text-xs text-slate-400">
+                {isKh
+                  ? "ដាក់អ៊ីមែលដើម្បីទទួលបានការបញ្ជាក់ជាអ៊ីមែល។"
+                  : "Add your email to get a confirmation message."}
+              </p>
             </div>
 
             <div>

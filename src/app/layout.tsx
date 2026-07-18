@@ -6,7 +6,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 
 const sourceSans = Source_Sans_3({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["200", "300", "400", "500", "600", "700"],
   variable: "--font-dhinimex-sans",
 });
 

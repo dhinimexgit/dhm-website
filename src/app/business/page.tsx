@@ -14,7 +14,7 @@ import {
 import { StickyHeader } from "@/components/home/sticky-header";
 
 // Optimized timeline photos (WebP) labelled by year + company name.
-const TL = "/biz-portfolio-timeline/optimized";
+const TL = "/biz-portfolio-timeline/optimized/v2";
 
 // Company milestones data.
 // Displayed text (title/subtitle/description/events) is pulled from translations
@@ -45,7 +45,7 @@ const milestones = [
     events: [
       { year: "2006", description: "Electricity of Kiensvay (Elek)", image: `${TL}/2006-elek.webp` },
       { year: "2008", description: "Dangtong Electricity", image: `${TL}/2008-dangtong.webp` },
-      { year: "2009", description: "Eastern Power Supply Enterprise (Epose)", image: `${TL}/2009-epose-v2.webp` },
+      { year: "2009", description: "Eastern Power Supply Enterprise (Epose)", image: `${TL}/2009-epose.webp` },
       { year: "2009", description: "Chhouk & Chumkiri Water — first potable water concession", image: `${TL}/2009-chhouk.webp` },
       { year: "2010", description: "Toukmeas Water", image: `${TL}/2010-toukmeas-water.webp` },
     ],
@@ -73,7 +73,7 @@ const milestones = [
     subtitle: "Healthcare, Food-Tech and New Frontiers",
     description:
       "Today Dhinimex Group spans trading, manufacturing, electricity, water and scientific sectors. Recent years added the CamRad medical diagnostic center and the CamIrrad E-Beam food irradiation facility, alongside new potable water operations — reflecting the group's move into healthcare and food technology.",
-    image: `${TL}/2019-present-v2.webp`,
+    image: `${TL}/2019-present.webp`,
     events: [
       { year: "2019", description: "CamRad — medical diagnostic center", image: `${TL}/2019-camrad.webp` },
       { year: "2019", description: "Thpong Water — potable water supply", image: `${TL}/2019-thpong-water.webp` },
@@ -384,7 +384,7 @@ export default function BusinessPortfolioPage() {
                         <div className="absolute inset-0 bg-black/35" />
                         {/* Large year overlay */}
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <span className={`font-extralight tracking-wider text-white/90 ${
+                          <span className={`font-semibold tracking-wider text-white/90 ${
                             milestone.id === "investment"
                               ? "text-4xl sm:text-5xl lg:text-6xl xl:text-7xl"
                               : "text-5xl sm:text-6xl lg:text-7xl xl:text-8xl"

@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { getContactInfo } from "@/data/site-content";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
+import { isLikelySpam } from "@/lib/spam-filter";
+import { sendConfirmationEmail } from "@/lib/send-confirmation";
 import { StickyHeader } from "@/components/home/sticky-header";
 import { useLanguage } from "@/lib/i18n";
 import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
@@ -48,6 +50,8 @@ export default function ContactPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  // Honeypot: hidden field real users never fill; bots often do.
+  const [honeypot, setHoneypot] = useState("");
 
   // Scroll detection for sticky header
   useEffect(() => {
@@ -111,12 +115,30 @@ export default function ContactPage() {
     setIsSubmitting(true);
     setSubmitStatus("idle");
 
+    // Silently drop bot spam: show success but don't save or email.
+    if (
+      isLikelySpam({
+        name: formData.fullName,
+        email: formData.email,
+        message: formData.message,
+        honeypot,
+      })
+    ) {
+      setSubmitStatus("success");
+      setFormData({ fullName: "", email: "", phone: "", inquiryType: "", message: "" });
+      setHoneypot("");
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       await addDoc(collection(db, "inquiries"), {
         ...formData,
         createdAt: Timestamp.now(),
         status: "new",
       });
+      // Send the customer a confirmation email (email is required on this form).
+      sendConfirmationEmail({ name: formData.fullName, email: formData.email });
       setSubmitStatus("success");
       setFormData({ fullName: "", email: "", phone: "", inquiryType: "", message: "" });
     } catch (error) {
@@ -319,6 +341,17 @@ export default function ContactPage() {
               ) : (
                 <div className="rounded-3xl bg-white p-8 shadow-2xl shadow-slate-200/50 ring-1 ring-slate-100 sm:p-10 lg:p-12">
                   <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Honeypot: hidden from real users; bots that fill it get dropped. */}
+                    <input
+                      type="text"
+                      name="company_website"
+                      value={honeypot}
+                      onChange={(e) => setHoneypot(e.target.value)}
+                      tabIndex={-1}
+                      autoComplete="off"
+                      aria-hidden="true"
+                      className="hidden"
+                    />
                     {/* Name and Email Row */}
                     <div className="grid gap-6 md:grid-cols-2">
                       <div>
