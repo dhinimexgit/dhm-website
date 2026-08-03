@@ -27,6 +27,7 @@ import {
   togglePermission,
   withNormalizedPermissions,
 } from "./user-management-shared";
+import { ALL_PO_BRANCHES } from "@/lib/branch-po-view-scope";
 
 function SectionCard({ title, description, children }: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -67,6 +68,7 @@ export function EditUserClient({ initialUser }: { initialUser: AdminUser }) {
     fd.append("office", profile.office ?? "");
     fd.append("title", profile.title ?? "");
     fd.append("department", profile.department ?? "");
+    fd.append("branch", profile.branch ?? "");
     fd.append("role", profile.role);
     const res = await updateManagedUserDetails(fd);
     setLoading(false);
@@ -335,6 +337,24 @@ export function EditUserClient({ initialUser }: { initialUser: AdminUser }) {
                   </option>
                 ))}
               </select>
+            </div>
+            <div className="sm:col-span-2">
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">PO Branch (scope)</label>
+              <select
+                value={profile.branch ?? ""}
+                onChange={(e) => setProfile({ ...profile, branch: e.target.value || undefined })}
+                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-800 focus:border-brand-navy focus:outline-none focus:ring-1 focus:ring-brand-navy"
+              >
+                <option value="">All (office scope)</option>
+                {ALL_PO_BRANCHES.map((b) => (
+                  <option key={b} value={b}>
+                    {b}
+                  </option>
+                ))}
+              </select>
+              <p className="mt-1 text-xs text-slate-400">
+                When set, this user sees every PO for this one branch (regardless of who created it), overriding office grouping.
+              </p>
             </div>
             <div className="sm:col-span-2">
               <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">Role</label>

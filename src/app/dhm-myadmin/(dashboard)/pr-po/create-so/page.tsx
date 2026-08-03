@@ -54,6 +54,7 @@ export default async function CreateSoPage({ searchParams }: Props) {
       }
       actorDisplayName={actorDisplayName}
       actorUsername={user?.username ?? ""}
+      isPrpoSuperUser={isPrpoSuperUser}
     />
   );
 }

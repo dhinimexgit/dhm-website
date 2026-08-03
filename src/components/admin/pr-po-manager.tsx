@@ -440,6 +440,8 @@ type PrPoManagerProps = {
   /** Signed-in user's full name for audit logs (remarks, Create SO, etc.). */
   actorDisplayName?: string;
   actorUsername?: string;
+  /** PR/PO super-users may edit any not-yet-delivered PO, not only ones they created. */
+  isPrpoSuperUser?: boolean;
 };
 
 function UploadBusyInline({ message }: { message: string }) {
@@ -506,6 +508,7 @@ export function PrPoManager({
   viewPoAllowedBranches = "",
   actorDisplayName = "Unknown user",
   actorUsername = "",
+  isPrpoSuperUser = false,
 }: PrPoManagerProps) {
   const { t } = useLanguage();
   const p = t.admin.prpo;
@@ -560,6 +563,8 @@ export function PrPoManager({
   const [prFile, setPrFile] = useState<File | null>(null);
   const [poFile, setPoFile] = useState<File | null>(null);
   const [urgent, setUrgent] = useState<"no" | "yes">("no");
+  /** When set, the Submit PO form edits this existing PO instead of creating a new one. */
+  const [editingPoId, setEditingPoId] = useState<string | null>(null);
   const [status, setStatus] = useState<string>("");
   const [isSaving, setIsSaving] = useState(false);
   const [isParsingPo, setIsParsingPo] = useState(false);
@@ -599,6 +604,74 @@ export function PrPoManager({
   const poFileInputRef = useRef<HTMLInputElement | null>(null);
   const [includeOtherSuppliers, setIncludeOtherSuppliers] = useState(false);
   const [sisterSupplierDrafts, setSisterSupplierDrafts] = useState<SisterSupplierDraft[]>([]);
+
+  /**
+   * A submitted PO may be edited only while it has no deliveries yet (status "Not Delivered",
+   * i.e. no openings/SO). Editors are the original submitter or a PR/PO super-user.
+   */
+  const canEditPo = (po: SavedPurchaseOrder): boolean => {
+    if ((po.openingHistory?.length ?? 0) > 0) return false;
+    if (isPrpoSuperUser) return true;
+    const owner = (po.submittedByUsername ?? "").trim().toLowerCase();
+    const me = actorUsername.trim().toLowerCase();
+    return !!me && owner === me;
+  };
+
+  /** Reset every Submit PO form field back to a blank "new PO" state. */
+  const resetSubmitForm = () => {
+    setEditingPoId(null);
+    setBranchName("");
+    setPrNumber("");
+    setPoNumber("");
+    setUrgent("no");
+    setItems([]);
+    setSubmitItemRemarks({});
+    setVat10Amount(null);
+    setPoGrandTotal(null);
+    setPrFileName("");
+    setPoFileName("");
+    setPrFile(null);
+    setPoFile(null);
+    setIncludeOtherSuppliers(false);
+    setSisterSupplierDrafts([]);
+    if (prFileInputRef.current) prFileInputRef.current.value = "";
+    if (poFileInputRef.current) poFileInputRef.current.value = "";
+  };
+
+  /** Load an existing PO into the Submit PO form for editing and switch to that tab. */
+  const startEditPo = (po: SavedPurchaseOrder) => {
+    if (!canEditPo(po)) {
+      setStatus((po.openingHistory?.length ?? 0) > 0 ? p.editBlockedOpened : p.editNotAllowed);
+      return;
+    }
+    setEditingPoId(po.id);
+    setBranchName(canonicalPoBranchName(po.branchName));
+    setPrNumber(po.prNumber);
+    setPoNumber(po.poNumber);
+    setUrgent(po.urgent === "yes" ? "yes" : "no");
+    setItems(po.items.map((i) => ({ ...i })));
+    setSubmitItemRemarks({});
+    setVat10Amount(po.vat10Amount ?? null);
+    setPoGrandTotal(po.poGrandTotal ?? null);
+    setPrFileName(po.prFileName ?? "");
+    setPoFileName(po.poFileName ?? "");
+    setPrFile(null);
+    setPoFile(null);
+    // Sister-supplier lines are preserved untouched on save; not editable through this flow.
+    setIncludeOtherSuppliers(false);
+    setSisterSupplierDrafts([]);
+    if (prFileInputRef.current) prFileInputRef.current.value = "";
+    if (poFileInputRef.current) poFileInputRef.current.value = "";
+    setStatus("");
+    setConfirmAction(null);
+    setSelectedViewPoId(null);
+    setActiveTab("submit");
+  };
+
+  const cancelEdit = () => {
+    resetSubmitForm();
+    setStatus("");
+  };
 
   const totalItems = useMemo(
     () => items.reduce((sum, item) => sum + item.quantity, 0),
@@ -1602,6 +1675,19 @@ export function PrPoManager({
       return;
     }
 
+    // Editing guard: the PO must still exist, be undelivered, and belong to an allowed editor.
+    if (editingPoId) {
+      const current = savedPos.find((po) => po.id === editingPoId);
+      if (!current) {
+        setStatus(p.poSaveFailed);
+        return;
+      }
+      if (!canEditPo(current)) {
+        setStatus((current.openingHistory?.length ?? 0) > 0 ? p.editBlockedOpened : p.editNotAllowed);
+        return;
+      }
+    }
+
     if (includeOtherSuppliers) {
       if (!sisterSupplierDrafts.length) {
         setStatus(p.addOtherSupplierOrUncheck);
@@ -1616,7 +1702,7 @@ export function PrPoManager({
 
     const normalizedPoNumber = poNumber.trim().toLowerCase();
     const isDuplicatePo = savedPos.some(
-      (po) => po.poNumber.trim().toLowerCase() === normalizedPoNumber,
+      (po) => po.id !== editingPoId && po.poNumber.trim().toLowerCase() === normalizedPoNumber,
     );
     if (isDuplicatePo) {
       setConfirmAction(null);
@@ -1635,8 +1721,11 @@ export function PrPoManager({
       setIsSaving(true);
       setStatus(p.savingPo);
 
-      let prFileUrl: string | null = null;
-      let poFileUrl: string | null = null;
+      const editingPo = editingPoId ? savedPos.find((po) => po.id === editingPoId) : null;
+
+      // Preserve previously-uploaded files unless the user picks a replacement.
+      let prFileUrl: string | null = editingPo?.prFileUrl ?? null;
+      let poFileUrl: string | null = editingPo?.poFileUrl ?? null;
 
       if (prFile) {
         const prStorageRef = ref(
@@ -1690,53 +1779,57 @@ export function PrPoManager({
         submittedAt,
       );
 
-      await addDoc(collection(db, "purchaseOrders"), {
-        branchName: branchName.trim(),
-        prNumber: prNumber.trim(),
-        poNumber: formattedPoNumber,
-        submittedByName: actorDisplayName,
-        submittedByUsername: actorUsername || null,
-        urgent,
-        prFileName: prFileName || null,
-        poFileName: poFileName || null,
-        prFileUrl,
-        poFileUrl,
-        includeOtherSuppliers: sisterPayload.length > 0,
-        sisterSupplierPos: sisterPayload.length ? sisterPayload : null,
-        sourceType: "excel-po-upload",
-        status: "draft",
-        items: purchaseOrderItemsForFirestore(items),
-        ...(itemRemarkHistory ? { itemRemarkHistory } : {}),
-        totalLineItems: items.length,
-        totalQuantity: totalItems,
-        totalAmount,
-        vat10Amount: vat10Amount ?? null,
-        poGrandTotal: poGrandTotal ?? null,
-        createdAt: submittedAt,
-        updatedAt: submittedAt,
-      });
+      if (editingPo) {
+        // Edit: replace the editable fields; preserve creator, createdAt, delivery
+        // history (openingHistory/openedTotals), remark history, and sister-supplier lines.
+        await updateDoc(doc(db, "purchaseOrders", editingPo.id), {
+          branchName: branchName.trim(),
+          prNumber: prNumber.trim(),
+          poNumber: formattedPoNumber,
+          urgent,
+          prFileName: prFileName || null,
+          poFileName: poFileName || null,
+          prFileUrl,
+          poFileUrl,
+          items: purchaseOrderItemsForFirestore(items),
+          totalLineItems: items.length,
+          totalQuantity: totalItems,
+          totalAmount,
+          vat10Amount: vat10Amount ?? null,
+          poGrandTotal: poGrandTotal ?? null,
+          updatedAt: submittedAt,
+        });
+        setStatus(p.poUpdatedSuccess);
+      } else {
+        await addDoc(collection(db, "purchaseOrders"), {
+          branchName: branchName.trim(),
+          prNumber: prNumber.trim(),
+          poNumber: formattedPoNumber,
+          submittedByName: actorDisplayName,
+          submittedByUsername: actorUsername || null,
+          urgent,
+          prFileName: prFileName || null,
+          poFileName: poFileName || null,
+          prFileUrl,
+          poFileUrl,
+          includeOtherSuppliers: sisterPayload.length > 0,
+          sisterSupplierPos: sisterPayload.length ? sisterPayload : null,
+          sourceType: "excel-po-upload",
+          status: "draft",
+          items: purchaseOrderItemsForFirestore(items),
+          ...(itemRemarkHistory ? { itemRemarkHistory } : {}),
+          totalLineItems: items.length,
+          totalQuantity: totalItems,
+          totalAmount,
+          vat10Amount: vat10Amount ?? null,
+          poGrandTotal: poGrandTotal ?? null,
+          createdAt: submittedAt,
+          updatedAt: submittedAt,
+        });
+        setStatus(p.poSavedSuccess);
+      }
 
-      setStatus(p.poSavedSuccess);
-      setBranchName("");
-      setPrNumber("");
-      setPoNumber("");
-      setUrgent("no");
-      setItems([]);
-      setSubmitItemRemarks({});
-      setVat10Amount(null);
-      setPoGrandTotal(null);
-      setPrFileName("");
-      setPoFileName("");
-      setPrFile(null);
-      setPoFile(null);
-      setIncludeOtherSuppliers(false);
-      setSisterSupplierDrafts([]);
-      if (prFileInputRef.current) {
-        prFileInputRef.current.value = "";
-      }
-      if (poFileInputRef.current) {
-        poFileInputRef.current.value = "";
-      }
+      resetSubmitForm();
     } catch (error) {
       console.error("Failed to save PO:", error);
       setStatus(p.poSaveFailed);
@@ -2225,6 +2318,20 @@ export function PrPoManager({
         </div>
       ) : activeTab === "submit" && canSubmit ? (
         <>
+      {editingPoId ? (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+          <p className="text-sm font-semibold text-amber-900">
+            {fmt(p.editingPoBanner, { poNumber: formatPoNumberDisplay(poNumber) })}
+          </p>
+          <button
+            type="button"
+            onClick={cancelEdit}
+            className="rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-xs font-semibold text-amber-800 hover:bg-amber-100"
+          >
+            {p.cancelEdit}
+          </button>
+        </div>
+      ) : null}
       <div className="grid gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 md:grid-cols-2">
         <div>
           <label className="mb-2 block text-sm font-semibold text-slate-700">{p.branch}</label>
@@ -2565,7 +2672,7 @@ export function PrPoManager({
           }
           className="rounded-full bg-brand-navy px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-brand-navy/90 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {isSaving ? p.saving : p.submitPo}
+          {isSaving ? p.saving : editingPoId ? p.saveChanges : p.submitPo}
         </button>
       </div>
 
@@ -2845,6 +2952,16 @@ export function PrPoManager({
                     <span className="text-xs text-slate-400">
                       {canonicalPoBranchName(po.branchName)} · PR {po.prNumber}
                     </span>
+                    {canSubmit && canEditPo(po) ? (
+                      <button
+                        type="button"
+                        onClick={() => startEditPo(po)}
+                        className="ml-auto flex items-center gap-1.5 rounded-full border border-brand-navy/30 bg-brand-navy/5 px-3 py-1.5 text-xs font-semibold text-brand-navy hover:bg-brand-navy/10"
+                      >
+                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                        {p.editPoFull}
+                      </button>
+                    ) : null}
                   </div>
 
                   {/* PO summary card */}
@@ -3324,10 +3441,22 @@ export function PrPoManager({
                                 </span>
                               </td>
                               <td className="px-5 py-3.5 text-right">
-                                <span className="inline-flex items-center gap-1 text-xs font-semibold text-brand-navy">
-                                  {p.viewHistory}
-                                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
-                                </span>
+                                <div className="inline-flex items-center gap-3">
+                                  {canSubmit && canEditPo(po) ? (
+                                    <button
+                                      type="button"
+                                      onClick={(e) => { e.stopPropagation(); startEditPo(po); }}
+                                      className="inline-flex items-center gap-1 rounded-full border border-brand-navy/30 px-2.5 py-1 text-xs font-semibold text-brand-navy hover:bg-brand-navy/5"
+                                    >
+                                      <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                      {p.editPo}
+                                    </button>
+                                  ) : null}
+                                  <span className="inline-flex items-center gap-1 text-xs font-semibold text-brand-navy">
+                                    {p.viewHistory}
+                                    <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                                  </span>
+                                </div>
                               </td>
                             </tr>
                           );

@@ -13,6 +13,7 @@ import {
 } from '@/lib/admin-session';
 import { db } from '@/lib/firebase';
 import { collection, deleteField, doc, getDocs, setDoc, serverTimestamp } from 'firebase/firestore';
+import { ALL_PO_BRANCHES, canonicalPoBranchName } from '@/lib/branch-po-view-scope';
 
 // User roles (User = standard staff; legacy: branch, marketing, management)
 export type UserRole = 'super_admin' | 'admin' | 'user' | 'branch' | 'marketing' | 'management';
@@ -78,6 +79,14 @@ function resolveStaffDepartment(raw: string): StaffDepartment | undefined {
   return STAFF_DEPARTMENTS.find((d) => d === t || d.toLowerCase() === t.toLowerCase());
 }
 
+/** Validate/canonicalize an optional per-user PO branch; empty or unknown → undefined. */
+function resolveUserBranch(raw: string): string | undefined {
+  const t = raw.trim();
+  if (!t) return undefined;
+  const canonical = canonicalPoBranchName(t);
+  return (ALL_PO_BRANCHES as readonly string[]).includes(canonical) ? canonical : undefined;
+}
+
 const VALID_ROLES: UserRole[] = ['super_admin', 'admin', 'user', 'branch', 'marketing', 'management'];
 export type FunctionAccessKey =
   | 'admin.products'
@@ -111,6 +120,8 @@ export interface AdminUser {
   office?: StaffOffice;
   title?: StaffTitle;
   department?: StaffDepartment;
+  /** Canonical PO branch name; when set, scopes the user's PO visibility to this single branch. */
+  branch?: string;
   revoked?: boolean;
 }
 
@@ -125,6 +136,8 @@ export type SessionUser = {
   permissions: FunctionAccessKey[];
   office?: StaffOffice;
   title?: StaffTitle;
+  /** Canonical PO branch name; when set, scopes the user's PO visibility to this single branch. */
+  branch?: string;
 };
 
 const ALL_FUNCTIONS: FunctionAccessKey[] = [
@@ -390,6 +403,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
       : getDefaultPermissionsByRole(storedUser.role),
     office: storedUser.office,
     title: storedUser.title,
+    branch: storedUser.branch,
   };
 }
 
@@ -536,6 +550,7 @@ export async function createManagedUser(formData: FormData): Promise<{ success: 
     const office = resolveStaffOffice((formData.get('office') as string) || '');
     const title = resolveStaffTitle((formData.get('title') as string) || '');
     const department = resolveStaffDepartment((formData.get('department') as string) || '');
+    const branch = resolveUserBranch((formData.get('branch') as string) || '');
     const { value: firstName, error: firstErr } = validatePersonName(
       formData.get('firstName') as string,
       'First name'
@@ -577,6 +592,7 @@ export async function createManagedUser(formData: FormData): Promise<{ success: 
       office,
       title,
       department,
+      branch,
       revoked: false,
     });
 
@@ -689,6 +705,7 @@ export async function updateManagedUserDetails(
     const office = resolveStaffOffice((formData.get('office') as string) || '');
     const title = resolveStaffTitle((formData.get('title') as string) || '');
     const department = resolveStaffDepartment((formData.get('department') as string) || '');
+    const branch = resolveUserBranch((formData.get('branch') as string) || '');
     const role = coerceRole(formData.get('role') as string);
     const { value: firstName, error: firstErr } = validatePersonName(
       formData.get('firstName') as string,
@@ -718,6 +735,7 @@ export async function updateManagedUserDetails(
       office,
       title,
       department,
+      branch: branch ?? deleteField(),
       role,
       updatedAt: serverTimestamp(),
     };

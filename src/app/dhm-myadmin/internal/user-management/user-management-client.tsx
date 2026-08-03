@@ -27,6 +27,7 @@ import {
   togglePermission,
   withNormalizedPermissions,
 } from "./user-management-shared";
+import { ALL_PO_BRANCHES } from "@/lib/branch-po-view-scope";
 import { useLanguage } from "@/lib/i18n";
 
 const PAGE_SIZE = 10;
@@ -77,6 +78,7 @@ export function UserManagementClient({
   const [newOffice, setNewOffice] = useState<StaffOffice>("Head Office");
   const [newTitle, setNewTitle] = useState<StaffTitle>("Staff");
   const [newDepartment, setNewDepartment] = useState<StaffDepartment>("Sales");
+  const [newBranch, setNewBranch] = useState<string>("");
   const [newRole, setNewRole] = useState<UserRole>("user");
   const [newPermissions, setNewPermissions] = useState<FunctionAccessKey[]>([]);
 
@@ -129,6 +131,7 @@ export function UserManagementClient({
     formData.append("office", newOffice);
     formData.append("title", newTitle);
     formData.append("department", newDepartment);
+    formData.append("branch", newBranch);
 
     const result = await createManagedUser(formData);
     setLoading(false);
@@ -148,6 +151,7 @@ export function UserManagementClient({
     setNewOffice("Head Office");
     setNewTitle("Staff");
     setNewDepartment("Sales");
+    setNewBranch("");
     setNewRole("user");
     setNewPermissions([]);
     setPage(1);
@@ -306,6 +310,21 @@ export function UserManagementClient({
                 {DEPARTMENTS.map((d) => (
                   <option key={d} value={d}>
                     {d}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">{t.admin.userMgmt.branch}</label>
+              <select
+                value={newBranch}
+                onChange={(e) => setNewBranch(e.target.value)}
+                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-800 focus:border-brand-navy focus:outline-none focus:ring-1 focus:ring-brand-navy"
+              >
+                <option value="">{t.admin.userMgmt.branchNone}</option>
+                {ALL_PO_BRANCHES.map((b) => (
+                  <option key={b} value={b}>
+                    {b}
                   </option>
                 ))}
               </select>

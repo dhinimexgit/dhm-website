@@ -85,18 +85,29 @@ export function poBranchNamesMatch(a: string, b: string): boolean {
 }
 
 /**
- * Users at a warehouse office (Kien Svay / Touk Meas) may only work with POs for branches in that group.
- * Head Office users (any title) and PR/PO super-users see all branches.
- * Staff with no office mapping see none.
+ * PR/PO super-users and Head Office users (any title) see all branches.
+ * A staff member assigned a specific `branch` sees every PO for that one branch
+ * (regardless of who created it) — this takes precedence over office grouping.
+ * Otherwise, users at a warehouse office (Kien Svay / Touk Meas) may only work
+ * with POs for branches in that group. Staff with no office mapping see none.
  */
 export function resolveViewPoBranchScope(
-  user: Pick<SessionUser, "title" | "office"> | null,
+  user: Pick<SessionUser, "title" | "office" | "branch"> | null,
   isPrpoSuperUser: boolean
 ): ViewPoBranchScope {
   if (!user || isPrpoSuperUser) return { kind: "all" };
 
   const office = user.office;
   if (office === "Head Office") return { kind: "all" };
+
+  // Per-user single-branch assignment: see all POs for that branch.
+  const assignedBranch = user.branch?.trim();
+  if (assignedBranch) {
+    const canonical = canonicalPoBranchName(assignedBranch);
+    if ((ALL_PO_BRANCHES as readonly string[]).includes(canonical)) {
+      return { kind: "branches", branchNames: [canonical] };
+    }
+  }
 
   if (!office) {
     if (user.title === "Staff") return { kind: "none" };

@@ -67,6 +67,7 @@ export default async function PrPoPage({ searchParams }: Props) {
       }
       actorDisplayName={actorDisplayName}
       actorUsername={user?.username ?? ""}
+      isPrpoSuperUser={isPrpoSuperUser}
     />
   );
 }

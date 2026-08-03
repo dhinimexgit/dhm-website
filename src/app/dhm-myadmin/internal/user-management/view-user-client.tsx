@@ -78,6 +78,7 @@ export function ViewUserClient({ user }: { user: AdminUser }) {
         <Field label="Office" value={formatStaffOfficeLabel(user.office)} />
         <Field label="Title" value={user.title ?? ""} />
         <Field label="Department" value={user.department ?? ""} />
+        <Field label="PO Branch (scope)" value={user.branch ?? "All (office scope)"} />
       </div>
 
       <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
