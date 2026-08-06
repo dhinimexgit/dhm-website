@@ -84,7 +84,6 @@ export default function BrandsPage() {
                     fill
                     className="object-contain"
                     sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 16vw"
-                    unoptimized
                   />
                 </div>
               </div>

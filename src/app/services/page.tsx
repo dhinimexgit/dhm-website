@@ -164,7 +164,6 @@ export default function ServicesPage() {
                       height={46}
                       priority
                       className="h-auto w-[160px]"
-                      unoptimized
                     />
                   </Link>
                   <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
@@ -322,6 +321,7 @@ export default function ServicesPage() {
                   src={serviceImages.hero}
                   alt="Dhinimex Services"
                   fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/40 via-transparent to-transparent" />
