@@ -17,6 +17,11 @@ import { HeroBackgroundVideo } from "@/components/home/hero-background-video";
 // Optimized timeline photos (WebP) labelled by year + company name.
 const TL = "/biz-portfolio-timeline/optimized/v2";
 
+// Newer replacement artwork supplied as PNG. These live in the timeline root
+// rather than optimized/v2 (which only holds the older WebP derivatives), so
+// they need their own prefix. next/image still converts them on delivery.
+const TL_PNG = "/biz-portfolio-timeline";
+
 // Company milestones data.
 // Displayed text (title/subtitle/description/events) is pulled from translations
 // (t.businessPage.milestones); the events array length here MUST stay in sync with it.
@@ -29,7 +34,7 @@ const milestones = [
     subtitle: "First Steps to Create Tomorrow",
     description:
       "Dhinimex Co., Ltd. was founded in 2003 as a trade-based supplier of electrical equipment and water-supply components, and as the headquarters of the group. Within a year it secured its first rural electricity distribution concession, laying the foundation for a diversified infrastructure group.",
-    image: `${TL}/2003-2004-start.webp`,
+    image: `${TL_PNG}/2003-2004-start.png`,
     events: [
       { year: "2003", description: "Dhinimex Co., Ltd (DHM) founded as trading company and group HQ", image: `${TL}/2003-dhm.webp` },
       { year: "2004", description: "Toukmeas Electricity — first rural electricity distribution concession", image: `${TL}/2004-toukmeas.webp` },
@@ -42,13 +47,13 @@ const milestones = [
     subtitle: "Electricity and Water for the Provinces",
     description:
       "The group expanded into provincial electricity and potable water concessions, growing its electricity distribution network across Kiensvay, Dangtong and eastern Cambodia and launching its first potable water supplies. This period transformed Dhinimex from a trader into an integrated utilities provider.",
-    image: `${TL}/2006-2010-powering-communities.webp`,
+    image: `${TL_PNG}/2006-2010-powering-communities.png`,
     events: [
-      { year: "2006", description: "Electricity of Kiensvay (Elek)", image: `${TL}/2006-elek.webp` },
+      { year: "2006", description: "Electricity of Kiensvay (Elek)", image: `${TL_PNG}/2006-elek.png` },
       { year: "2008", description: "Dangtong Electricity", image: `${TL}/2008-dangtong.webp` },
       { year: "2009", description: "Eastern Power Supply Enterprise (Epose)", image: `${TL}/2009-epose.webp` },
-      { year: "2009", description: "Chhouk & Chumkiri Water — first potable water concession", image: `${TL}/2009-chhouk.webp` },
-      { year: "2010", description: "Toukmeas Water", image: `${TL}/2010-toukmeas-water.webp` },
+      { year: "2009", description: "Chhouk & Chumkiri Water — first potable water concession", image: `${TL_PNG}/2009-chhouk.png` },
+      { year: "2010", description: "Toukmeas Water", image: `${TL_PNG}/2010-toukmeas-water.png` },
     ],
   },
   {
@@ -63,7 +68,7 @@ const milestones = [
       { year: "2010", description: "Khmer Concrete Co., Ltd (KCC) — concrete pole factory", image: `${TL}/2010-kcc.webp` },
       { year: "2011", description: "Nicole Home Mart — retail mart for tools and equipment", image: `${TL}/2011-nicolehomemart.webp` },
       { year: "2013", description: "Saekaraj Transfo — distribution transformer factory", image: `${TL}/2013-saekaraj.webp` },
-      { year: "2015", description: "Tek Pong Traj — potable water supply", image: `${TL}/2015-pong-traj.webp` },
+      { year: "2015", description: "Tek Pong Traj — potable water supply", image: `${TL_PNG}/2015-pong-traj.png` },
       { year: "2018", description: "Vong Chan Cable Co., Ltd (VCC) — wire and cable factory", image: `${TL}/2018-vcc.webp` },
     ],
   },
@@ -77,8 +82,8 @@ const milestones = [
     image: `${TL}/2019-present.webp`,
     events: [
       { year: "2019", description: "CamRad — medical diagnostic center", image: `${TL}/2019-camrad.webp` },
-      { year: "2019", description: "Thpong Water — potable water supply", image: `${TL}/2019-thpong-water.webp` },
-      { year: "2020", description: "Tek Pong Teuk — potable water supply", image: `${TL}/202-tek-pong-teuk.webp` },
+      { year: "2019", description: "Thpong Water — potable water supply", image: `${TL_PNG}/2019-thpong-water.png` },
+      { year: "2020", description: "Tek Pong Teuk — potable water supply", image: `${TL_PNG}/202-tek-pong-teuk.png` },
       { year: "2023", description: "CamIrrad Center Co., Ltd — E-Beam food irradiation", image: `${TL}/2023-camirrad.webp` },
     ],
   },
