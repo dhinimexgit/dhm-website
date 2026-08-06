@@ -330,7 +330,7 @@ export function ProductList({ onEdit }: Props) {
                     <td className="px-6 py-4">
                       <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-slate-100">
                         {product.images?.[0] && (
-                          <Image src={product.images[0]} alt="" fill className="object-cover" />
+                          <Image src={product.images[0]} alt="" fill sizes="48px" className="object-cover" />
                         )}
                       </div>
                     </td>

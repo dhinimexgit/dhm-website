@@ -12,6 +12,7 @@ import {
   NAV_UTILITY_ICON_CLASS,
 } from "@/components/layout/nav-utility-cluster";
 import { StickyHeader } from "@/components/home/sticky-header";
+import { HeroBackgroundVideo } from "@/components/home/hero-background-video";
 
 // Optimized timeline photos (WebP) labelled by year + company name.
 const TL = "/biz-portfolio-timeline/optimized/v2";
@@ -202,12 +203,9 @@ export default function BusinessPortfolioPage() {
         <section ref={heroRef} className="relative min-h-[70vh] overflow-hidden lg:min-h-[80vh]">
           <div className="absolute inset-0 z-0">
             {/* Same hero banner asset as the home page */}
-            <video
+            <HeroBackgroundVideo
               src="/home-hero.mp4"
-              autoPlay
-              muted
-              playsInline
-              preload="metadata"
+              poster="/home-hero-poster.jpg"
               className="absolute inset-0 h-full w-full object-cover"
             />
             <div className="absolute inset-0 bg-black/10" />
@@ -379,7 +377,7 @@ export default function BusinessPortfolioPage() {
                     {/* Large year + image */}
                     <div className={`relative ${isEven ? "" : "lg:order-1"}`}>
                       <div className="relative aspect-[16/10] overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/10">
-                        <Image src={milestone.image} alt={localizedMilestone.title} fill className="object-cover" />
+                        <Image src={milestone.image} alt={localizedMilestone.title} fill sizes="(max-width: 1024px) 100vw, 620px" className="object-cover" />
                         {/* Slight dark overlay so the white year text stays readable */}
                         <div className="absolute inset-0 bg-black/35" />
                         {/* Large year overlay */}

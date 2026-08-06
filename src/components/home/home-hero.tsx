@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { StickyHeader } from "./sticky-header";
+import { HeroBackgroundVideo } from "./hero-background-video";
 import { useLanguage } from "@/lib/i18n";
 import { NavAdminLoginLink } from "@/components/layout/nav-admin-login-link";
 import {
@@ -102,12 +103,9 @@ export function HomeHero() {
       <section ref={heroRef} className="relative flex min-h-screen flex-col overflow-hidden">
         {/* Background Video with Glassmorphism Dark Overlay */}
         <div className="absolute inset-0 z-0">
-          <video
+          <HeroBackgroundVideo
             src="/home-hero.mp4"
-            autoPlay
-            muted
-            playsInline
-            preload="metadata"
+            poster="/home-hero-poster.jpg"
             className="absolute inset-0 h-full w-full object-cover"
           />
           {/* Dark semi-transparent overlay for glassmorphism effect (lightened) */}
@@ -129,7 +127,6 @@ export function HomeHero() {
                     height={46}
                     priority
                     className="h-auto w-[160px]"
-                    unoptimized
                   />
                 </Link>
                 <nav className="flex items-center gap-8 text-[15px] font-medium text-white">

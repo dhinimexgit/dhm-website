@@ -82,6 +82,64 @@ export async function getAllProducts(lang: 'en' | 'kh' = 'en'): Promise<ProductC
   }
 }
 
+/**
+ * Flat product list for the /products listing, fetched on the server.
+ *
+ * The listing used to open a client-side `onSnapshot` over the whole
+ * collection, which could not start until the JS bundle had booted and
+ * hydrated — measured at ~2.9s before the first product request even left the
+ * browser. Fetching here instead puts the catalogue in the initial HTML.
+ *
+ * The mapping intentionally matches `docToProduct` in products-client.tsx so
+ * server-rendered and client-rendered products are byte-identical.
+ */
+export async function getProductsForListing(): Promise<Product[]> {
+  try {
+    const snapshot = await getDocs(collection(db, "products"));
+    return snapshot.docs.map((doc) => {
+      // Firestore documents are untyped here, same as docToProduct above.
+      const data = doc.data() as any;
+      const rawImages = data.images;
+      const images = Array.isArray(rawImages)
+        ? rawImages
+            .filter((img): img is string => typeof img === "string" && img.trim().length > 0)
+            .map((img) => img.trim())
+        : [];
+
+      const toIso = (v: unknown): string | null => {
+        if (v && typeof v === "object" && "toDate" in v) {
+          return (v as { toDate: () => Date }).toDate().toISOString();
+        }
+        return (v as string) ?? null;
+      };
+
+      return {
+        slug: data.slug,
+        brand: data.brand,
+        model: data.model,
+        name: data.name,
+        nameKh: data.nameKh || "",
+        summary: data.summary || "",
+        summaryKh: data.summaryKh || "",
+        price: data.price,
+        categories: data.categories || [],
+        subCategories: data.subCategories || [],
+        featuredHighlights: data.featuredHighlights || [],
+        specs: data.specs || {},
+        images,
+        createdAt: toIso(data.createdAt),
+        createdBy: data.createdBy,
+        updatedAt: toIso(data.updatedAt),
+        updatedBy: data.updatedBy,
+      } as Product;
+    });
+  } catch (error) {
+    // Never let a Firestore hiccup break the page — the client refetches.
+    console.error("Error fetching products for listing:", error);
+    return [];
+  }
+}
+
 export async function getProduct(brandSlug: string, productSlug: string, lang: 'en' | 'kh' = 'en'): Promise<{ category: ProductCategory; product: Product } | undefined> {
   try {
     const productsRef = collection(db, "products");

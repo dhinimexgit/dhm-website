@@ -118,6 +118,7 @@ export function PostList({ onEdit }: Props) {
                           src={post.cover}
                           alt=""
                           fill
+                          sizes="96px"
                           className="object-cover"
                         />
                       )}

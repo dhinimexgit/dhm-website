@@ -118,7 +118,6 @@ export function SiteHeader() {
             height={44}
             priority
             className="h-auto w-[150px] md:hidden"
-            unoptimized
           />
           <Image
             src="/brands/ALL-LOGO-25.png"
@@ -127,7 +126,6 @@ export function SiteHeader() {
             height={16}
             priority
             className="hidden h-auto w-[48px] md:block"
-            unoptimized
           />
         </Link>
         <div className="w-10 md:hidden" />

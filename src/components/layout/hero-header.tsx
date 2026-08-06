@@ -78,7 +78,6 @@ export function HeroHeader() {
           height={49}
           priority
           className="h-auto w-[170px]"
-          unoptimized
         />
       </Link>
       <nav className="flex items-center gap-6 text-[15px] font-medium text-white xl:gap-8">

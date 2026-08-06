@@ -4,3 +4,48 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# Static assets under public/ are content-stable: when one changes we rename it
+# or bump its ?v= query. Netlify's default for them is
+# `public,max-age=0,must-revalidate`, which costs a revalidation round-trip on
+# every asset on every page view. Cache them hard instead.
+
+[[headers]]
+  for = "/brands/*"
+  [headers.values]
+    Cache-Control = "public,max-age=31536000,immutable"
+
+[[headers]]
+  for = "/biz-portfolio-timeline/*"
+  [headers.values]
+    Cache-Control = "public,max-age=31536000,immutable"
+
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public,max-age=2592000,stale-while-revalidate=86400"
+
+[[headers]]
+  for = "/*.jpg"
+  [headers.values]
+    Cache-Control = "public,max-age=2592000,stale-while-revalidate=86400"
+
+[[headers]]
+  for = "/*.jpeg"
+  [headers.values]
+    Cache-Control = "public,max-age=2592000,stale-while-revalidate=86400"
+
+[[headers]]
+  for = "/*.webp"
+  [headers.values]
+    Cache-Control = "public,max-age=2592000,stale-while-revalidate=86400"
+
+[[headers]]
+  for = "/*.svg"
+  [headers.values]
+    Cache-Control = "public,max-age=2592000,stale-while-revalidate=86400"
+
+[[headers]]
+  for = "/*.mp4"
+  [headers.values]
+    Cache-Control = "public,max-age=31536000,immutable"

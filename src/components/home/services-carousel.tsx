@@ -126,7 +126,6 @@ export function ServicesCarousel({ services: propServices }: Props) {
               className="object-cover"
               sizes="100vw"
               priority
-              unoptimized
             />
           </div>
 
@@ -171,7 +170,6 @@ export function ServicesCarousel({ services: propServices }: Props) {
               className="object-cover"
               sizes="40vw"
               priority
-              unoptimized
             />
           </div>
 

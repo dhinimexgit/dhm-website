@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { db } from "@/lib/firebase";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import type { Product } from "@/data/site-content";
 import { StickyHeader } from "@/components/home/sticky-header";
 import { ContactModal } from "@/components/contact-modal";
@@ -76,13 +76,16 @@ const docToProduct = (doc: any): Product => {
 
 type Props = {
   initialBrand?: string;
+  initialProducts?: Product[];
 };
 
-export function ProductsPageClient({ initialBrand }: Props) {
+export function ProductsPageClient({ initialBrand, initialProducts }: Props) {
   const { t, language, setLanguage } = useLanguage();
-  // Real-time products from Firebase (like admin page)
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Products are server-rendered (see getProductsForListing) so the catalogue
+  // is in the initial HTML. Only fall back to fetching in the browser if the
+  // server had nothing to give us.
+  const [products, setProducts] = useState<Product[]>(initialProducts ?? []);
+  const [loading, setLoading] = useState(!initialProducts?.length);
 
   // Dynamic brands & category tree (managed from the admin dashboard).
   const [brandsList, setBrandsList] = useState<TaxonomyBrand[]>([]);
@@ -96,19 +99,29 @@ export function ProductsPageClient({ initialBrand }: Props) {
   const searchPanelRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  // Fetch products client-side using onSnapshot (real-time, no caching)
+  // Only fetch in the browser when the server render produced nothing (a
+  // Firestore error, or a brand page rendered on demand before revalidation).
+  // A public catalogue does not need a live listener: the page is ISR-cached
+  // and refreshes every 5 minutes, and onSnapshot held an open channel plus a
+  // full-collection read for every visitor.
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "products"), (snapshot) => {
-      const items: Product[] = [];
-      snapshot.forEach((doc) => {
-        items.push(docToProduct(doc));
-      });
-      setProducts(items);
-      setLoading(false);
-    });
+    if (initialProducts?.length) return;
 
-    return () => unsubscribe();
-  }, []);
+    let cancelled = false;
+    getDocs(collection(db, "products"))
+      .then((snapshot) => {
+        if (cancelled) return;
+        setProducts(snapshot.docs.map((doc) => docToProduct(doc)));
+      })
+      .catch((error) => console.error("Error fetching products:", error))
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProducts]);
 
   // Subscribe to dynamic brands & categories
   useEffect(() => {
@@ -1011,7 +1024,6 @@ function HeroSection({
                   height={46}
                   priority
                   className="h-auto w-[160px]"
-                  unoptimized
                 />
               </Link>
               <nav className="flex items-center gap-8 text-[15px] font-medium text-white">

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { resolveBrandHeroImage } from "@/lib/image-url";
 
 export type BrandShowcaseItem = {
@@ -25,7 +25,12 @@ function getVisibleCount(width: number) {
 }
 
 export function BrandShowcaseCarousel({ brands, shopLabel }: Props) {
-  const viewportRef = useRef<HTMLDivElement>(null);
+  // A callback ref, not useRef: this component renders `null` until `brands`
+  // arrives, so a mount-time effect would run while there is no element to
+  // measure and never get another chance — leaving cardWidth at 0 and every
+  // card falling back to width:100%. Tracking the node as state re-runs the
+  // measurement exactly when the viewport actually appears.
+  const [viewport, setViewport] = useState<HTMLDivElement | null>(null);
   const [visibleCount, setVisibleCount] = useState(3);
   const [cardWidth, setCardWidth] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
@@ -44,23 +49,24 @@ export function BrandShowcaseCarousel({ brands, shopLabel }: Props) {
   const maxPage = pageCount - 1;
 
   const measure = useCallback(() => {
-    const viewport = viewportRef.current;
     if (!viewport) return;
-    const count = getVisibleCount(viewport.offsetWidth);
+    const width = viewport.offsetWidth;
+    // A detached or zero-width viewport would compute a nonsense card width.
+    if (width <= 0) return;
+    const count = getVisibleCount(width);
     setVisibleCount(count);
     const totalGaps = GAP_PX * Math.max(0, count - 1);
-    setCardWidth((viewport.offsetWidth - totalGaps) / count);
-  }, []);
+    setCardWidth((width - totalGaps) / count);
+  }, [viewport]);
 
   useEffect(() => {
-    measure();
-    const viewport = viewportRef.current;
     if (!viewport) return;
+    measure();
 
     const observer = new ResizeObserver(measure);
     observer.observe(viewport);
     return () => observer.disconnect();
-  }, [measure]);
+  }, [viewport, measure]);
 
   useEffect(() => {
     setCurrentPage((prev) => Math.min(prev, maxPage));
@@ -83,7 +89,7 @@ export function BrandShowcaseCarousel({ brands, shopLabel }: Props) {
 
   return (
     <div className="relative">
-      <div ref={viewportRef} className="overflow-hidden">
+      <div ref={setViewport} className="overflow-hidden">
         <div
           className="flex will-change-transform"
           style={{

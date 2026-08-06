@@ -1,19 +1,9 @@
 "use client";
 
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n";
-
-type Post = {
-  slug: string;
-  title: string;
-  date: string;
-  excerpt: string;
-  cover: string;
-  tag?: "News" | "Event" | "Insight";
-};
+import type { Post } from "@/data/site-content";
 
 type Props = {
   posts: Post[];
@@ -27,6 +17,19 @@ const tagColors = {
 
 export function BlogSection({ posts }: Props) {
   const { t, language } = useLanguage();
+
+  // Posts arrive from a statically rendered page, so they carry both locales
+  // (docToPost always returns titleKh/excerptKh). Pick the right one here
+  // rather than making the home page render per-request just to read a cookie.
+  const localizedPosts = posts.map((post) =>
+    language === "kh"
+      ? {
+          ...post,
+          title: post.titleKh || post.title,
+          excerpt: post.excerptKh || post.excerpt,
+        }
+      : post
+  );
   return (
     <section className="relative overflow-hidden bg-slate-50 py-24">
       {/* Background Pattern */}
@@ -62,7 +65,7 @@ export function BlogSection({ posts }: Props) {
 
         {/* News Cards Grid - JP Morgan Style */}
         <div className="grid gap-8 md:grid-cols-3">
-          {posts.map((post, index) => (
+          {localizedPosts.map((post, index) => (
             <article
               key={post.slug}
               className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"

@@ -204,7 +204,6 @@ export default function AboutPage() {
                       height={46}
                       priority
                       className="h-auto w-[160px]"
-                      unoptimized
                     />
                   </Link>
                   <nav className="flex items-center gap-8 text-[15px] font-medium text-white">
@@ -406,6 +405,7 @@ export default function AboutPage() {
                   src="/kcc-2.jpg"
                   alt="Dhinimex manufacturing and operations"
                   fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover"
                 />
               </div>
@@ -445,7 +445,7 @@ export default function AboutPage() {
                       src={placeholderImages.vision}
                       alt="Vision - Innovation and Technology"
                       fill
-                      unoptimized
+                      sizes="(max-width: 1024px) 100vw, 512px"
                       className="object-cover object-center"
                     />
                   </div>
@@ -469,7 +469,7 @@ export default function AboutPage() {
                       src={placeholderImages.mission}
                       alt="Mission - Empowering Communities"
                       fill
-                      unoptimized
+                      sizes="(max-width: 1024px) 100vw, 512px"
                       className="object-cover object-center"
                     />
                   </div>
@@ -500,6 +500,7 @@ export default function AboutPage() {
                   src="/vcc-2.jpg"
                   alt="Core Values - Manufacturing and quality"
                   fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover"
                 />
               </div>
@@ -595,6 +596,7 @@ export default function AboutPage() {
                       src={leadership[0].portrait}
                       alt={leadership[0].name}
                       fill
+                      sizes="(max-width: 1024px) 100vw, 400px"
                       className="object-cover object-top"
                     />
                   </div>
@@ -658,6 +660,7 @@ export default function AboutPage() {
                       src={leader.portrait}
                       alt={leader.name}
                       fill
+                      sizes="(max-width: 768px) 50vw, 360px"
                       className="object-cover object-top"
                     />
                   </div>
@@ -729,7 +732,6 @@ export default function AboutPage() {
                       alt={manager.name}
                       fill
                       sizes="(min-width: 1024px) 220px, (min-width: 768px) 200px, (min-width: 640px) 180px, 160px"
-                      unoptimized
                       className="object-cover object-top"
                     />
                   </div>
@@ -750,6 +752,7 @@ export default function AboutPage() {
                   src={placeholderImages.workCulture}
                   alt="Work Culture"
                   fill
+                  sizes="(max-width: 768px) 100vw, 768px"
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -774,6 +777,7 @@ export default function AboutPage() {
                     src={image}
                     alt={`Team Member ${index + 1}`}
                     fill
+                    sizes="(max-width: 640px) 33vw, 16vw"
                     className="object-cover transition-opacity group-hover:opacity-90"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/40 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />

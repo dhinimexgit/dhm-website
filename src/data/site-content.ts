@@ -508,7 +508,7 @@ export const getLeadership = (language: 'en' | 'kh'): Leader[] => [
     quote: language === 'kh'
       ? "ការទទួលខុសត្រូវផ្ទាល់ខ្លួននឹងពង្រឹងភាពល្អឥតខ្ចោះជារួម ដែលនាំឲ្យយើងទៅកាន់តែឆ្ងាយជាមួយគ្នា។"
       : "We go farther together when individual responsibility strengthens collective excellence.",
-    portrait: "/dmdo.svg",
+    portrait: "/dmdo.jpg",
   },
 ];
 
