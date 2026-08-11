@@ -160,7 +160,18 @@ export function InquiryList() {
                     </div>
 
                     {inquiry.message && (
-                      <p className="line-clamp-2 text-sm text-slate-600">{inquiry.message}</p>
+                      // Clamped to a two-line preview while collapsed; the
+                      // expanded card shows the whole message, preserving the
+                      // line breaks the customer typed.
+                      <p
+                        className={`text-sm text-slate-600 ${
+                          selectedInquiry?.id === inquiry.id
+                            ? "whitespace-pre-wrap break-words"
+                            : "line-clamp-2"
+                        }`}
+                      >
+                        {inquiry.message}
+                      </p>
                     )}
 
                     <div className="text-xs text-slate-400">
