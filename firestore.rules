@@ -104,6 +104,16 @@ service cloud.firestore {
       allow read: if true;
       allow write: if true;
     }
+
+    match /dhmProjects/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /projectTypes/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
   }
 }
 

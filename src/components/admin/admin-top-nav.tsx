@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "@/lib/i18n";
 
-type NavLinkId = "home" | "dashboard" | "prpo" | "userMgmt";
+type NavLinkId = "home" | "dashboard" | "prpo" | "dhmProjects" | "userMgmt";
 
 type NavLink = {
   href: string;
@@ -34,6 +34,11 @@ const ALL_LINKS: NavLink[] = [
       "admin.prpo.open",
       "admin.prpo.view",
     ],
+  },
+  {
+    href: "/dhm-myadmin/dhm-projects",
+    id: "dhmProjects",
+    requiredPerms: ["projects.view", "projects.submit", "projects.update"],
   },
   /* Internal tooling hidden
   {
@@ -70,6 +75,7 @@ export function AdminTopNav({
       home: t.admin.common.navHome,
       dashboard: t.admin.dashboard.title,
       prpo: t.admin.prpo.title,
+      dhmProjects: t.admin.dhmProjects.title,
       userMgmt: t.admin.userMgmt.title,
     }),
     [t],

@@ -1,11 +1,11 @@
 import { getCurrentUser, canAccessFunction, type FunctionAccessKey } from "@/app/actions/auth";
-import { SUPER_ADMIN_LOGIN_ID } from "@/lib/admin-auth-constants";
+import { hasFullAdminAccess } from "@/lib/admin-auth-constants";
 import Link from "next/link";
 import { getTranslation } from "@/lib/i18n-server";
 
 type Section = {
   href: string;
-  id: "dashboard" | "prpo" | "userMgmt";
+  id: "dashboard" | "prpo" | "dhmProjects" | "userMgmt";
   requiredPerms: FunctionAccessKey[];
   icon: React.ReactNode;
   accent: string;
@@ -40,6 +40,17 @@ const SECTIONS: Section[] = [
       </svg>
     ),
   },
+  {
+    href: "/dhm-myadmin/dhm-projects",
+    id: "dhmProjects",
+    requiredPerms: ["projects.view", "projects.submit", "projects.update"],
+    accent: "from-sky-600 to-cyan-600",
+    icon: (
+      <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.746 3.746 0 0121 12z" />
+      </svg>
+    ),
+  },
   /* Internal tooling hidden — restore this block to show the portal card again
   {
     href: "/dhm-myadmin/internal",
@@ -69,10 +80,8 @@ const SECTIONS: Section[] = [
 export default async function HomePage() {
   const { t } = await getTranslation();
   const user = await getCurrentUser();
-  const isSuperAdmin =
-    user?.role === "super_admin" ||
-    user?.username.toLowerCase() === SUPER_ADMIN_LOGIN_ID ||
-    user?.email?.toLowerCase() === SUPER_ADMIN_LOGIN_ID;
+  // Same rule the nav and the server-side canAccessFunction use.
+  const isSuperAdmin = hasFullAdminAccess(user);
   const permissions = user?.permissions ?? [];
 
   const canUserMgmt = await canAccessFunction("internal.user_management");
