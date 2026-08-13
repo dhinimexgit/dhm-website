@@ -74,6 +74,29 @@ const docToProduct = (doc: any): Product => {
   } as Product;
 };
 
+// Fisher-Yates driven by a seeded PRNG (mulberry32). Seeding it — rather than
+// calling Math.random() inline — keeps the order stable across re-renders, so
+// the featured strip doesn't reshuffle every time the language toggles or the
+// product list updates.
+function seededShuffle<T>(items: T[], seed: number): T[] {
+  const out = [...items];
+  let state = seed >>> 0;
+
+  const random = () => {
+    state = (state + 0x6d2b79f5) >>> 0;
+    let t = Math.imul(state ^ (state >>> 15), 1 | state);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+
+  return out;
+}
+
 type Props = {
   initialBrand?: string;
   initialProducts?: Product[];
@@ -210,8 +233,16 @@ export function ProductsPageClient({ initialBrand, initialProducts }: Props) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
-  const PRODUCTS_PER_PAGE = 6;
+  const PRODUCTS_PER_PAGE = 12;
   const productsHeaderRef = useRef<HTMLHeadingElement>(null);
+
+  // Brand slug -> display name / colour, so cards can show a real brand badge
+  // instead of the raw slug.
+  const brandBySlug = useMemo(() => {
+    const map = new Map<string, { name: string; brandColor: string }>();
+    categories.forEach((c) => map.set(c.slug, { name: c.name, brandColor: c.brandColor }));
+    return map;
+  }, [categories]);
 
   // Flatten all products for "View All" or multi-brand filtering
   const allProducts = useMemo(() => products, [products]);
@@ -265,7 +296,14 @@ export function ProductsPageClient({ initialBrand, initialProducts }: Props) {
 
   // Handlers
   const handleCategoryClick = (categoryId: string) => {
-    setSelectedCategories([categoryId]);
+    // The tile's count covers the parent *and* its children, so the filter it
+    // applies has to as well — otherwise a tile reading "12" lands on an empty
+    // grid whenever products are tagged only against sub-categories.
+    const group = categoryTree.find((g) => g.id === categoryId);
+    setSelectedCategories(
+      group ? [group.id, ...group.children.map((c) => c.id)] : [categoryId]
+    );
+    setSelectedBrands([]);
     setViewMode('listing');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -367,6 +405,40 @@ export function ProductsPageClient({ initialBrand, initialProducts }: Props) {
     setSortOption(sortOptions[0].value);
   };
 
+  // Removable chips for whatever is currently filtering the grid.
+  const activeFilterChips = useMemo(() => {
+    const flat = categoryTree.flatMap((c) => [c, ...(c.children || [])]);
+    const chips: { key: string; label: string; onRemove: () => void }[] = [];
+
+    selectedBrands.forEach((slug) => {
+      const brand = categories.find((c) => c.slug === slug);
+      chips.push({
+        key: `brand-${slug}`,
+        label: brand?.name || slug,
+        onRemove: () => toggleBrand(slug),
+      });
+    });
+
+    selectedCategories.forEach((id) => {
+      // A child whose parent is also ticked is already implied by the parent
+      // chip, so don't repeat it.
+      const parent = categoryTree.find((g) => g.children?.some((child) => child.id === id));
+      if (parent && selectedCategories.includes(parent.id)) return;
+
+      const match = flat.find((c) => c.id === id);
+      chips.push({
+        key: `cat-${id}`,
+        label: match ? localized(language, match.label, match.labelKh) : id,
+        onRemove: () => toggleCategory(id),
+      });
+    });
+
+    return chips;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedBrands, selectedCategories, categories, categoryTree, language]);
+
+  const activeFilterCount = activeFilterChips.length;
+
   // Breadcrumb Text
   const breadcrumbText = useMemo(() => {
     const parts = [];
@@ -399,12 +471,31 @@ export function ProductsPageClient({ initialBrand, initialProducts }: Props) {
     });
   }, [categoryTree, products, language]);
 
-  // Get featured products (just taking top rated from all brands for the showcase)
+  // Drives the per-visit shuffle of the featured strip and the brand carousel.
+  // The seed is set after mount and never during render: the page is
+  // server-rendered and ISR-cached, so randomising server-side would mismatch
+  // hydration *and* serve one frozen order to everyone until the cache
+  // revalidates. Seed 0 = "not mounted yet", which keeps the server HTML and
+  // the first client render identical.
+  const [shuffleSeed, setShuffleSeed] = useState(0);
+
+  useEffect(() => {
+    setShuffleSeed(Math.floor(Math.random() * 0xffffffff) || 1);
+  }, []);
+
   const featuredProducts = useMemo(() => {
     const all = categories.flatMap(c => c.products);
-    // Using price as a fallback sort since rating was removed, or just random/first few
-    return all.slice(0, 5);
-  }, [categories]);
+    return (shuffleSeed ? seededShuffle(all, shuffleSeed) : all).slice(0, 5);
+  }, [categories, shuffleSeed]);
+
+  const showcaseBrands = useMemo(() => {
+    const items = categories.map((brand) => ({
+      slug: brand.slug,
+      name: brand.name,
+      heroImage: brand.heroImage,
+    }));
+    return shuffleSeed ? seededShuffle(items, shuffleSeed) : items;
+  }, [categories, shuffleSeed]);
 
   // Show loading state while fetching products
   if (loading) {
@@ -502,7 +593,13 @@ export function ProductsPageClient({ initialBrand, initialProducts }: Props) {
             
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
               {featuredProducts.map((product, index) => (
-                <FeaturedProductCard key={`${product.slug}-${index}`} product={product} categorySlug={categories.find(c => c.slug === product.brand)?.slug || 'stanley'} />
+                <FeaturedProductCard
+                  key={`${product.slug}-${index}`}
+                  product={product}
+                  categorySlug={categories.find(c => c.slug === product.brand)?.slug || 'stanley'}
+                  brandName={brandBySlug.get(product.brand)?.name}
+                  brandColor={brandBySlug.get(product.brand)?.brandColor}
+                />
               ))}
             </div>
           </section>
@@ -524,11 +621,7 @@ export function ProductsPageClient({ initialBrand, initialProducts }: Props) {
               </div>
 
               <BrandShowcaseCarousel
-                brands={categories.map((brand) => ({
-                  slug: brand.slug,
-                  name: brand.name,
-                  heroImage: brand.heroImage,
-                }))}
+                brands={showcaseBrands}
                 shopLabel={t.productsPage.brands.shopBrand}
               />
             </div>
@@ -547,9 +640,26 @@ export function ProductsPageClient({ initialBrand, initialProducts }: Props) {
           </nav>
 
           <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
+            {/* Mobile Filter Toggle — sits above the panel it controls */}
+            <div className="order-1 w-full lg:hidden">
+              <button
+                onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
+                aria-expanded={mobileFiltersOpen}
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-brand-navy hover:text-brand-navy"
+              >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
+                {mobileFiltersOpen ? t.productsPage.listing.hideFilters : t.productsPage.listing.showFilters}
+                {activeFilterCount > 0 && (
+                  <span className="ml-1 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-brand-red px-1.5 text-[11px] font-bold text-white">
+                    {activeFilterCount}
+                  </span>
+                )}
+              </button>
+            </div>
+
             {/* Sidebar - Filters Panel */}
-            <aside className={`w-full lg:w-1/4 ${mobileFiltersOpen ? 'block' : 'hidden lg:block'}`}>
-              <div className="space-y-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <aside className={`order-2 w-full lg:order-1 lg:w-1/4 lg:shrink-0 ${mobileFiltersOpen ? 'block' : 'hidden lg:block'}`}>
+              <div className="space-y-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:sticky lg:top-24 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-bold text-brand-navy">{t.productsPage.listing.filters}</h3>
                   <button onClick={clearFilters} className="text-xs font-semibold text-brand-red hover:underline">
@@ -644,14 +754,19 @@ export function ProductsPageClient({ initialBrand, initialProducts }: Props) {
                   <div className="space-y-2">
                     {categories.map((b) => (
                       <div key={b.slug} className="flex items-center gap-2">
-                        <input 
+                        <input
                           type="checkbox"
                           id={`brand-${b.slug}`}
                           checked={selectedBrands.includes(b.slug)}
                           onChange={() => toggleBrand(b.slug)}
                           className="rounded border-slate-300 text-brand-navy focus:ring-brand-navy"
                         />
-                        <label htmlFor={`brand-${b.slug}`} className="text-sm text-slate-600 cursor-pointer">{b.name}</label>
+                        <label
+                          htmlFor={`brand-${b.slug}`}
+                          className="flex-1 cursor-pointer text-sm font-medium text-slate-700 hover:text-brand-navy"
+                        >
+                          {b.name}
+                        </label>
                       </div>
                     ))}
                   </div>
@@ -687,25 +802,45 @@ export function ProductsPageClient({ initialBrand, initialProducts }: Props) {
               </div>
             </aside>
 
-            {/* Mobile Filter Toggle */}
-            <div className="lg:hidden w-full">
-              <button 
-                onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
-                className="w-full flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white py-3 text-sm font-semibold text-slate-700"
-              >
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
-                {mobileFiltersOpen ? t.productsPage.listing.hideFilters : t.productsPage.listing.showFilters}
-              </button>
-            </div>
-
             {/* Product Grid */}
-            <main className="flex-1">
-              <div className="mb-6 flex items-center justify-between">
-                <h2 ref={productsHeaderRef} className="text-2xl font-bold text-brand-navy">
+            {/* min-w-0 is load-bearing: without it this flex item refuses to
+                shrink below its widest child and the whole page scrolls
+                sideways. */}
+            <main className="order-3 min-w-0 flex-1 lg:order-2">
+              <div className="mb-6 flex flex-wrap items-baseline justify-between gap-3">
+                <h2 ref={productsHeaderRef} className="scroll-mt-24 text-2xl font-bold text-brand-navy">
                   {t.productsPage.listing.products} <span className="text-sm font-normal text-slate-500 ml-2">({filteredProducts.length} {t.productsPage.listing.items})</span>
                 </h2>
-                {/* Optional: Top bar sort could also be here if preferred over sidebar */}
+                {totalPages > 1 && (
+                  <span className="text-sm text-slate-500">
+                    {currentPage} / {totalPages}
+                  </span>
+                )}
               </div>
+
+              {/* Active filter chips */}
+              {activeFilterCount > 0 && (
+                <div className="mb-6 flex flex-wrap items-center gap-2">
+                  {activeFilterChips.map((chip) => (
+                    <button
+                      key={chip.key}
+                      onClick={chip.onRemove}
+                      className="group inline-flex items-center gap-1.5 rounded-full border border-brand-navy/15 bg-brand-navy/5 py-1 pl-3 pr-2 text-xs font-semibold text-brand-navy transition hover:border-brand-red/40 hover:bg-brand-red/5 hover:text-brand-red"
+                    >
+                      {chip.label}
+                      <svg className="h-3.5 w-3.5 opacity-60 transition group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  ))}
+                  <button
+                    onClick={clearFilters}
+                    className="ml-1 text-xs font-semibold text-brand-red hover:underline"
+                  >
+                    {t.productsPage.listing.clearAll}
+                  </button>
+                </div>
+              )}
 
               {filteredProducts.length > 0 ? (
                 <>
@@ -715,54 +850,24 @@ export function ProductsPageClient({ initialBrand, initialProducts }: Props) {
                         key={`${product.slug}-${index}`}
                         product={product}
                         categorySlug={categories.find(c => c.slug === product.brand)?.slug || 'stanley'}
+                        brandName={brandBySlug.get(product.brand)?.name}
+                        brandColor={brandBySlug.get(product.brand)?.brandColor}
                       />
                     ))}
                   </div>
 
                   {/* Pagination Controls */}
                   {totalPages > 1 && (
-                    <div className="mt-10 flex items-center justify-center gap-2">
-                      <button
-                        onClick={() => {
-                          setCurrentPage(prev => Math.max(prev - 1, 1));
-                          productsHeaderRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }}
-                        disabled={currentPage === 1}
-                        className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-brand-navy hover:text-white disabled:opacity-50 disabled:hover:bg-white disabled:hover:text-slate-600"
-                      >
-                        {t.productsPage.listing.previous}
-                      </button>
-                      
-                      <div className="flex items-center gap-1">
-                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                          <button
-                            key={page}
-                            onClick={() => {
-                              setCurrentPage(page);
-                              productsHeaderRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                            }}
-                            className={`h-10 w-10 rounded-lg text-sm font-medium transition-colors ${
-                              currentPage === page
-                                ? "bg-brand-navy text-white"
-                                : "text-slate-600 hover:bg-slate-50"
-                            }`}
-                          >
-                            {page}
-                          </button>
-                        ))}
-                      </div>
-
-                      <button
-                        onClick={() => {
-                          setCurrentPage(prev => Math.min(prev + 1, totalPages));
-                          productsHeaderRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }}
-                        disabled={currentPage === totalPages}
-                        className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-brand-navy hover:text-white disabled:opacity-50 disabled:hover:bg-white disabled:hover:text-slate-600"
-                      >
-                        {t.productsPage.listing.next}
-                      </button>
-                    </div>
+                    <PaginationBar
+                      currentPage={currentPage}
+                      totalPages={totalPages}
+                      previousLabel={t.productsPage.listing.previous}
+                      nextLabel={t.productsPage.listing.next}
+                      onChange={(page) => {
+                        setCurrentPage(page);
+                        productsHeaderRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }}
+                    />
                   )}
                 </>
               ) : (
@@ -816,6 +921,93 @@ export function ProductsPageClient({ initialBrand, initialProducts }: Props) {
       </section>
       </div>
     </>
+  );
+}
+
+// A compact page window: 1 … 6 [7] 8 … 27. Rendering every page number blows
+// the row (and the whole flex layout) wide open once the catalogue is unfiltered.
+function getPageWindow(current: number, total: number): (number | "gap")[] {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+
+  const wanted = new Set<number>([1, total, current, current - 1, current + 1]);
+  if (current <= 3) [2, 3, 4].forEach((p) => wanted.add(p));
+  if (current >= total - 2) [total - 1, total - 2, total - 3].forEach((p) => wanted.add(p));
+
+  const pages = [...wanted].filter((p) => p >= 1 && p <= total).sort((a, b) => a - b);
+
+  return pages.flatMap((page, i) =>
+    i > 0 && page - pages[i - 1] > 1 ? (["gap", page] as (number | "gap")[]) : [page]
+  );
+}
+
+function PaginationBar({
+  currentPage,
+  totalPages,
+  previousLabel,
+  nextLabel,
+  onChange,
+}: {
+  currentPage: number;
+  totalPages: number;
+  previousLabel: string;
+  nextLabel: string;
+  onChange: (page: number) => void;
+}) {
+  const pageWindow = getPageWindow(currentPage, totalPages);
+  const arrowClass =
+    "inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition hover:border-brand-navy hover:bg-brand-navy hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-slate-200 disabled:hover:bg-white disabled:hover:text-slate-600 sm:px-4";
+
+  return (
+    <nav aria-label="Pagination" className="mt-10 flex items-center justify-center gap-2">
+      <button
+        onClick={() => onChange(Math.max(currentPage - 1, 1))}
+        disabled={currentPage === 1}
+        className={arrowClass}
+      >
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        <span className="hidden sm:inline">{previousLabel}</span>
+      </button>
+
+      {/* Numbers on tablet and up; a plain counter keeps phones tidy. */}
+      <div className="hidden items-center gap-1 sm:flex">
+        {pageWindow.map((page, i) =>
+          page === "gap" ? (
+            <span key={`gap-${i}`} className="px-1 text-sm text-slate-400 select-none">
+              …
+            </span>
+          ) : (
+            <button
+              key={page}
+              onClick={() => onChange(page)}
+              aria-current={currentPage === page ? "page" : undefined}
+              className={`h-10 w-10 rounded-lg text-sm font-medium transition-colors ${
+                currentPage === page
+                  ? "bg-brand-navy text-white shadow-sm"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-brand-navy"
+              }`}
+            >
+              {page}
+            </button>
+          )
+        )}
+      </div>
+      <span className="px-2 text-sm font-medium text-slate-600 sm:hidden">
+        {currentPage} / {totalPages}
+      </span>
+
+      <button
+        onClick={() => onChange(Math.min(currentPage + 1, totalPages))}
+        disabled={currentPage === totalPages}
+        className={arrowClass}
+      >
+        <span className="hidden sm:inline">{nextLabel}</span>
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </nav>
   );
 }
 
@@ -896,45 +1088,100 @@ function ProductImageDisplay({ images, productName }: { images: any, productName
   );
 }
 
-function FeaturedProductCard({ product, categorySlug }: { product: any, categorySlug: string }) {
-  const { t, language, setLanguage } = useLanguage();
+// Partner brand colours run the whole range, from near-black to DeWalt yellow.
+// White is the house look for the badge, but it washes out on the light end, so
+// flip to near-black whenever white would fall below ~3.5:1 on that fill.
+// Expects a validated #rrggbb value.
+function badgeTextColor(hex: string): string {
+  const channel = (v: number) => {
+    const c = v / 255;
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  };
+
+  const luminance =
+    0.2126 * channel(parseInt(hex.slice(1, 3), 16)) +
+    0.7152 * channel(parseInt(hex.slice(3, 5), 16)) +
+    0.0722 * channel(parseInt(hex.slice(5, 7), 16));
+
+  // WCAG contrast of white against this fill: 1.05 / (L + 0.05).
+  return 1.05 / (luminance + 0.05) >= 3.5 ? "#ffffff" : "#0f172a";
+}
+
+// Both card actions share one box model — same height, radius, padding and
+// type — so "Request Quote" and "View Product" stack as a matched pair. The
+// primary carries a border too, otherwise it would sit 4px shorter.
+const CARD_ACTION_BASE =
+  "block w-full rounded-lg border-2 py-2.5 text-center text-xs font-bold uppercase tracking-wider transition-colors";
+const CARD_ACTION_PRIMARY = `${CARD_ACTION_BASE} border-brand-navy bg-brand-navy text-white hover:border-brand-red hover:bg-brand-red`;
+const CARD_ACTION_SECONDARY = `${CARD_ACTION_BASE} border-brand-navy/25 bg-white text-brand-navy hover:border-brand-navy hover:bg-brand-navy/5`;
+
+function FeaturedProductCard({
+  product,
+  categorySlug,
+  brandName,
+  brandColor,
+}: {
+  product: any;
+  categorySlug: string;
+  brandName?: string;
+  brandColor?: string;
+}) {
+  const { t, language } = useLanguage();
+  const hasPrice = product.price && Number(product.price) > 0;
+
+  // Only trust a full hex value for inline tinting; fall back to brand navy.
+  const accent = /^#[0-9a-f]{6}$/i.test(brandColor || "") ? brandColor! : "#1e2a78";
+  const label = brandName || product.brand;
+
   return (
-    <div className="group relative flex flex-col items-center rounded-xl border border-slate-100 bg-white p-6 text-center shadow-sm transition-all hover:border-slate-200 hover:shadow-lg">
-      {/* Sale Badge if needed */}
-      {/* <span className="absolute left-4 top-4 rounded bg-brand-red px-2 py-1 text-[10px] font-bold text-white">SALE</span> */}
-      
-      <ProductImageDisplay 
-        images={product.images} 
+    <div className="group relative flex flex-col items-center rounded-xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-brand-navy/30 hover:shadow-xl">
+      <ProductImageDisplay
+        images={product.images}
         productName={product.name}
       />
-      
-      <div className="mb-2 text-xs font-semibold uppercase text-slate-400">{product.brand}</div>
-      <h3 className="mb-2 line-clamp-2 min-h-[2.5rem] text-sm font-bold text-brand-navy group-hover:text-brand-red">
-        {language === "kh" && product.nameKh ? product.nameKh : product.name}
-      </h3>
-      
-      {product.price && Number(product.price) > 0 ? (
-        <div className="mb-4 text-lg font-bold text-brand-red">
-          ${Number(product.price).toFixed(2)}
-        </div>
-      ) : (
-        <div className="mb-4">
-          <ContactModal 
+
+      {label && (
+        <span
+          className="inline-flex max-w-full items-center truncate rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
+          style={{ backgroundColor: accent, color: badgeTextColor(accent) }}
+        >
+          {label}
+        </span>
+      )}
+
+      {/* Absorbs the card's leftover height, so the name sits centred in the
+          white space between the badge and the actions instead of hugging the
+          badge. Cards in a row still bottom-align their buttons. */}
+      <div className="flex w-full flex-1 flex-col items-center justify-center gap-2 py-5">
+        <h3 className="line-clamp-2 text-sm font-bold text-brand-navy group-hover:text-brand-red">
+          {language === "kh" && product.nameKh ? product.nameKh : product.name}
+        </h3>
+
+        {hasPrice && (
+          <div className="text-lg font-bold text-brand-red">
+            ${Number(product.price).toFixed(2)}
+          </div>
+        )}
+      </div>
+
+      <div className="w-full space-y-2">
+        {!hasPrice && (
+          <ContactModal
             productName={product.name}
             triggerText={t.productsPage.card.requestQuote}
-            triggerClassName="inline-block rounded-md bg-slate-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-navy hover:bg-slate-200 transition-colors"
+            triggerClassName={CARD_ACTION_SECONDARY}
             initialQuestion={language === 'kh' ? `ខ្ញុំចង់ស្នើសុំតម្លៃសម្រាប់ ${product.name}។` : `I would like to request a quotation for ${product.name}.`}
             language={language}
           />
-        </div>
-      )}
-      
-      <Link 
-        href={`/products/${categorySlug}/${product.slug}`}
-        className="mt-auto w-full rounded bg-brand-navy py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-brand-red"
-      >
-        {t.productsPage.card.viewProduct}
-      </Link>
+        )}
+
+        <Link
+          href={`/products/${categorySlug}/${product.slug}`}
+          className={CARD_ACTION_PRIMARY}
+        >
+          {t.productsPage.card.viewProduct}
+        </Link>
+      </div>
     </div>
   );
 }
