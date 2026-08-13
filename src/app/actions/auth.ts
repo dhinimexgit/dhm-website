@@ -100,6 +100,9 @@ export type FunctionAccessKey =
   | 'admin.prpo.open'
   | 'admin.prpo.view'
   | 'admin.prpo.items'
+  | 'projects.view'
+  | 'projects.submit'
+  | 'projects.update'
   | 'internal.rooms'
   | 'internal.cars'
   | 'internal.resource_management'
@@ -151,6 +154,9 @@ const ALL_FUNCTIONS: FunctionAccessKey[] = [
   'admin.prpo.submit',
   'admin.prpo.open',
   'admin.prpo.view',
+  'projects.view',
+  'projects.submit',
+  'projects.update',
   'internal.rooms',
   'internal.cars',
   'internal.resource_management',

@@ -694,6 +694,10 @@ export const translations = {
         requestVehicles: "Request company vehicles for your trips.",
         viewAndManage: "View and manage all your room and car bookings",
       },
+      dhmProjects: {
+        title: "DHM Projects",
+        desc: "Raise project tickets from customer inquiries and track them from study to completion.",
+      },
       userMgmt: {
         title: "User Management",
         desc: "Create staff accounts, assign roles, and control access to features.",
@@ -1512,6 +1516,10 @@ export const translations = {
         findAndBook: "ស្វែងរក និងកក់បន្ទប់ប្រជុំសម្រាប់ក្រុមរបស់អ្នក។",
         requestVehicles: "ស្នើសុំរថយន្តក្រុមហ៊ុនសម្រាប់ការធ្វើដំណើររបស់អ្នក។",
         viewAndManage: "មើល និងគ្រប់គ្រងការកក់បន្ទប់ និងរថយន្តរបស់អ្នកទាំងអស់",
+      },
+      dhmProjects: {
+        title: "គម្រោង DHM",
+        desc: "បង្កើតសំណុំរឿងគម្រោងពីការសាកសួររបស់អតិថិជន និងតាមដានពីការសិក្សារហូតដល់បញ្ចប់។",
       },
       userMgmt: {
         title: "ការគ្រប់គ្រងអ្នកប្រើប្រាស់",

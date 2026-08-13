@@ -95,6 +95,29 @@ export const PERMISSION_TREE: PermissionNode[] = [
     ],
   },
   {
+    key: "_dhmprojects",
+    label: "DHM Projects",
+    description: "Sales-to-technical project tickets and lifecycle tracking",
+    children: [
+      {
+        key: "projects.view",
+        label: "View Projects",
+        description: "Browse the project register and open ticket details.",
+      },
+      {
+        key: "projects.submit",
+        label: "Raise Ticket (Sales)",
+        description: "Create a project ticket from a customer inquiry and notify the technical group chat.",
+      },
+      {
+        key: "projects.update",
+        label: "Update Lifecycle (Technical)",
+        description:
+          "Acknowledge receipt, fill in milestone dates (study, BOQ, quote, contract), and close or cancel a project.",
+      },
+    ],
+  },
+  {
     key: "_internal",
     label: "Internal Tooling",
     description: "Staff tools for booking and resource management ",

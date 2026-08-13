@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { logout, getCurrentUser } from "@/app/actions/auth";
 import { AdminSessionGuard } from "@/components/admin/admin-session-guard";
-import { SUPER_ADMIN_LOGIN_ID } from "@/lib/admin-auth-constants";
+import { hasFullAdminAccess, isSuperAdminUser } from "@/lib/admin-auth-constants";
 import { AdminTopNav } from "@/components/admin/admin-top-nav";
 import { getTranslation } from "@/lib/i18n-server";
 import { LanguageProvider } from "@/lib/i18n";
@@ -28,7 +28,7 @@ export default async function DashboardLayout({
   }
 
   const userRole = user.role;
-  const isSuperAdmin = user?.username.toLowerCase() === SUPER_ADMIN_LOGIN_ID;
+  const isSuperAdmin = isSuperAdminUser(user);
 
   const loginUsername = user?.username?.trim() ?? "";
   const headerIdentity = user
@@ -59,7 +59,10 @@ export default async function DashboardLayout({
                     />
                 </Link> */}
                 
-                <AdminTopNav isSuperAdmin={isSuperAdmin} permissions={user?.permissions ?? []} />
+                <AdminTopNav
+                  isSuperAdmin={isSuperAdmin || hasFullAdminAccess(user)}
+                  permissions={user?.permissions ?? []}
+                />
             </div>
 
             <div className="flex min-w-0 w-full items-center justify-between gap-2 border-t border-white/10 pt-3 sm:gap-3 lg:w-auto lg:justify-end lg:border-t-0 lg:pt-0">
