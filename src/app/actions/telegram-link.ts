@@ -19,7 +19,7 @@ import { getCurrentUser } from '@/app/actions/auth';
 
 const ADMIN_USERS_COLLECTION = 'admin_users';
 
-export const TELEGRAM_LINK_CODE_TTL_MS = 15 * 60 * 1000;
+const TELEGRAM_LINK_CODE_TTL_MS = 15 * 60 * 1000;
 
 /** Unambiguous alphabet — no O/0, I/1 — because people retype these by hand. */
 const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
