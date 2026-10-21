@@ -716,23 +716,24 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mx-auto grid max-w-5xl grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {[
                 { name: language === 'kh' ? "ហុង ធារី" : "Hong Thary", title: language === 'kh' ? "ប្រធានផ្នែកគណនេយ្យ" : "Accounting Manager", photo: "/acct-dhm.jpg" },
                 { name: language === 'kh' ? "ណែម ភិរុណ" : "Nem Phyrun", title: language === 'kh' ? "ប្រធានផ្នែករដ្ឋបាល និងធនធានមនុស្ស" : "Admin & HR Manager", photo: "/hr.jpg" },
                 { name: language === 'kh' ? "ចាន់ រស្មី" : "Chan Reaksmey", title: language === 'kh' ? "ប្រធានផ្នែកទិញ និងភស្តុភារ" : "Purchasing & Logistics Manager", photo: "/lm.jpg" },
-                { name: language === 'kh' ? "ខូវ ទី វិកទ័រ" : "Victor Khov", title: language === 'kh' ? "ប្រធានផ្នែកបច្ចេកវិទ្យា" : "Technology Manager", photo: "/tm.jpg" },
               ].map((manager, index) => (
                 <div
                   key={manager.name}
-                  className="group flex w-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white text-center shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+                  className={`group flex w-full max-w-[280px] flex-col items-center overflow-hidden rounded-xl border border-slate-200 bg-white text-center shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl ${
+                    index === 2 ? "sm:col-span-2 lg:col-span-1" : ""
+                  }`}
                 >
-                  <div className="relative aspect-[4/5] w-full overflow-hidden bg-slate-200">
+                  <div className="relative mt-5 aspect-[3/4] w-full max-w-[240px] overflow-hidden rounded-lg bg-slate-200">
                     <Image
                       src={manager.photo}
                       alt={manager.name}
                       fill
-                      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                      sizes="240px"
                       className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
                     />
                   </div>
