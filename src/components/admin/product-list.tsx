@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { db } from "@/lib/firebase";
+import { requireFirebaseDb } from "@/lib/firebase";
 import { collection, onSnapshot, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import {
@@ -49,7 +49,7 @@ export function ProductList({ onEdit }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "products"), (snapshot) => {
+    const unsubscribe = onSnapshot(collection(requireFirebaseDb(), "products"), (snapshot) => {
       const items: Product[] = [];
       snapshot.forEach((docSnap) => {
         items.push({ id: docSnap.id, ...docSnap.data() } as Product);
@@ -110,7 +110,7 @@ export function ProductList({ onEdit }: Props) {
 
   const toggleVisibility = async (id: string, currentHidden: boolean) => {
     try {
-      await updateDoc(doc(db, "products", id), { hidden: !currentHidden });
+      await updateDoc(doc(requireFirebaseDb(), "products", id), { hidden: !currentHidden });
     } catch (err) {
       console.error("Error toggling visibility:", err);
       alert("Failed to update visibility");
@@ -120,7 +120,7 @@ export function ProductList({ onEdit }: Props) {
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this product? This cannot be undone.")) return;
     try {
-      await deleteDoc(doc(db, "products", id));
+      await deleteDoc(doc(requireFirebaseDb(), "products", id));
     } catch (err) {
       console.error("Error deleting product:", err);
       alert("Failed to delete product");

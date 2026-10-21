@@ -14,9 +14,8 @@ import {
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { requireFirebaseDb, requireFirebaseStorage } from "@/lib/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { storage } from "@/lib/firebase";
 import { useLanguage } from "@/lib/i18n";
 import {
   canonicalPoBranchName,
@@ -698,7 +697,7 @@ export function PrPoManager({
   }, [isReadingPr, isParsingPo, parsingSisterIds.size, p]);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "purchaseOrders"), (snapshot) => {
+    const unsubscribe = onSnapshot(collection(requireFirebaseDb(), "purchaseOrders"), (snapshot) => {
       const rows: SavedPurchaseOrder[] = snapshot.docs.map((doc) => {
         const data = doc.data() as Record<string, unknown>;
         return {
@@ -1040,7 +1039,7 @@ export function PrPoManager({
     try {
       setIsSavingOpen(true);
 
-      await updateDoc(doc(db, "purchaseOrders", selectedPo.id), {
+      await updateDoc(doc(requireFirebaseDb(), "purchaseOrders", selectedPo.id), {
         openedTotals: updatedOpenedTotals,
         updatedAt: Timestamp.now(),
         openingHistory: arrayUnion({
@@ -1113,7 +1112,7 @@ export function PrPoManager({
         createdByUsername: actorUsername || undefined,
         createdAt: now,
       };
-      await updateDoc(doc(db, "purchaseOrders", selectedPo.id), {
+      await updateDoc(doc(requireFirebaseDb(), "purchaseOrders", selectedPo.id), {
         [`itemRemarkHistory.${String(remarkItemLineNo)}`]: arrayUnion(entry),
         updatedAt: now,
       });
@@ -1729,7 +1728,7 @@ export function PrPoManager({
 
       if (prFile) {
         const prStorageRef = ref(
-          storage,
+          requireFirebaseStorage(),
           `purchase-orders/${formattedPoNumber}/pr-${Date.now()}-${prFile.name}`,
         );
         const uploadedPr = await uploadBytes(prStorageRef, prFile);
@@ -1738,7 +1737,7 @@ export function PrPoManager({
 
       if (poFile) {
         const poStorageRef = ref(
-          storage,
+          requireFirebaseStorage(),
           `purchase-orders/${formattedPoNumber}/po-${Date.now()}-${poFile.name}`,
         );
         const uploadedPo = await uploadBytes(poStorageRef, poFile);
@@ -1750,7 +1749,7 @@ export function PrPoManager({
         for (const row of sisterSupplierDrafts) {
           if (!row.file) continue;
           const poStorageRef = ref(
-            storage,
+            requireFirebaseStorage(),
             `purchase-orders/${formattedPoNumber}/po-${row.supplier}-${Date.now()}-${row.file.name}`,
           );
           const uploadedPo = await uploadBytes(poStorageRef, row.file);
@@ -1782,7 +1781,7 @@ export function PrPoManager({
       if (editingPo) {
         // Edit: replace the editable fields; preserve creator, createdAt, delivery
         // history (openingHistory/openedTotals), remark history, and sister-supplier lines.
-        await updateDoc(doc(db, "purchaseOrders", editingPo.id), {
+        await updateDoc(doc(requireFirebaseDb(), "purchaseOrders", editingPo.id), {
           branchName: branchName.trim(),
           prNumber: prNumber.trim(),
           poNumber: formattedPoNumber,
@@ -1801,7 +1800,7 @@ export function PrPoManager({
         });
         setStatus(p.poUpdatedSuccess);
       } else {
-        await addDoc(collection(db, "purchaseOrders"), {
+        await addDoc(collection(requireFirebaseDb(), "purchaseOrders"), {
           branchName: branchName.trim(),
           prNumber: prNumber.trim(),
           poNumber: formattedPoNumber,

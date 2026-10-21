@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { db } from "@/lib/firebase";
+import { requireFirebaseDb } from "@/lib/firebase";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 import { getCareers } from "@/data/site-content";
 import { useLanguage } from "@/lib/i18n";
@@ -44,7 +44,7 @@ export function SeedCareersButton() {
         };
 
         // Use setDoc with merge to update or create
-        await setDoc(doc(db, "careers", career.slug), {
+        await setDoc(doc(requireFirebaseDb(), "careers", career.slug), {
           ...careerData,
           createdAt: Timestamp.now(),
           createdBy: 'system',
@@ -77,4 +77,3 @@ export function SeedCareersButton() {
     </div>
   );
 }
-

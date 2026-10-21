@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { db } from "@/lib/firebase";
+import { requireFirebaseDb } from "@/lib/firebase";
 import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs } from "firebase/firestore";
 import {
   subscribeCategories,
@@ -52,13 +52,13 @@ export function CategoryManager() {
     if (!confirm("Import the default categories into the database so they become editable?")) return;
     setImporting(true);
     try {
-      const existing = await getDocs(collection(db, "categories"));
+      const existing = await getDocs(collection(requireFirebaseDb(), "categories"));
       if (!existing.empty) {
         alert("Categories already exist in the database.");
         return;
       }
       for (const c of FALLBACK_CATEGORIES) {
-        await addDoc(collection(db, "categories"), {
+        await addDoc(collection(requireFirebaseDb(), "categories"), {
           id: c.id,
           label: c.label,
           labelKh: c.labelKh || "",
@@ -104,9 +104,9 @@ export function CategoryManager() {
         hidden: !!editing.hidden,
       };
       if (editing.docId) {
-        await updateDoc(doc(db, "categories", editing.docId), payload);
+        await updateDoc(doc(requireFirebaseDb(), "categories", editing.docId), payload);
       } else {
-        await addDoc(collection(db, "categories"), payload);
+        await addDoc(collection(requireFirebaseDb(), "categories"), payload);
       }
       setEditing(null);
     } catch (err) {
@@ -125,10 +125,10 @@ export function CategoryManager() {
       : `Delete category "${c.label}"?`;
     if (!confirm(msg)) return;
     try {
-      await deleteDoc(doc(db, "categories", c.docId));
+      await deleteDoc(doc(requireFirebaseDb(), "categories", c.docId));
       // Detach children so they don't become orphaned under a missing parent.
       for (const child of categories.filter((x) => x.parentId === c.id && x.docId)) {
-        await updateDoc(doc(db, "categories", child.docId!), { parentId: null });
+        await updateDoc(doc(requireFirebaseDb(), "categories", child.docId!), { parentId: null });
       }
     } catch (err) {
       console.error("Failed to delete category:", err);

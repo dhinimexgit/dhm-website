@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { db } from "@/lib/firebase";
+import { requireFirebaseDb, requireFirebaseStorage } from "@/lib/firebase";
 import { collection, addDoc, Timestamp, updateDoc, doc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "@/lib/firebase";
 import { compressImage } from "@/lib/image-compress";
 import {
   subscribeBrands,
@@ -134,7 +133,7 @@ export function ProductUploadForm({ initialData, onSuccess, onCancel }: Props) {
       if (newImages) {
         for (let i = 0; i < newImages.length; i++) {
           const optimized = await compressImage(newImages[i]);
-          const storageRef = ref(storage, `products/${brand}/${Date.now()}-${optimized.name}`);
+          const storageRef = ref(requireFirebaseStorage(), `products/${brand}/${Date.now()}-${optimized.name}`);
           const snapshot = await uploadBytes(storageRef, optimized);
           const url = await getDownloadURL(snapshot.ref);
           uploadedImageUrls.push(url);
@@ -184,10 +183,10 @@ export function ProductUploadForm({ initialData, onSuccess, onCancel }: Props) {
       };
 
       if (initialData?.id) {
-        await updateDoc(doc(db, "products", initialData.id), productData);
+        await updateDoc(doc(requireFirebaseDb(), "products", initialData.id), productData);
         alert("Product updated successfully!");
       } else {
-        await addDoc(collection(db, "products"), { ...productData, createdAt: Timestamp.now() });
+        await addDoc(collection(requireFirebaseDb(), "products"), { ...productData, createdAt: Timestamp.now() });
         alert("Product created successfully!");
       }
 

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { requireFirebaseDb } from '@/lib/firebase';
 import { isLikelySpam } from '@/lib/spam-filter';
 import { sendConfirmationEmail } from '@/lib/send-confirmation';
 
@@ -62,7 +62,7 @@ export function ContactModal({
     }
 
     try {
-      await addDoc(collection(db, 'inquiries'), {
+      await addDoc(collection(requireFirebaseDb(), 'inquiries'), {
         name,
         phone,
         ...(email ? { email } : {}),
@@ -247,4 +247,3 @@ export function ContactModal({
     </div>
   );
 }
-

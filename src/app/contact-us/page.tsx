@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { getContactInfo } from "@/data/site-content";
-import { db } from "@/lib/firebase";
+import { requireFirebaseDb } from "@/lib/firebase";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { isLikelySpam } from "@/lib/spam-filter";
 import { sendConfirmationEmail } from "@/lib/send-confirmation";
@@ -132,7 +132,7 @@ export default function ContactPage() {
     }
 
     try {
-      await addDoc(collection(db, "inquiries"), {
+      await addDoc(collection(requireFirebaseDb(), "inquiries"), {
         ...formData,
         createdAt: Timestamp.now(),
         status: "new",

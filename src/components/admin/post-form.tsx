@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { db, storage } from "@/lib/firebase";
+import { requireFirebaseDb, requireFirebaseStorage } from "@/lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import type { Post } from "@/data/site-content";
@@ -79,7 +79,7 @@ export function PostForm({ initialData, onSuccess, onCancel }: Props) {
 
   const uploadFile = async (file: File, path: string) => {
     const optimized = await compressImage(file);
-    const storageRef = ref(storage, path);
+    const storageRef = ref(requireFirebaseStorage(), path);
     const snapshot = await uploadBytes(storageRef, optimized);
     return getDownloadURL(snapshot.ref);
   };
@@ -148,7 +148,7 @@ export function PostForm({ initialData, onSuccess, onCancel }: Props) {
       if (khContent.length > 0) postData.contentKh = khContent;
       if (finalImages.length > 0) postData.images = finalImages;
 
-      await setDoc(doc(db, "posts", docId), postData);
+      await setDoc(doc(requireFirebaseDb(), "posts", docId), postData);
       onSuccess();
     } catch (error) {
       console.error("Error saving post:", error);

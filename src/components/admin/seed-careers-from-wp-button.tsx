@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { db } from "@/lib/firebase";
+import { requireFirebaseDb } from "@/lib/firebase";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 
 // Helper to strip HTML (browser-safe)
@@ -216,7 +216,7 @@ export function SeedCareersFromWPButton() {
           };
 
           // Use setDoc with merge to update or create
-          await setDoc(doc(db, "careers", careerInfo.slug), {
+          await setDoc(doc(requireFirebaseDb(), "careers", careerInfo.slug), {
             ...careerData,
             createdAt: Timestamp.now(),
             createdBy: "wordpress-import",
@@ -253,4 +253,3 @@ export function SeedCareersFromWPButton() {
     </div>
   );
 }
-

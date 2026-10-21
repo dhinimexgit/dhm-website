@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { db } from "@/lib/firebase";
+import { requireFirebaseDb } from "@/lib/firebase";
 import { collection, onSnapshot, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import type { Post } from "@/data/site-content";
@@ -19,7 +19,7 @@ export function PostList({ onEdit }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "posts"), (snapshot) => {
+    const unsubscribe = onSnapshot(collection(requireFirebaseDb(), "posts"), (snapshot) => {
       const items: (Post & { id: string })[] = [];
       snapshot.forEach((doc) => {
         items.push({ id: doc.id, ...doc.data() } as Post & { id: string });
@@ -36,7 +36,7 @@ export function PostList({ onEdit }: Props) {
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this post? This cannot be undone.")) return;
     try {
-      await deleteDoc(doc(db, "posts", id));
+      await deleteDoc(doc(requireFirebaseDb(), "posts", id));
     } catch (err) {
       console.error("Error deleting post:", err);
       alert("Failed to delete post");
@@ -224,4 +224,3 @@ export function PostList({ onEdit }: Props) {
     </div>
   );
 }
-

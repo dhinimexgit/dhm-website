@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { collection, getDocs, query, where, doc, setDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { requireFirebaseDb } from "@/lib/firebase";
 
 // Receives updates from Telegram and completes account linking.
 //
@@ -85,7 +85,7 @@ export async function POST(request: Request) {
 
   try {
     const snap = await getDocs(
-      query(collection(db, ADMIN_USERS_COLLECTION), where("telegramLinkCode", "==", code))
+      query(collection(requireFirebaseDb(), ADMIN_USERS_COLLECTION), where("telegramLinkCode", "==", code))
     );
 
     if (snap.empty) {
@@ -109,7 +109,7 @@ export async function POST(request: Request) {
       typeof update.message?.from?.first_name === "string" ? update.message.from.first_name : "";
 
     await setDoc(
-      doc(db, ADMIN_USERS_COLLECTION, userDoc.id),
+      doc(requireFirebaseDb(), ADMIN_USERS_COLLECTION, userDoc.id),
       {
         telegramChatId: chatId,
         telegramUsername: username,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { db } from "@/lib/firebase";
+import { requireFirebaseDb } from "@/lib/firebase";
 import { collection, addDoc, query, where, getDocs, updateDoc, Timestamp } from "firebase/firestore";
 import { getProductCategories } from "@/data/site-content";
 
@@ -19,7 +19,7 @@ export function SeedButton() {
 
     try {
       let count = 0;
-      const productsRef = collection(db, "products");
+      const productsRef = collection(requireFirebaseDb(), "products");
 
       for (const brandCategory of getProductCategories('en')) {
         const brandSlug = brandCategory.slug;
@@ -89,4 +89,3 @@ export function SeedButton() {
     </div>
   );
 }
-

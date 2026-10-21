@@ -11,7 +11,7 @@ import {
   isAdminSessionExpired,
   parseLastActivityMs,
 } from '@/lib/admin-session';
-import { db } from '@/lib/firebase';
+import { db, requireFirebaseDb } from '@/lib/firebase';
 import { collection, deleteField, doc, getDocs, setDoc, serverTimestamp } from 'firebase/firestore';
 import { ALL_PO_BRANCHES, canonicalPoBranchName } from '@/lib/branch-po-view-scope';
 
@@ -273,6 +273,8 @@ async function getAdminUsers(): Promise<AdminUser[]> {
   ];
 
   const users = dedupeUsersByUsername([...defaultUsers, ...envUsers].map(normalizeUser));
+
+  if (!db) return users;
 
   try {
     const managedUsersSnapshot = await getDocs(collection(db, ADMIN_USERS_COLLECTION));
@@ -609,7 +611,7 @@ export async function createManagedUser(formData: FormData): Promise<{ success: 
       createdAt: serverTimestamp(),
     });
 
-    await setDoc(doc(db, ADMIN_USERS_COLLECTION, normalized.username), payload, { merge: true });
+    await setDoc(doc(requireFirebaseDb(), ADMIN_USERS_COLLECTION, normalized.username), payload, { merge: true });
 
     return { success: true };
   } catch (error: unknown) {
@@ -635,7 +637,7 @@ export async function resetManagedUserPassword(formData: FormData): Promise<{ su
       return { success: false, error: 'Super admin password should be managed securely in environment defaults.' };
     }
 
-    await setDoc(doc(db, ADMIN_USERS_COLLECTION, loginId), {
+    await setDoc(doc(requireFirebaseDb(), ADMIN_USERS_COLLECTION, loginId), {
       password: encryptAdminPassword(newPassword),
       updatedAt: serverTimestamp(),
     }, { merge: true });
@@ -672,7 +674,7 @@ export async function updateManagedUserAccess(formData: FormData): Promise<{ suc
     });
 
     await setDoc(
-      doc(db, ADMIN_USERS_COLLECTION, loginId),
+      doc(requireFirebaseDb(), ADMIN_USERS_COLLECTION, loginId),
       {
         username: normalized.username,
         role: normalized.role,
@@ -751,7 +753,7 @@ export async function updateManagedUserDetails(
       patch.email = deleteField();
     }
 
-    await setDoc(doc(db, ADMIN_USERS_COLLECTION, loginId), stripUndefinedForFirestore(patch), { merge: true });
+    await setDoc(doc(requireFirebaseDb(), ADMIN_USERS_COLLECTION, loginId), stripUndefinedForFirestore(patch), { merge: true });
 
     return { success: true };
   } catch (error: unknown) {
@@ -777,7 +779,7 @@ export async function setManagedUserRevoked(
     }
 
     await setDoc(
-      doc(db, ADMIN_USERS_COLLECTION, loginId),
+      doc(requireFirebaseDb(), ADMIN_USERS_COLLECTION, loginId),
       { revoked, updatedAt: serverTimestamp() },
       { merge: true }
     );

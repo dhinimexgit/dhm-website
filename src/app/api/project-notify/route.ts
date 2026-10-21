@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { hasValidAdminSession } from "@/lib/admin-session";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { requireFirebaseDb } from "@/lib/firebase";
 import {
   TELEGRAM_NOT_CONFIGURED,
   buildProjectMessage,
@@ -33,7 +33,7 @@ const ADMIN_USERS_COLLECTION = "admin_users";
 async function lookupVerifiedHandle(username: string | undefined): Promise<string> {
   if (!username) return "";
   try {
-    const snap = await getDoc(doc(db, ADMIN_USERS_COLLECTION, username));
+    const snap = await getDoc(doc(requireFirebaseDb(), ADMIN_USERS_COLLECTION, username));
     if (!snap.exists()) return "";
     const data = snap.data() as Record<string, unknown>;
     // Only trust the handle when a chat id proves the link completed.

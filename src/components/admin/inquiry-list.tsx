@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { requireFirebaseDb } from "@/lib/firebase";
 
 // Helper to format phone number with space after +855
 function formatPhoneNumber(phone: string): string {
@@ -21,7 +21,7 @@ export function InquiryList() {
   const [statusFilter, setStatusFilter] = useState<"all" | "new" | "read" | "contacted">("all");
 
   useEffect(() => {
-    const q = query(collection(db, "inquiries"), orderBy("createdAt", "desc"));
+    const q = query(collection(requireFirebaseDb(), "inquiries"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       setInquiries(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
       setLoading(false);
@@ -31,14 +31,14 @@ export function InquiryList() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this inquiry?")) return;
-    await deleteDoc(doc(db, "inquiries", id));
+    await deleteDoc(doc(requireFirebaseDb(), "inquiries", id));
     if (selectedInquiry?.id === id) {
       setSelectedInquiry(null);
     }
   };
 
   const handleStatusUpdate = async (id: string, newStatus: string) => {
-    await updateDoc(doc(db, "inquiries", id), { status: newStatus });
+    await updateDoc(doc(requireFirebaseDb(), "inquiries", id), { status: newStatus });
     if (selectedInquiry?.id === id) {
       setSelectedInquiry({ ...selectedInquiry, status: newStatus });
     }

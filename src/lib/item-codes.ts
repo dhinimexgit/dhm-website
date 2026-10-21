@@ -14,7 +14,7 @@
  *  the document id, so uniqueness is guaranteed by the database).
  *  --------------------------------------------------------------------------- */
 
-import { db } from "@/lib/firebase";
+import { requireFirebaseDb } from "@/lib/firebase";
 import { collection, onSnapshot, query, orderBy, type Unsubscribe } from "firebase/firestore";
 
 // ============================================================================
@@ -358,7 +358,7 @@ export function matchesSearch(it: ItemCodeRecord, term: string): boolean {
 // ============================================================================
 export function subscribeItemCodes(callback: (items: ItemCodeRecord[]) => void): Unsubscribe {
   try {
-    const q = query(collection(db, "itemCodes"), orderBy("code", "asc"));
+    const q = query(collection(requireFirebaseDb(), "itemCodes"), orderBy("code", "asc"));
     return onSnapshot(
       q,
       (snapshot) => {

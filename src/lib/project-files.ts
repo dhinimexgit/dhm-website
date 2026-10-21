@@ -12,7 +12,7 @@
  * be found (and cleaned up) as a unit.
  */
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
-import { storage } from "@/lib/firebase";
+import { requireFirebaseStorage } from "@/lib/firebase";
 import { compressImage } from "@/lib/image-compress";
 import {
   updateProject,
@@ -60,7 +60,7 @@ export async function uploadProjectDocument(
 
   const id = randomId();
   const path = `dhm-projects/${project.id}/documents/${category}/${id}-${safeFileName(file.name)}`;
-  const snapshot = await uploadBytes(ref(storage, path), file, {
+  const snapshot = await uploadBytes(ref(requireFirebaseStorage(), path), file, {
     contentType: file.type || "application/octet-stream",
   });
   const url = await getDownloadURL(snapshot.ref);
@@ -94,7 +94,7 @@ export async function removeProjectDocument(
     actor
   );
   try {
-    await deleteObject(ref(storage, document.path));
+    await deleteObject(ref(requireFirebaseStorage(), document.path));
   } catch (err) {
     console.error("removeProjectDocument: storage delete failed (row already removed)", err);
   }
@@ -112,7 +112,7 @@ export async function addProjectUpdate(
     const optimized = await compressImage(file);
     const id = randomId();
     const path = `dhm-projects/${project.id}/updates/${id}-${safeFileName(optimized.name)}`;
-    const snapshot = await uploadBytes(ref(storage, path), optimized, {
+    const snapshot = await uploadBytes(ref(requireFirebaseStorage(), path), optimized, {
       contentType: optimized.type || "image/webp",
     });
     photos.push({ url: await getDownloadURL(snapshot.ref), path, name: file.name.slice(0, 160) });
@@ -143,7 +143,7 @@ export async function removeProjectUpdate(
   );
   for (const photo of update.photos) {
     try {
-      await deleteObject(ref(storage, photo.path));
+      await deleteObject(ref(requireFirebaseStorage(), photo.path));
     } catch (err) {
       console.error("removeProjectUpdate: storage delete failed", err);
     }

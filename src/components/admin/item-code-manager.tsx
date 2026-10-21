@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { db } from "@/lib/firebase";
+import { requireFirebaseDb } from "@/lib/firebase";
 import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import {
   subscribeItemCodes,
@@ -140,7 +140,7 @@ function ItemRegister({ items }: { items: ItemCodeRecord[] }) {
 
   const setStatus = async (it: ItemCodeRecord, status: ItemStatus) => {
     try {
-      await updateDoc(doc(db, "itemCodes", it.id), { status, updatedAt: serverTimestamp() });
+      await updateDoc(doc(requireFirebaseDb(), "itemCodes", it.id), { status, updatedAt: serverTimestamp() });
     } catch (err) {
       console.error("Failed to update item status:", err);
       alert("Failed to update status.");
@@ -372,7 +372,7 @@ function EditItemForm({ item, onDone }: { item: ItemCodeRecord; onDone: () => vo
     }
     setSaving(true);
     try {
-      await updateDoc(doc(db, "itemCodes", item.id), {
+      await updateDoc(doc(requireFirebaseDb(), "itemCodes", item.id), {
         description: f.description.trim(),
         uom: f.uom,
         companyCode: f.companyCode,
@@ -561,7 +561,7 @@ function NewItemCode({ items, onCreated }: { items: ItemCodeRecord[]; onCreated:
     setJustChecked(true); // record that the duplicate check has run
     setSaving(true);
     try {
-      const ref = doc(db, "itemCodes", code); // code IS the id → unique
+      const ref = doc(requireFirebaseDb(), "itemCodes", code); // code IS the id → unique
       const existing = await getDoc(ref);
       if (existing.exists()) {
         alert(`Item code ${code} already exists.`);

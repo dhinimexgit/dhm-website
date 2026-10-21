@@ -1,6 +1,6 @@
 'use server';
 
-import { db } from '@/lib/firebase';
+import { requireFirebaseDb } from '@/lib/firebase';
 import { revalidatePath } from 'next/cache';
 import { 
   collection, 
@@ -47,7 +47,7 @@ export async function createRoom(roomData: Omit<Room, 'id' | 'createdAt' | 'upda
       return { success: false, error: 'Unauthorized' };
     }
 
-    const docRef = await addDoc(collection(db, 'rooms'), {
+    const docRef = await addDoc(collection(requireFirebaseDb(), 'rooms'), {
       ...roomData,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
@@ -62,7 +62,7 @@ export async function createRoom(roomData: Omit<Room, 'id' | 'createdAt' | 'upda
 
 export async function getRooms(): Promise<Room[]> {
   try {
-    const querySnapshot = await getDocs(collection(db, 'rooms'));
+    const querySnapshot = await getDocs(collection(requireFirebaseDb(), 'rooms'));
     return querySnapshot.docs.map(doc => {
       const data = convertTimestamp(doc.data());
       return {
@@ -78,7 +78,7 @@ export async function getRooms(): Promise<Room[]> {
 
 export async function getRoom(roomId: string): Promise<Room | null> {
   try {
-    const docSnap = await getDoc(doc(db, 'rooms', roomId));
+    const docSnap = await getDoc(doc(requireFirebaseDb(), 'rooms', roomId));
     if (docSnap.exists()) {
       const data = convertTimestamp(docSnap.data());
       return { id: docSnap.id, ...data } as Room;
@@ -97,7 +97,7 @@ export async function updateRoom(roomId: string, updates: Partial<Room>): Promis
       return { success: false, error: 'Unauthorized' };
     }
 
-    await updateDoc(doc(db, 'rooms', roomId), {
+    await updateDoc(doc(requireFirebaseDb(), 'rooms', roomId), {
       ...updates,
       updatedAt: Timestamp.now(),
     });
@@ -116,7 +116,7 @@ export async function deleteRoom(roomId: string): Promise<{ success: boolean; er
       return { success: false, error: 'Unauthorized' };
     }
 
-    await deleteDoc(doc(db, 'rooms', roomId));
+    await deleteDoc(doc(requireFirebaseDb(), 'rooms', roomId));
     return { success: true };
   } catch (error: any) {
     console.error('Error deleting room:', error);
@@ -144,7 +144,7 @@ export async function createRoomBooking(bookingData: Omit<RoomBooking, 'id' | 'c
       return { success: false, error: 'Room is already booked for this time slot' };
     }
 
-    const docRef = await addDoc(collection(db, 'room_bookings'), {
+    const docRef = await addDoc(collection(requireFirebaseDb(), 'room_bookings'), {
       ...bookingData,
       startTime: Timestamp.fromDate(new Date(bookingData.startTime)),
       endTime: Timestamp.fromDate(new Date(bookingData.endTime)),
@@ -173,7 +173,7 @@ export async function createRoomBooking(bookingData: Omit<RoomBooking, 'id' | 'c
 export async function checkRoomAvailability(roomId: string, startTime: Date, endTime: Date, excludeBookingId?: string): Promise<RoomBooking[]> {
   try {
     const q = query(
-      collection(db, 'room_bookings'),
+      collection(requireFirebaseDb(), 'room_bookings'),
       where('roomId', '==', roomId),
       where('status', 'in', ['pending', 'confirmed', 'checked-in'])
     );
@@ -218,7 +218,7 @@ export async function getRoomBookings(filters?: { roomId?: string; userId?: stri
 
     constraints.push(orderBy('startTime', 'desc'));
 
-    const q = query(collection(db, 'room_bookings'), ...constraints);
+    const q = query(collection(requireFirebaseDb(), 'room_bookings'), ...constraints);
     const querySnapshot = await getDocs(q);
     
     let bookings = querySnapshot.docs.map(doc => {
@@ -255,7 +255,7 @@ export async function updateRoomBooking(bookingId: string, updates: Partial<Room
       updateData.checkedInAt = Timestamp.fromDate(new Date(updates.checkedInAt));
     }
 
-    await updateDoc(doc(db, 'room_bookings', bookingId), {
+    await updateDoc(doc(requireFirebaseDb(), 'room_bookings', bookingId), {
       ...updateData,
       updatedAt: Timestamp.now(),
     });
@@ -269,7 +269,7 @@ export async function updateRoomBooking(bookingId: string, updates: Partial<Room
 
 export async function checkInRoomBooking(bookingId: string): Promise<{ success: boolean; error?: string }> {
   try {
-    const booking = await getDoc(doc(db, 'room_bookings', bookingId));
+    const booking = await getDoc(doc(requireFirebaseDb(), 'room_bookings', bookingId));
     if (!booking.exists()) {
       return { success: false, error: 'Booking not found' };
     }
@@ -284,7 +284,7 @@ export async function checkInRoomBooking(bookingId: string): Promise<{ success: 
       return { success: false, error: 'Check-in is only available 10 minutes before to 10 minutes after start time' };
     }
 
-    await updateDoc(doc(db, 'room_bookings', bookingId), {
+    await updateDoc(doc(requireFirebaseDb(), 'room_bookings', bookingId), {
       status: 'checked-in',
       checkedInAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
@@ -306,7 +306,7 @@ export async function createCar(carData: Omit<Car, 'id' | 'createdAt' | 'updated
       return { success: false, error: 'Unauthorized' };
     }
 
-    const docRef = await addDoc(collection(db, 'cars'), {
+    const docRef = await addDoc(collection(requireFirebaseDb(), 'cars'), {
       ...carData,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
@@ -321,7 +321,7 @@ export async function createCar(carData: Omit<Car, 'id' | 'createdAt' | 'updated
 
 export async function getCars(): Promise<Car[]> {
   try {
-    const querySnapshot = await getDocs(collection(db, 'cars'));
+    const querySnapshot = await getDocs(collection(requireFirebaseDb(), 'cars'));
     return querySnapshot.docs.map(doc => {
       const data = convertTimestamp(doc.data());
       return { id: doc.id, ...data } as Car;
@@ -334,7 +334,7 @@ export async function getCars(): Promise<Car[]> {
 
 export async function getCar(carId: string): Promise<Car | null> {
   try {
-    const docSnap = await getDoc(doc(db, 'cars', carId));
+    const docSnap = await getDoc(doc(requireFirebaseDb(), 'cars', carId));
     if (docSnap.exists()) {
       const data = convertTimestamp(docSnap.data());
       return { id: docSnap.id, ...data } as Car;
@@ -353,7 +353,7 @@ export async function updateCar(carId: string, updates: Partial<Car>): Promise<{
       return { success: false, error: 'Unauthorized' };
     }
 
-    await updateDoc(doc(db, 'cars', carId), {
+    await updateDoc(doc(requireFirebaseDb(), 'cars', carId), {
       ...updates,
       updatedAt: Timestamp.now(),
     });
@@ -372,7 +372,7 @@ export async function deleteCar(carId: string): Promise<{ success: boolean; erro
       return { success: false, error: 'Unauthorized' };
     }
 
-    await deleteDoc(doc(db, 'cars', carId));
+    await deleteDoc(doc(requireFirebaseDb(), 'cars', carId));
     return { success: true };
   } catch (error: any) {
     console.error('Error deleting car:', error);
@@ -400,7 +400,7 @@ export async function createCarBooking(bookingData: Omit<CarBooking, 'id' | 'cre
       return { success: false, error: 'Car is already booked for this time slot' };
     }
 
-    const docRef = await addDoc(collection(db, 'car_bookings'), {
+    const docRef = await addDoc(collection(requireFirebaseDb(), 'car_bookings'), {
       ...bookingData,
       startTime: Timestamp.fromDate(new Date(bookingData.startTime)),
       endTime: Timestamp.fromDate(new Date(bookingData.endTime)),
@@ -434,7 +434,7 @@ export async function createCarBooking(bookingData: Omit<CarBooking, 'id' | 'cre
 export async function checkCarAvailability(carId: string, startTime: Date, endTime: Date, excludeBookingId?: string): Promise<CarBooking[]> {
   try {
     const q = query(
-      collection(db, 'car_bookings'),
+      collection(requireFirebaseDb(), 'car_bookings'),
       where('carId', '==', carId),
       where('status', 'in', ['pending', 'approved', 'in-progress'])
     );
@@ -481,7 +481,7 @@ export async function getCarBookings(filters?: { carId?: string; userId?: string
       constraints.push(orderBy('startTime', 'desc'));
     }
 
-    const q = query(collection(db, 'car_bookings'), ...constraints);
+    const q = query(collection(requireFirebaseDb(), 'car_bookings'), ...constraints);
     const querySnapshot = await getDocs(q);
     
     let bookings = querySnapshot.docs.map(doc => {
@@ -515,7 +515,7 @@ export async function updateCarBooking(bookingId: string, updates: Partial<CarBo
       updateData.endTime = Timestamp.fromDate(new Date(updates.endTime));
     }
 
-    await updateDoc(doc(db, 'car_bookings', bookingId), {
+    await updateDoc(doc(requireFirebaseDb(), 'car_bookings', bookingId), {
       ...updateData,
       updatedAt: Timestamp.now(),
     });
@@ -538,7 +538,7 @@ export async function approveCarBooking(bookingId: string, approverEmail: string
       return { success: false, error: 'Unauthorized' };
     }
 
-    const bookingRef = doc(db, 'car_bookings', bookingId);
+    const bookingRef = doc(requireFirebaseDb(), 'car_bookings', bookingId);
     const bookingSnap = await getDoc(bookingRef);
     
     if (!bookingSnap.exists()) {
@@ -583,7 +583,7 @@ export async function rejectCarBooking(bookingId: string, reason: string): Promi
       return { success: false, error: 'Unauthorized' };
     }
 
-    const bookingRef = doc(db, 'car_bookings', bookingId);
+    const bookingRef = doc(requireFirebaseDb(), 'car_bookings', bookingId);
     const bookingSnap = await getDoc(bookingRef);
     
     if (!bookingSnap.exists()) {
@@ -621,7 +621,7 @@ export async function updateCarBookingTripLog(
   tripLog: { startMileage: number; endMileage: number; startFuelLevel: number; endFuelLevel: number }
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    await updateDoc(doc(db, 'car_bookings', bookingId), {
+    await updateDoc(doc(requireFirebaseDb(), 'car_bookings', bookingId), {
       status: 'completed',
       tripLog: {
         ...tripLog,
@@ -641,7 +641,7 @@ export async function updateCarBookingTripLog(
 
 async function createNotification(notificationData: Omit<BookingNotification, 'id' | 'isRead' | 'createdAt'>): Promise<void> {
   try {
-    await addDoc(collection(db, 'booking_notifications'), {
+    await addDoc(collection(requireFirebaseDb(), 'booking_notifications'), {
       ...notificationData,
       isRead: false,
       createdAt: Timestamp.now(),
@@ -654,7 +654,7 @@ async function createNotification(notificationData: Omit<BookingNotification, 'i
 export async function getNotifications(userEmail: string): Promise<BookingNotification[]> {
   try {
     const q = query(
-      collection(db, 'booking_notifications'),
+      collection(requireFirebaseDb(), 'booking_notifications'),
       where('userEmail', '==', userEmail),
       orderBy('createdAt', 'desc')
     );
@@ -672,7 +672,7 @@ export async function getNotifications(userEmail: string): Promise<BookingNotifi
 
 export async function markNotificationAsRead(notificationId: string): Promise<{ success: boolean; error?: string }> {
   try {
-    await updateDoc(doc(db, 'booking_notifications', notificationId), {
+    await updateDoc(doc(requireFirebaseDb(), 'booking_notifications', notificationId), {
       isRead: true,
     });
     return { success: true };
@@ -681,4 +681,3 @@ export async function markNotificationAsRead(notificationId: string): Promise<{ 
     return { success: false, error: error.message };
   }
 }
-

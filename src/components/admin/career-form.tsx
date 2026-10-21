@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { db } from "@/lib/firebase";
+import { requireFirebaseDb } from "@/lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import type { CareerRole } from "@/data/site-content";
 
@@ -81,7 +81,7 @@ export function CareerForm({ initialData, onSuccess, onCancel }: Props) {
         howToApply: formData.howToApply || undefined,
       };
 
-      await setDoc(doc(db, "careers", slug), careerData);
+      await setDoc(doc(requireFirebaseDb(), "careers", slug), careerData);
       onSuccess();
     } catch (error) {
       console.error("Error saving career:", error);
@@ -314,4 +314,3 @@ export function CareerForm({ initialData, onSuccess, onCancel }: Props) {
     </form>
   );
 }
-

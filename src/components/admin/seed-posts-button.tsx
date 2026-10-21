@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { db } from "@/lib/firebase";
+import { requireFirebaseDb } from "@/lib/firebase";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 import { getPosts } from "@/data/site-content";
 import { useLanguage } from "@/lib/i18n";
@@ -39,7 +39,7 @@ export function SeedPostsButton() {
         };
 
         // Use setDoc with merge to update or create
-        await setDoc(doc(db, "posts", post.slug), {
+        await setDoc(doc(requireFirebaseDb(), "posts", post.slug), {
           ...postData,
           createdAt: Timestamp.now(),
           createdBy: 'system',
@@ -72,4 +72,3 @@ export function SeedPostsButton() {
     </div>
   );
 }
-

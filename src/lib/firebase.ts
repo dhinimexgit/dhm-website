@@ -51,4 +51,18 @@ export function getFirebaseDb(): Firestore | null {
   return db ?? null;
 }
 
+export function requireFirebaseDb(): Firestore {
+  if (!db) {
+    throw new Error("Firebase is not configured.");
+  }
+  return db;
+}
+
+export function requireFirebaseStorage(): FirebaseStorage {
+  if (!storage) {
+    throw new Error("Firebase Storage is not configured.");
+  }
+  return storage;
+}
+
 export { app, db, storage };

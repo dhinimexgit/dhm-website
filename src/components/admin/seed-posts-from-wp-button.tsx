@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { db } from "@/lib/firebase";
+import { requireFirebaseDb } from "@/lib/firebase";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 
 // Helper to strip HTML and extract text (browser-safe)
@@ -115,7 +115,7 @@ export function SeedPostsFromWPButton() {
           };
 
           // Use setDoc with merge to update or create
-          await setDoc(doc(db, "posts", slug), {
+          await setDoc(doc(requireFirebaseDb(), "posts", slug), {
             ...postData,
             createdAt: Timestamp.fromDate(new Date(wpPost.date || Date.now())),
             createdBy: "wordpress-import",
@@ -152,4 +152,3 @@ export function SeedPostsFromWPButton() {
     </div>
   );
 }
-

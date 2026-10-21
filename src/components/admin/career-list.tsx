@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { db } from "@/lib/firebase";
+import { requireFirebaseDb } from "@/lib/firebase";
 import { collection, onSnapshot, deleteDoc, doc } from "firebase/firestore";
 import type { CareerRole } from "@/data/site-content";
 
@@ -18,7 +18,7 @@ export function CareerList({ onEdit }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "careers"), (snapshot) => {
+    const unsubscribe = onSnapshot(collection(requireFirebaseDb(), "careers"), (snapshot) => {
       const items: (CareerRole & { id: string })[] = [];
       snapshot.forEach((doc) => {
         items.push({ id: doc.id, ...doc.data() } as CareerRole & { id: string });
@@ -33,7 +33,7 @@ export function CareerList({ onEdit }: Props) {
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this career? This cannot be undone.")) return;
     try {
-      await deleteDoc(doc(db, "careers", id));
+      await deleteDoc(doc(requireFirebaseDb(), "careers", id));
     } catch (err) {
       console.error("Error deleting career:", err);
       alert("Failed to delete career");
@@ -205,4 +205,3 @@ export function CareerList({ onEdit }: Props) {
     </div>
   );
 }
-

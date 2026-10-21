@@ -14,7 +14,7 @@
  */
 
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { requireFirebaseDb } from '@/lib/firebase';
 import { getCurrentUser } from '@/app/actions/auth';
 
 const ADMIN_USERS_COLLECTION = 'admin_users';
@@ -71,7 +71,7 @@ export async function getTelegramLinkState(): Promise<TelegramLinkState> {
   if (!user) return { connected: false, botUsername, botConfigured };
 
   try {
-    const snap = await getDoc(doc(db, ADMIN_USERS_COLLECTION, user.username));
+    const snap = await getDoc(doc(requireFirebaseDb(), ADMIN_USERS_COLLECTION, user.username));
     return {
       ...readState(snap.exists() ? (snap.data() as Record<string, unknown>) : undefined),
       botUsername,
@@ -100,7 +100,7 @@ export async function startTelegramLink(): Promise<
 
   try {
     await setDoc(
-      doc(db, ADMIN_USERS_COLLECTION, user.username),
+      doc(requireFirebaseDb(), ADMIN_USERS_COLLECTION, user.username),
       { telegramLinkCode: code, telegramLinkCodeExpiresAt: expiresAt },
       { merge: true }
     );
@@ -117,7 +117,7 @@ export async function disconnectTelegram(): Promise<{ success: boolean; error?: 
 
   try {
     await setDoc(
-      doc(db, ADMIN_USERS_COLLECTION, user.username),
+      doc(requireFirebaseDb(), ADMIN_USERS_COLLECTION, user.username),
       {
         telegramChatId: null,
         telegramUsername: null,

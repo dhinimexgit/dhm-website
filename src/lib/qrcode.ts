@@ -1,6 +1,6 @@
 import QRCode from 'qrcode';
 import CryptoJS from 'crypto-js';
-import { db, storage } from './firebase';
+import { requireFirebaseDb, requireFirebaseStorage } from './firebase';
 import { 
   collection, 
   addDoc, 
@@ -118,7 +118,7 @@ export async function generateQRCodeDataURL(
  * Get the next version number
  */
 export async function getNextVersion(): Promise<number> {
-  const historyRef = collection(db, 'qr_codes');
+  const historyRef = collection(requireFirebaseDb(), 'qr_codes');
   const q = query(historyRef, orderBy('version', 'desc'));
   const snapshot = await getDocs(q);
   
@@ -147,20 +147,20 @@ export async function saveQRCode(
   
   // Create unique filename with security hash
   const filename = `qr-codes/dhm-msrp-v${version}-${securityHash.substring(0, 8)}.png`;
-  const storageRef = ref(storage, filename);
+  const storageRef = ref(requireFirebaseStorage(), filename);
   
   // Upload to Firebase Storage
   await uploadBytes(storageRef, blob);
   const storageUrl = await getDownloadURL(storageRef);
   
   // Deactivate previous active QR codes
-  const historyRef = collection(db, 'qr_codes');
+  const historyRef = collection(requireFirebaseDb(), 'qr_codes');
   const activeQuery = query(historyRef);
   const activeSnapshot = await getDocs(activeQuery);
   
   for (const docSnapshot of activeSnapshot.docs) {
     if (docSnapshot.data().isActive) {
-      await updateDoc(doc(db, 'qr_codes', docSnapshot.id), { isActive: false });
+      await updateDoc(doc(requireFirebaseDb(), 'qr_codes', docSnapshot.id), { isActive: false });
     }
   }
   
@@ -195,7 +195,7 @@ export async function saveQRCode(
  * Get QR code history
  */
 export async function getQRCodeHistory(): Promise<QRCodeHistory[]> {
-  const historyRef = collection(db, 'qr_codes');
+  const historyRef = collection(requireFirebaseDb(), 'qr_codes');
   const q = query(historyRef, orderBy('generatedAt', 'desc'));
   const snapshot = await getDocs(q);
   
@@ -219,7 +219,7 @@ export async function getQRCodeHistory(): Promise<QRCodeHistory[]> {
  * Get the currently active QR code
  */
 export async function getActiveQRCode(): Promise<QRCodeHistory | null> {
-  const historyRef = collection(db, 'qr_codes');
+  const historyRef = collection(requireFirebaseDb(), 'qr_codes');
   const q = query(historyRef, orderBy('generatedAt', 'desc'));
   const snapshot = await getDocs(q);
   
@@ -299,17 +299,17 @@ export async function resetAndGenerateQRCode(generatedBy: string): Promise<{
   history: QRCodeHistory;
 }> {
   // 1. Delete all documents from Firestore
-  const historyRef = collection(db, 'qr_codes');
+  const historyRef = collection(requireFirebaseDb(), 'qr_codes');
   const snapshot = await getDocs(historyRef);
   
   const deletePromises = snapshot.docs.map(docSnapshot => 
-    deleteDoc(doc(db, 'qr_codes', docSnapshot.id))
+    deleteDoc(doc(requireFirebaseDb(), 'qr_codes', docSnapshot.id))
   );
   await Promise.all(deletePromises);
   
   // 2. Delete all files from Storage qr-codes folder
   try {
-    const storageRef = ref(storage, 'qr-codes');
+    const storageRef = ref(requireFirebaseStorage(), 'qr-codes');
     const fileList = await listAll(storageRef);
     
     const deleteFilePromises = fileList.items.map(fileRef => 
@@ -346,4 +346,3 @@ export async function resetAndGenerateQRCode(generatedBy: string): Promise<{
     history
   };
 }
-

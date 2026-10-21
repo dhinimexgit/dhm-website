@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { db, storage } from "@/lib/firebase";
+import { requireFirebaseDb, requireFirebaseStorage } from "@/lib/firebase";
 import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { subscribeBrands, FALLBACK_BRANDS, type Brand } from "@/lib/taxonomy";
@@ -50,14 +50,14 @@ export function BrandManager() {
     if (!confirm("Import the default brands into the database so they become editable?")) return;
     setImporting(true);
     try {
-      const existing = await getDocs(collection(db, "brands"));
+      const existing = await getDocs(collection(requireFirebaseDb(), "brands"));
       if (!existing.empty) {
         alert("Brands already exist in the database.");
         return;
       }
       for (const b of FALLBACK_BRANDS) {
         const { id: _omit, ...data } = b;
-        await addDoc(collection(db, "brands"), { ...data, hidden: false });
+        await addDoc(collection(requireFirebaseDb(), "brands"), { ...data, hidden: false });
       }
       alert("Default brands imported.");
     } catch (err) {
@@ -82,7 +82,7 @@ export function BrandManager() {
       let heroImageUrl = editing.heroImage?.trim() || "";
       if (newHeroImage) {
         const optimized = await compressImage(newHeroImage);
-        const storageRef = ref(storage, `brands/${slug}/hero-${Date.now()}-${optimized.name}`);
+        const storageRef = ref(requireFirebaseStorage(), `brands/${slug}/hero-${Date.now()}-${optimized.name}`);
         const snapshot = await uploadBytes(storageRef, optimized);
         heroImageUrl = await getDownloadURL(snapshot.ref);
       }
@@ -100,9 +100,9 @@ export function BrandManager() {
         hidden: !!editing.hidden,
       };
       if (editing.id) {
-        await updateDoc(doc(db, "brands", editing.id), payload);
+        await updateDoc(doc(requireFirebaseDb(), "brands", editing.id), payload);
       } else {
-        await addDoc(collection(db, "brands"), payload);
+        await addDoc(collection(requireFirebaseDb(), "brands"), payload);
       }
       setEditing(null);
     } catch (err) {
@@ -117,7 +117,7 @@ export function BrandManager() {
     if (!b.id) return;
     if (!confirm(`Delete brand "${b.name}"? Products already tagged with this brand are not removed.`)) return;
     try {
-      await deleteDoc(doc(db, "brands", b.id));
+      await deleteDoc(doc(requireFirebaseDb(), "brands", b.id));
     } catch (err) {
       console.error("Failed to delete brand:", err);
       alert("Failed to delete brand.");

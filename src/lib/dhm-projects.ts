@@ -24,7 +24,7 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import type { Unsubscribe } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { requireFirebaseDb } from "@/lib/firebase";
 
 export const DHM_PROJECTS_COLLECTION = "dhmProjects";
 export const PROJECT_TYPES_COLLECTION = "projectTypes";
@@ -425,7 +425,7 @@ function rowToProject(id: string, data: Record<string, unknown>): DhmProject {
 
 export function subscribeProjects(callback: (projects: DhmProject[]) => void): Unsubscribe {
   try {
-    const q = query(collection(db, DHM_PROJECTS_COLLECTION), orderBy("createdAt", "desc"));
+    const q = query(collection(requireFirebaseDb(), DHM_PROJECTS_COLLECTION), orderBy("createdAt", "desc"));
     return onSnapshot(
       q,
       (snapshot) => callback(snapshot.docs.map((d) => rowToProject(d.id, d.data()))),
@@ -453,7 +453,7 @@ export function subscribeProject(
 ): Unsubscribe {
   try {
     return onSnapshot(
-      doc(db, DHM_PROJECTS_COLLECTION, id),
+      doc(requireFirebaseDb(), DHM_PROJECTS_COLLECTION, id),
       (snap) => callback(snap.exists() ? rowToProject(snap.id, snap.data()) : null),
       (err) => {
         console.error("subscribeProject error:", err);
@@ -473,7 +473,7 @@ export async function createProject(
   ticketNo: string
 ): Promise<string> {
   const now = Timestamp.now();
-  const ref = await addDoc(collection(db, DHM_PROJECTS_COLLECTION), {
+  const ref = await addDoc(collection(requireFirebaseDb(), DHM_PROJECTS_COLLECTION), {
     ticketNo,
     ...input,
     // Assigned by technical on acknowledgement, not by sales.
@@ -505,7 +505,7 @@ export async function updateProject(
   for (const [k, v] of Object.entries(patch)) {
     if (v !== undefined) clean[k] = v;
   }
-  await updateDoc(doc(db, DHM_PROJECTS_COLLECTION, id), {
+  await updateDoc(doc(requireFirebaseDb(), DHM_PROJECTS_COLLECTION, id), {
     ...clean,
     updatedAt: Timestamp.now(),
     updatedBy: actor.username,
@@ -585,7 +585,7 @@ export function subscribeProjectTypes(
   callback: (types: ProjectTypeRecord[]) => void
 ): Unsubscribe {
   try {
-    const q = query(collection(db, PROJECT_TYPES_COLLECTION), orderBy("order", "asc"));
+    const q = query(collection(requireFirebaseDb(), PROJECT_TYPES_COLLECTION), orderBy("order", "asc"));
     return onSnapshot(
       q,
       (snapshot) => {
@@ -618,7 +618,7 @@ export function subscribeProjectTypes(
 }
 
 export async function createProjectType(name: string, order: number): Promise<void> {
-  await addDoc(collection(db, PROJECT_TYPES_COLLECTION), {
+  await addDoc(collection(requireFirebaseDb(), PROJECT_TYPES_COLLECTION), {
     name: name.trim(),
     order,
     hidden: false,
@@ -634,11 +634,11 @@ export async function updateProjectType(
   for (const [k, v] of Object.entries(patch)) {
     if (v !== undefined) clean[k] = typeof v === "string" ? v.trim() : v;
   }
-  await updateDoc(doc(db, PROJECT_TYPES_COLLECTION, id), { ...clean, updatedAt: Timestamp.now() });
+  await updateDoc(doc(requireFirebaseDb(), PROJECT_TYPES_COLLECTION, id), { ...clean, updatedAt: Timestamp.now() });
 }
 
 export async function deleteProjectType(id: string): Promise<void> {
-  await deleteDoc(doc(db, PROJECT_TYPES_COLLECTION, id));
+  await deleteDoc(doc(requireFirebaseDb(), PROJECT_TYPES_COLLECTION, id));
 }
 
 /** Swap the `order` of two rows so ↑/↓ reordering survives a reload. */
@@ -647,9 +647,10 @@ export async function swapProjectTypeOrder(
   b: ProjectTypeRecord
 ): Promise<void> {
   if (!a.id || !b.id) return;
-  const batch = writeBatch(db);
-  batch.update(doc(db, PROJECT_TYPES_COLLECTION, a.id), { order: b.order });
-  batch.update(doc(db, PROJECT_TYPES_COLLECTION, b.id), { order: a.order });
+  const firestore = requireFirebaseDb();
+  const batch = writeBatch(firestore);
+  batch.update(doc(firestore, PROJECT_TYPES_COLLECTION, a.id), { order: b.order });
+  batch.update(doc(firestore, PROJECT_TYPES_COLLECTION, b.id), { order: a.order });
   await batch.commit();
 }
 
@@ -661,7 +662,7 @@ export async function swapProjectTypeOrder(
  * top up a list that has already been edited by hand.
  */
 export async function seedProjectTypesFromSheet(): Promise<{ added: number; skipped: number }> {
-  const snapshot = await getDocs(collection(db, PROJECT_TYPES_COLLECTION));
+  const snapshot = await getDocs(collection(requireFirebaseDb(), PROJECT_TYPES_COLLECTION));
   const existing = new Set(
     snapshot.docs.map((d) => projectTypeKey(String((d.data() as { name?: unknown }).name ?? "")))
   );
@@ -676,9 +677,10 @@ export async function seedProjectTypesFromSheet(): Promise<{ added: number; skip
     return { added: 0, skipped: PROJECT_TYPES.length };
   }
 
-  const batch = writeBatch(db);
+  const firestore = requireFirebaseDb();
+  const batch = writeBatch(firestore);
   missing.forEach((name, i) => {
-    batch.set(doc(collection(db, PROJECT_TYPES_COLLECTION)), {
+    batch.set(doc(collection(firestore, PROJECT_TYPES_COLLECTION)), {
       name,
       order: maxOrder + 1 + i,
       hidden: false,
