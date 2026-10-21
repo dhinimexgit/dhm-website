@@ -1,6 +1,6 @@
 "use client";
 
-import { db } from "@/lib/firebase";
+import { getFirebaseDb } from "@/lib/firebase";
 import {
   collection,
   onSnapshot,
@@ -88,8 +88,14 @@ export function localized(language: Language, en?: string | null, kh?: string | 
 // ---------------------------------------------------------------------------
 
 export function subscribeBrands(callback: (brands: Brand[]) => void): Unsubscribe {
+  const firestore = getFirebaseDb();
+  if (!firestore) {
+    callback(FALLBACK_BRANDS);
+    return () => {};
+  }
+
   try {
-    const q = query(collection(db, "brands"), orderBy("order", "asc"));
+    const q = query(collection(firestore, "brands"), orderBy("order", "asc"));
     return onSnapshot(
       q,
       (snapshot) => {
@@ -113,8 +119,14 @@ export function subscribeBrands(callback: (brands: Brand[]) => void): Unsubscrib
 }
 
 export function subscribeCategories(callback: (categories: Category[]) => void): Unsubscribe {
+  const firestore = getFirebaseDb();
+  if (!firestore) {
+    callback(FALLBACK_CATEGORIES);
+    return () => {};
+  }
+
   try {
-    const q = query(collection(db, "categories"), orderBy("order", "asc"));
+    const q = query(collection(firestore, "categories"), orderBy("order", "asc"));
     return onSnapshot(
       q,
       (snapshot) => {

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { db } from "@/lib/firebase";
+import { getFirebaseDb } from "@/lib/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import type { Product } from "@/data/site-content";
 import { StickyHeader } from "@/components/home/sticky-header";
@@ -130,8 +130,14 @@ export function ProductsPageClient({ initialBrand, initialProducts }: Props) {
   useEffect(() => {
     if (initialProducts?.length) return;
 
+    const firestore = getFirebaseDb();
+    if (!firestore) {
+      setLoading(false);
+      return;
+    }
+
     let cancelled = false;
-    getDocs(collection(db, "products"))
+    getDocs(collection(firestore, "products"))
       .then((snapshot) => {
         if (cancelled) return;
         setProducts(snapshot.docs.map((doc) => docToProduct(doc)));

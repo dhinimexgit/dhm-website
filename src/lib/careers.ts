@@ -1,6 +1,6 @@
-import { db } from "./firebase";
+import { getFirebaseDb } from "./firebase";
 import { collection, getDocs, doc, getDoc, query, orderBy, where, limit } from "firebase/firestore";
-import type { CareerRole } from "@/data/site-content";
+import { getCareers as getStaticCareers, type CareerRole } from "@/data/site-content";
 
 const docToCareer = (doc: any, lang: 'en' | 'kh' = 'en'): CareerRole => {
   const data = doc.data();
@@ -21,26 +21,34 @@ const docToCareer = (doc: any, lang: 'en' | 'kh' = 'en'): CareerRole => {
 };
 
 export async function getAllCareers(lang: 'en' | 'kh' = 'en'): Promise<CareerRole[]> {
+  const db = getFirebaseDb();
+  if (!db) {
+    return getStaticCareers(lang);
+  }
+
   try {
     const careersRef = collection(db, "careers");
     const q = query(careersRef, orderBy("deadline", "asc"));
     const snapshot = await getDocs(q);
     
     if (snapshot.empty) {
-      return [];
+      return getStaticCareers(lang);
     }
 
     return snapshot.docs.map(doc => docToCareer(doc, lang));
-  } catch (error) {
-    console.error("Error fetching careers:", error);
-    return [];
+  } catch {
+    return getStaticCareers(lang);
   }
 }
 
 export async function getCareer(slug: string, lang: 'en' | 'kh' = 'en'): Promise<CareerRole | null> {
+  const decodedSlug = decodeURIComponent(slug).trim();
+  const db = getFirebaseDb();
+  if (!db) {
+    return getStaticCareers(lang).find((role) => role.slug === decodedSlug) ?? null;
+  }
+
   try {
-    // Decode URL-encoded slug and normalize
-    const decodedSlug = decodeURIComponent(slug).trim();
     
     // First try: Get by document ID
     const careerRef = doc(db, "careers", decodedSlug);
@@ -69,11 +77,9 @@ export async function getCareer(slug: string, lang: 'en' | 'kh' = 'en'): Promise
       }
     }
     
-    console.warn(`Career not found with slug: ${decodedSlug}`);
-    return null;
-  } catch (error) {
-    console.error("Error fetching career:", error, "slug:", slug);
-    return null;
+    return getStaticCareers(lang).find((role) => role.slug === decodedSlug) ?? null;
+  } catch {
+    return getStaticCareers(lang).find((role) => role.slug === decodedSlug) ?? null;
   }
 }
 

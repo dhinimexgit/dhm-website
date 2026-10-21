@@ -2,12 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { collection, query, onSnapshot } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { getFirebaseDb } from "@/lib/firebase";
 
 export function InquiryBadge() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
+    const db = getFirebaseDb();
+    if (!db) return;
+
     const q = query(collection(db, "inquiries"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const newCount = snapshot.docs.filter((doc) => {

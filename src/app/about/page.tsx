@@ -716,31 +716,31 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="mx-auto grid max-w-6xl grid-cols-1 place-items-center gap-8 sm:grid-cols-2 lg:grid-cols-6">
+            <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {[
                 { name: language === 'kh' ? "ហុង ធារី" : "Hong Thary", title: language === 'kh' ? "ប្រធានផ្នែកគណនេយ្យ" : "Accounting Manager", photo: "/acct-dhm.jpg" },
                 { name: language === 'kh' ? "ណែម ភិរុណ" : "Nem Phyrun", title: language === 'kh' ? "ប្រធានផ្នែករដ្ឋបាល និងធនធានមនុស្ស" : "Admin & HR Manager", photo: "/hr.jpg" },
-                { name: language === 'kh' ? "ភួង ម៉ាលែន" : "Phuong Malen", title: language === 'kh' ? "ប្រធានផ្នែកគណនេយ្យ (សាខា)" : "Accounting Manager (Branch)", photo: "/acct-br.jpg" },
                 { name: language === 'kh' ? "ចាន់ រស្មី" : "Chan Reaksmey", title: language === 'kh' ? "ប្រធានផ្នែកទិញ និងភស្តុភារ" : "Purchasing & Logistics Manager", photo: "/lm.jpg" },
                 { name: language === 'kh' ? "ខូវ ទី វិកទ័រ" : "Victor Khov", title: language === 'kh' ? "ប្រធានផ្នែកបច្ចេកវិទ្យា" : "Technology Manager", photo: "/tm.jpg" },
               ].map((manager, index) => (
                 <div
                   key={manager.name}
-                  className={`group flex w-full max-w-[260px] flex-col items-center text-center lg:col-span-2 ${
-                    index === 3 ? "lg:col-start-2" : index === 4 ? "lg:col-start-4" : ""
-                  }`}
+                  className="group flex w-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white text-center shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
                 >
-                  <div className="relative mb-5 aspect-[3/4] w-full overflow-hidden rounded-[26px] bg-slate-200 shadow-[0_18px_35px_rgba(15,23,42,0.08)] ring-1 ring-black/5 transition duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_22px_45px_rgba(15,23,42,0.12)]">
+                  <div className="relative aspect-[4/5] w-full overflow-hidden bg-slate-200">
                     <Image
                       src={manager.photo}
                       alt={manager.name}
                       fill
-                      sizes="(min-width: 1024px) 260px, (min-width: 640px) 240px, 100vw"
-                      className="object-cover object-top"
+                      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
                     />
                   </div>
-                  <h3 className="text-[1.05rem] font-bold text-brand-navy sm:text-[1.2rem]">{manager.name}</h3>
-                  <p className="mt-2 max-w-[220px] text-sm font-semibold leading-snug text-brand-red">{manager.title}</p>
+                  <div className="flex flex-1 flex-col items-center px-4 py-5">
+                    <span className="mb-3 h-1 w-10 rounded-full bg-brand-red" />
+                    <h3 className="flex min-h-12 items-center text-[1.05rem] font-bold text-brand-navy sm:text-[1.2rem]">{manager.name}</h3>
+                    <p className="mt-2 flex min-h-10 items-center justify-center text-sm font-semibold leading-snug text-slate-600">{manager.title}</p>
+                  </div>
                 </div>
               ))}
             </div>

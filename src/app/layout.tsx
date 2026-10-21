@@ -1,25 +1,32 @@
 import type { Metadata, Viewport } from "next";
-import { Source_Sans_3, Suwannaphum } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { ConditionalHeader } from "@/components/layout/conditional-header";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { LanguageProvider } from "@/lib/i18n";
 
-// Only the weights the UI actually uses. A grep across src/ finds exactly four
-// font-weight utilities in play — normal (400), medium (500), semibold (600)
-// and bold (700) — so the 200/300 cuts here were pure download.
-const sourceSans = Source_Sans_3({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+// Self-hosted because Next 16.1 Turbopack cannot parse Google Fonts' occasional
+// `/l/font?kit=…&skey=…` URLs (next/font/google queries have exactly one entry).
+const sourceSans = localFont({
+  src: "./fonts/source-sans-3-latin-wght-normal.woff2",
+  weight: "400 700",
   display: "swap",
   variable: "--font-dhinimex-sans",
 });
 
-// Khmer glyph coverage makes this font heavy, and it is only rendered when the
-// visitor switches to kh (the default is en). Keep two weights and let the
-// browser pull it on demand instead of preloading it for every English visit.
-const suwannaphum = Suwannaphum({
-  subsets: ["khmer"],
-  weight: ["400", "700"],
+const suwannaphum = localFont({
+  src: [
+    {
+      path: "./fonts/suwannaphum-khmer-400-normal.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/suwannaphum-khmer-700-normal.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
   display: "swap",
   preload: false,
   variable: "--font-suwannaphum",
@@ -51,17 +58,16 @@ export const viewport: Viewport = {
   themeColor: "#2e388c",
 };
 
-import { LanguageProvider } from "@/lib/i18n";
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="overflow-x-hidden">
+    <html lang="en" className="overflow-x-hidden" suppressHydrationWarning>
       <body
         className={`${sourceSans.variable} ${suwannaphum.variable} overflow-x-hidden antialiased`}
+        suppressHydrationWarning
       >
         <LanguageProvider>
           <ConditionalHeader />

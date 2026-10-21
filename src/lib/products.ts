@@ -1,4 +1,4 @@
-import { db } from "@/lib/firebase";
+import { getFirebaseDb } from "@/lib/firebase";
 import { collection, getDocs, query, where, getDoc, limit } from "firebase/firestore";
 import { getProductCategories, type Product, type ProductCategory } from "@/data/site-content";
 
@@ -56,6 +56,11 @@ const docToProduct = (doc: any, lang: 'en' | 'kh' = 'en'): Product => {
 };
 
 export async function getAllProducts(lang: 'en' | 'kh' = 'en'): Promise<ProductCategory[]> {
+  const db = getFirebaseDb();
+  if (!db) {
+    return getProductCategories(lang);
+  }
+
   try {
     const productsRef = collection(db, "products");
     const snapshot = await getDocs(productsRef);
@@ -76,9 +81,8 @@ export async function getAllProducts(lang: 'en' | 'kh' = 'en'): Promise<ProductC
     }));
 
     return categories;
-  } catch (error) {
-    console.error("Error fetching products:", error);
-    return getProductCategories(lang); // Fallback on error
+  } catch {
+    return getProductCategories(lang);
   }
 }
 
@@ -94,6 +98,11 @@ export async function getAllProducts(lang: 'en' | 'kh' = 'en'): Promise<ProductC
  * server-rendered and client-rendered products are byte-identical.
  */
 export async function getProductsForListing(): Promise<Product[]> {
+  const db = getFirebaseDb();
+  if (!db) {
+    return [];
+  }
+
   try {
     const snapshot = await getDocs(collection(db, "products"));
     return snapshot.docs.map((doc) => {
@@ -133,14 +142,24 @@ export async function getProductsForListing(): Promise<Product[]> {
         updatedBy: data.updatedBy,
       } as Product;
     });
-  } catch (error) {
-    // Never let a Firestore hiccup break the page — the client refetches.
-    console.error("Error fetching products for listing:", error);
+  } catch {
     return [];
   }
 }
 
 export async function getProduct(brandSlug: string, productSlug: string, lang: 'en' | 'kh' = 'en'): Promise<{ category: ProductCategory; product: Product } | undefined> {
+  const staticMatch = () => {
+    const cat = getProductCategories(lang).find((c) => c.slug === brandSlug);
+    const prod = cat?.products.find((p) => p.slug === productSlug);
+    if (cat && prod) return { category: cat, product: prod };
+    return undefined;
+  };
+
+  const db = getFirebaseDb();
+  if (!db) {
+    return staticMatch();
+  }
+
   try {
     const productsRef = collection(db, "products");
     const q = query(
@@ -152,11 +171,7 @@ export async function getProduct(brandSlug: string, productSlug: string, lang: '
     const snapshot = await getDocs(q);
 
     if (snapshot.empty) {
-       // Try static data fallback
-       const cat = getProductCategories(lang).find(c => c.slug === brandSlug);
-       const prod = cat?.products.find(p => p.slug === productSlug);
-       if (cat && prod) return { category: cat, product: prod };
-       return undefined;
+       return staticMatch();
     }
 
     const product = docToProduct(snapshot.docs[0], lang);
@@ -174,9 +189,8 @@ export async function getProduct(brandSlug: string, productSlug: string, lang: '
     };
 
     return { category, product };
-  } catch (error) {
-    console.error("Error fetching product:", error);
-    return undefined;
+  } catch {
+    return staticMatch();
   }
 }
 
