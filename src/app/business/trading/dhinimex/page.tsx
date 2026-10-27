@@ -13,7 +13,7 @@ import {
   NAV_UTILITY_ICON_CLASS,
 } from "@/components/layout/nav-utility-cluster";
 
-const heroImage = "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1920&q=80";
+const heroImage = "/images/hq/dhinimex-hq-front.webp";
 
 export default function DhinimexDetailPage() {
   const { t, language, setLanguage } = useLanguage();
@@ -70,8 +70,7 @@ export default function DhinimexDetailPage() {
         {/* Hero Banner Section */}
         <section className="relative min-h-[50vh] overflow-hidden lg:min-h-[60vh]">
           <div className="absolute inset-0 z-0">
-            <Image src={heroImage} alt="Dhinimex Co., LTD" fill priority className="object-cover" sizes="100vw" />
-            <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/90 via-brand-navy/70 to-brand-navy/50" />
+            <Image src={heroImage} alt="Architectural rendering of the entrance and lower facade of Dhinimex headquarters" fill priority className="scale-[1.06] object-cover object-[center_95%]" sizes="100vw" />
           </div>
 
           {/* Header - Desktop Only */}
@@ -137,7 +136,7 @@ export default function DhinimexDetailPage() {
           {/* Hero Content */}
           <div className="relative z-20 mx-auto max-w-7xl px-6 lg:px-8">
             <div className="flex min-h-[calc(50vh-120px)] items-center py-16 lg:min-h-[calc(60vh-120px)] lg:py-0">
-              <div className="max-w-2xl space-y-4">
+              <div className="max-w-2xl space-y-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                 <div className="flex items-center gap-3 text-sm">
                   <Link href="/business" className="font-medium text-white/70 transition hover:text-white">{t.nav.business}</Link>
                   <span className="text-white/40">/</span>

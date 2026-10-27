@@ -15,7 +15,7 @@ import { getLeadership } from "@/data/site-content";
 import { StickyHeader } from "@/components/home/sticky-header";
 
 // Hero background image
-const heroImage = "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=1920&q=80";
+const heroImage = "/images/hq/dhinimex-hq-upward.webp";
 
 // Bump when replacing images in /public to bust browser and optimizer cache
 const ABOUT_IMAGE_VERSION = "20250611";
@@ -181,10 +181,10 @@ export default function AboutPage() {
           <div className="absolute inset-0 z-0">
             <Image
               src={heroImage}
-              alt="About Dhinimex"
+              alt="Architectural rendering looking up at Dhinimex headquarters"
               fill
               priority
-              className="object-cover"
+              className="object-cover object-[center_65%]"
               sizes="100vw"
             />
             <div className="absolute inset-0 bg-black/30" />
@@ -332,7 +332,7 @@ export default function AboutPage() {
                   }`}
                 >
                   {t.about.hero.title.map((line, index) => (
-                    <span key={index} className="block whitespace-nowrap">
+                    <span key={index} className="block sm:whitespace-nowrap">
                       {line}
                     </span>
                   ))}
@@ -400,10 +400,10 @@ export default function AboutPage() {
             
             {/* Image */}
             <div className="relative">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-2xl">
+              <div className="relative aspect-[3508/2479] overflow-hidden rounded-2xl shadow-2xl">
                 <Image
-                  src="/kcc-2.jpg"
-                  alt="Dhinimex manufacturing and operations"
+                  src="/images/hq/dhinimex-hq-sunset.webp"
+                  alt="Architectural rendering of Dhinimex headquarters at sunset"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover"

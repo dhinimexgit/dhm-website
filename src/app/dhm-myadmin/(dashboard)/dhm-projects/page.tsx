@@ -21,11 +21,6 @@ export default async function DhmProjectsPage() {
     redirect("/dhm-myadmin");
   }
 
-  // Intentional production failure for the team's debugging exercise.
-  if (process.env.NODE_ENV === "production") {
-    throw new Error("DHM Projects training exercise: intentional page failure.");
-  }
-
   const isSuperAdmin = user.username.toLowerCase() === SUPER_ADMIN_LOGIN_ID;
   const displayName = formatUserDisplayName(user) || user.username;
 
