@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   PROJECT_STATUSES,
+  deleteProject,
   diffProject,
   formatProjectDate,
   projectProgress,
@@ -38,13 +40,6 @@ type PageProps = {
   canUpdate: boolean;
 };
 
-/**
- * One project, on its own page.
- *
- * The register used to expand each ticket inline, which does not survive a
- * realistic number of projects — ten open accordions is an unreadable page.
- * A ticket now has its own URL, so it can be linked, bookmarked and shared.
- */
 export function ProjectDetailPage({ projectId, actorName, actorUsername, canUpdate }: PageProps) {
   const [project, setProject] = useState<DhmProject | null>(null);
   const [loading, setLoading] = useState(true);
@@ -195,6 +190,7 @@ function ProjectDetail({
   onPatch: (project: DhmProject, patch: ProjectPatch) => Promise<void>;
   onError: (message: string) => void;
 }) {
+  const router = useRouter();
   const [tab, setTab] = useState<DetailTab>("overview");
   const [busy, setBusy] = useState(false);
   const [docFocus, setDocFocus] = useState<DocumentCategory | null>(null);
@@ -216,6 +212,31 @@ function ProjectDetail({
       acknowledgedByUsername: actorUsername,
       ...(project.projectLead ? {} : { projectLead: actorName }),
     });
+  }
+
+  // 📌 ពិនិត្យមើលថា User បច្ចុប្បន្នជាអ្នកបង្កើត Project នេះដែរឬទេ
+  // (ផ្អែកលើ createdBy ឬ submittedByUsername)
+  const isCreator =
+    (project.createdBy && project.createdBy.toLowerCase() === actorUsername.toLowerCase()) ||
+    (project.submittedByUsername && project.submittedByUsername.toLowerCase() === actorUsername.toLowerCase());
+
+  async function handleDeleteProject() {
+    if (!isCreator) {
+      alert("You do not have permission to delete this project. Only the creator can delete it.");
+      return;
+    }
+
+    const confirmed = window.confirm(`Are you sure you want to delete project "${project.projectName}"?`);
+    if (!confirmed) return;
+
+    try {
+      await deleteProject(project.id);
+      alert("Project deleted successfully!");
+      router.push(LIST_HREF);
+    } catch (err) {
+      console.error("Failed to delete project", err);
+      alert("Failed to delete this project. Please try again.");
+    }
   }
 
   const tabs: { id: DetailTab; label: string; count?: number }[] = [
@@ -243,30 +264,43 @@ function ProjectDetail({
         <Detail label="Project lead" value={project.projectLead || "Not yet assigned"} />
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-1 border-b border-slate-200 bg-white px-5">
-        {tabs.map((t) => (
+      {/* Tabs & Delete Button (បង្ហាញเฉพาะ User ដែលជា Creator) */}
+      <div className="flex flex-wrap items-center justify-between border-b border-slate-200 bg-white px-5">
+        <div className="flex gap-1">
+          {tabs.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => {
+                setTab(t.id);
+                if (t.id !== "documents") setDocFocus(null);
+              }}
+              className={`-mb-px border-b-2 px-4 py-3 text-sm font-semibold transition ${
+                tab === t.id
+                  ? "border-brand-red text-brand-navy"
+                  : "border-transparent text-slate-500 hover:text-slate-700"
+              }`}
+            >
+              {t.label}
+              {t.count !== undefined && t.count > 0 && (
+                <span className="ml-1.5 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-600">
+                  {t.count}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* 📌 បង្ហាញប៊ូតុង Delete Project ហាមឃាត់ប្រសិនបើមិនមែនជា Creator */}
+        {isCreator && (
           <button
-            key={t.id}
             type="button"
-            onClick={() => {
-              setTab(t.id);
-              if (t.id !== "documents") setDocFocus(null);
-            }}
-            className={`-mb-px border-b-2 px-4 py-3 text-sm font-semibold transition ${
-              tab === t.id
-                ? "border-brand-red text-brand-navy"
-                : "border-transparent text-slate-500 hover:text-slate-700"
-            }`}
+            onClick={handleDeleteProject}
+            className="rounded-lg border border-rose-200 bg-rose-50 px-3.5 py-1.5 text-xs font-semibold text-rose-700 transition hover:bg-rose-100 hover:text-rose-800"
           >
-            {t.label}
-            {t.count !== undefined && t.count > 0 && (
-              <span className="ml-1.5 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-600">
-                {t.count}
-              </span>
-            )}
+            🗑️ Delete Project
           </button>
-        ))}
+        )}
       </div>
 
       <div className="p-5">
@@ -398,8 +432,6 @@ function ProjectDetail({
                   )}
                 </div>
 
-                {/* Read-only: this is what sales filed at intake. Anything said
-                    afterwards belongs on the comment thread, not overwritten here. */}
                 <div className="rounded-xl border border-slate-200 bg-white p-4">
                   <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                     Remark from sales
