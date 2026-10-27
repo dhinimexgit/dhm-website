@@ -63,9 +63,21 @@ export async function POST(request: Request) {
     });
 
     if (!res.ok) {
-      const detail = await res.text().catch(() => "");
+      const responseBody = await res.text().catch(() => "");
+      let detail = "";
+      try {
+        const telegramResponse = JSON.parse(responseBody) as { description?: unknown };
+        if (typeof telegramResponse.description === "string") {
+          detail = telegramResponse.description.slice(0, 300);
+        }
+      } catch {
+        // Keep the generic error when Telegram returns a non-JSON response.
+      }
       console.error("project-notify: telegram responded", res.status, detail.slice(0, 300));
-      return NextResponse.json({ ok: false, error: "telegram rejected" }, { status: 502 });
+      return NextResponse.json(
+        { ok: false, error: "telegram rejected", detail },
+        { status: 502 }
+      );
     }
 
     return NextResponse.json({ ok: true });
