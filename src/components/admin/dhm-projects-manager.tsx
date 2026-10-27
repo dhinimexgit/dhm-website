@@ -82,9 +82,6 @@ export function DhmProjectsManager({ actorName, actorUsername, canSubmit, isSupe
     return () => unsub();
   }, []);
 
-  // Whether *this* user has linked Telegram, so the confirm dialog can say
-  // whether they will be attributed in the group post. Re-checked when the
-  // dialog opens, in case they linked in another tab meanwhile.
   useEffect(() => {
     let cancelled = false;
     void getTelegramLinkState()
@@ -95,10 +92,8 @@ export function DhmProjectsManager({ actorName, actorUsername, canSubmit, isSupe
     };
   }, [confirmingSubmit]);
 
-  // No Firestore id means we are still on the static sheet fallback.
   const typesAreFallback = projectTypes.length > 0 && projectTypes.every((t) => !t.id);
 
-  /** Hidden types stay selectable only if the ticket already uses them. */
   const pickerTypes = useMemo(() => {
     const visible = projectTypes.filter((t) => !t.hidden).map((t) => t.name);
     return Array.from(new Set(visible));
@@ -112,13 +107,10 @@ export function DhmProjectsManager({ actorName, actorUsername, canSubmit, isSupe
     return counts;
   }, [projects]);
 
-  // Default the "Sale Team Informed" date to today once, on the client, so the
-  // server-rendered markup does not disagree with the hydrated markup.
   useEffect(() => {
     setForm((f) => (f.saleTeamInformed ? f : { ...f, saleTeamInformed: todayIso() }));
   }, []);
 
-  // Preselect the first managed type once the list arrives.
   useEffect(() => {
     if (pickerTypes.length === 0) return;
     setForm((f) => (f.projectType ? f : { ...f, projectType: pickerTypes[0] }));
@@ -147,10 +139,6 @@ export function DhmProjectsManager({ actorName, actorUsername, canSubmit, isSupe
     [projects]
   );
 
-  /**
-   * Submitting posts to a group chat that the whole technical team reads, so
-   * it asks first. The ticket is only written after the user confirms.
-   */
   function handleSubmitRequest(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit || saving) return;
@@ -186,12 +174,8 @@ export function DhmProjectsManager({ actorName, actorUsername, canSubmit, isSupe
 
       setForm({ ...EMPTY_FORM, saleTeamInformed: todayIso() });
       setShowForm(false);
-      // The ticket is saved either way — say so now, then amend the banner once
-      // we know whether the group chat actually received it.
       setBanner({ tone: "ok", text: `Ticket ${ticketNo} created.` });
 
-      // Build the payload from the typed input rather than casting the raw form
-      // object, so a field added or removed above is caught at compile time.
       const result = await notifyProject(
         "created",
         {
@@ -309,7 +293,6 @@ export function DhmProjectsManager({ actorName, actorUsername, canSubmit, isSupe
 
       {!loading && <ProjectDashboard projects={projects} />}
 
-      {/* Summary + new ticket */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap gap-2">
           {(["all", ...PROJECT_STATUSES] as const).map((s) => (
@@ -358,7 +341,6 @@ export function DhmProjectsManager({ actorName, actorUsername, canSubmit, isSupe
         />
       )}
 
-      {/* Intake form — mirrors the paper handoff sheet */}
       {showForm && canSubmit && (
         <form onSubmit={handleSubmitRequest} className={CARD}>
           <h2 className="mb-1 text-lg font-semibold text-brand-navy">New Project Ticket</h2>
@@ -480,7 +462,6 @@ export function DhmProjectsManager({ actorName, actorUsername, canSubmit, isSupe
         </form>
       )}
 
-      {/* Filters */}
       <div className="grid gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-3">
         <div>
           <label className={LABEL}>Search</label>
@@ -509,7 +490,6 @@ export function DhmProjectsManager({ actorName, actorUsername, canSubmit, isSupe
         </div>
       </div>
 
-      {/* Register */}
       {loading ? (
         <p className="px-6 py-12 text-center text-sm text-slate-500">Loading projects…</p>
       ) : filtered.length === 0 ? (
@@ -531,10 +511,6 @@ export function DhmProjectsManager({ actorName, actorUsername, canSubmit, isSupe
   );
 }
 
-/**
- * A register row. Navigates to the project's own page rather than expanding —
- * ten open accordions on one screen is unreadable, and a ticket deserves a URL.
- */
 function ProjectRow({ project }: { project: DhmProject }) {
   const progress = projectProgress(project);
   const docCount = project.documents.length;
@@ -560,7 +536,6 @@ function ProjectRow({ project }: { project: DhmProject }) {
           {project.customerLocation && <span>· {project.customerLocation}</span>}
         </div>
 
-        {/* Who raised it and who owns it — readable without opening the ticket. */}
         <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500">
           <span>
             Raised by{" "}
@@ -573,16 +548,8 @@ function ProjectRow({ project }: { project: DhmProject }) {
               {project.projectLead || "unassigned"}
             </span>
           </span>
-          {docCount > 0 && (
-            <span>
-              · {docCount} file{docCount === 1 ? "" : "s"}
-            </span>
-          )}
-          {updateCount > 0 && (
-            <span>
-              · {updateCount} update{updateCount === 1 ? "" : "s"}
-            </span>
-          )}
+          {docCount > 0 && <span>· {docCount} file{docCount === 1 ? "" : "s"}</span>}
+          {updateCount > 0 && <span>· {updateCount} update{updateCount === 1 ? "" : "s"}</span>}
         </div>
 
         <div className="flex items-center gap-3 pt-1">

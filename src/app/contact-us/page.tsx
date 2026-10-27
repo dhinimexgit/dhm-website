@@ -137,7 +137,22 @@ export default function ContactPage() {
         createdAt: Timestamp.now(),
         status: "new",
       });
-      // Send the customer a confirmation email (email is required on this form).
+// 2. Trigger Telegram notification
+      try {
+        const response = await fetch("/api/contact-notify", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+          console.error("Failed to send contact notification:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Failed to send contact notification:", error);
+      }      // Send the customer a confirmation email (email is required on this form).
       sendConfirmationEmail({ name: formData.fullName, email: formData.email });
       setSubmitStatus("success");
       setFormData({ fullName: "", email: "", phone: "", inquiryType: "", message: "" });

@@ -512,6 +512,10 @@ export async function updateProject(
   });
 }
 
+export async function deleteProject(id: string): Promise<void> {
+  await deleteDoc(doc(requireFirebaseDb(), DHM_PROJECTS_COLLECTION, id));
+}
+
 /** Append a comment. Never edits or removes what is already on the thread. */
 export async function addProjectComment(
   project: DhmProject,

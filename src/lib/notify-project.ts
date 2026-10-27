@@ -45,8 +45,8 @@ export async function notifyProject(
 
     if (res.ok) return { ok: true };
 
-    const body = (await res.json().catch(() => ({}))) as { error?: string };
-    const reason = body.error || `HTTP ${res.status}`;
+    const body = (await res.json().catch(() => ({}))) as { error?: string; detail?: string };
+    const reason = [body.error, body.detail].filter(Boolean).join(": ") || `HTTP ${res.status}`;
     return {
       ok: false,
       notConfigured: reason === TELEGRAM_NOT_CONFIGURED,
