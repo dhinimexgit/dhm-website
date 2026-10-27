@@ -137,6 +137,17 @@ export default function ContactPage() {
         createdAt: Timestamp.now(),
         status: "new",
       });
+      void fetch("/api/contact-notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      }).then((response) => {
+        if (!response.ok) {
+          console.error("Failed to send contact notification:", response.status);
+        }
+      }).catch((error) => {
+        console.error("Failed to send contact notification:", error);
+      });
       // Send the customer a confirmation email (email is required on this form).
       sendConfirmationEmail({ name: formData.fullName, email: formData.email });
       setSubmitStatus("success");
